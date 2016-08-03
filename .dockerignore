@@ -1,0 +1,9 @@
+*/.git
+*/.idea
+*/*.pyc
+*/.coverage
+*/*.iml
+*/*.Python
+
+!*/.git/HEAD
+!*/.git/refs/heads
