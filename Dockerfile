@@ -24,3 +24,12 @@ RUN apt-get install -y supervisor nginx python-pip
 
 # Install virtualenv
 RUN pip install virtualenv
+
+# Create dsd virtual env and install dependenices
+COPY ./requirements.txt /opt/app/chai/requirements.txt
+RUN virtualenv ~/.virtualenvs/dsd && virtualenv -p /usr/local/bin/python ~/.virtualenvs/dsd
+RUN /bin/bash -c "source ~/.virtualenvs/dsd/bin/activate && cd /opt/app/chai && pip install -r requirements.txt"
+
+# Set work dir
+WORKDIR /opt/app/chai
+
