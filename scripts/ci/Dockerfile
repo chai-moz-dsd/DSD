@@ -1,14 +1,9 @@
 FROM jenkins
-MAINTAINER  sjyuan  "sjyuan@thoughtworks.com"
+MAINTAINER  chai-dsd  "chai-dsd@thoughtworks.com"
 
 RUN export LC_CTYPE=en_US.UTF-8 && export LC_ALL=en_US.UTF-8
 
 USER root
-
-RUN wget https://packages.chef.io/stable/debian/6/chefdk_0.9.0-1_amd64.deb \
-    && dpkg -i chefdk_0.9.0-1_amd64.deb \
-    && chef verify \
-    && chef gem install knife-solo --version 0.4.3
 
 # Install docker
 RUN apt-get update \

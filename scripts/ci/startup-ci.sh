@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export IMAGE_JENKINS=ubuntu/jenkins
+export IMAGE_JENKINS=dsd/jenkins
 export JENKINS_HOME=/var/jenkins_home
 export CONTAINER_JENKINS_SERVER=jenkins-server
 export CONTAINER_REGISTRY_SERVER=registry-server
@@ -14,8 +14,6 @@ docker run -d --name ${CONTAINER_JENKINS_SERVER} \
  --restart=always \
  -p 8080:8080 \
  -v /var/run/docker.sock:/var/run/docker.sock:ro \
- -v /usr/local/bin/docker-compose:/usr/local/bin/docker-compose:ro \
- -v $HOME/.ssh/primero-aws.pem:/root/.ssh/primero-aws.pem \
  -v ${JENKINS_HOME}:${JENKINS_HOME} \
  ${IMAGE_JENKINS}
 
