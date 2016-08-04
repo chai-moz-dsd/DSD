@@ -77,15 +77,7 @@ WSGI_APPLICATION = 'chai.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dsd',
-        'USER': 'postgres',
-        'HOST': 'localhost',
-        'PORT': '5432',
-        'OPTIONS': {
-            'isolation_level': psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE,
         },
-    }
 }
 
 
@@ -125,4 +117,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'dsd/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, "dsd/static/")
