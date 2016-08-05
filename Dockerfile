@@ -36,17 +36,16 @@ RUN ln -sf /opt/app/chai/scripts/config/supervisord.conf /etc/supervisor/conf.d/
 RUN pip install virtualenv
 
 # Create dsd virtual env
-COPY ./chai/requirements.txt /opt/app/chai/requirements.txt
 RUN virtualenv ~/.virtualenvs/dsd && virtualenv -p /usr/local/bin/python ~/.virtualenvs/dsd
+
+# Copy source code
+COPY ./chai /opt/app/chai
 
 # Set work dir
 WORKDIR /opt/app/chai
 
 # Install dependenices
 RUN /bin/bash -c "source ~/.virtualenvs/dsd/bin/activate && pip install -r requirements.txt"
-
-# Copy source code
-COPY ./chai /opt/app/chai
 
 # Collect static files
 RUN /bin/bash -c "source ~/.virtualenvs/dsd/bin/activate && python manage.py collectstatic --no-input"
