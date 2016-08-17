@@ -5,4 +5,4 @@ echo "Copy Dockerfile"
 cp ./${JOB_NAME}/Dockerfile ./
 
 echo "Build docker image"
-sudo docker build -t chai/dsd:${BUILD_NUMBER} .
+docker build -t chai/dsd:${BUILD_NUMBER} .
