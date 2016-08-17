@@ -8,4 +8,4 @@ echo "Build docker image"
 docker build -t chai/dsd:${BUILD_NUMBER} .
 
 echo "Remove old images"
-docker images | grep -P '^\S+dsd\s+([0-9]+)\b' | awk 'BEGIN {BASELINE=${BUILD_NUMBER}}{if($2 < BASELINE) print $1":"$2}' | xargs -I {} docker rmi -f {} || true
+docker images | grep -P '^\S+dsd\s+([0-9]+)\b' | awk 'BEGIN {BASELINE=$BUILD_NUMBER}{if($2 < BASELINE) print $1":"$2}' | xargs -I {} docker rmi -f {} || true
