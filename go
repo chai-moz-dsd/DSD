@@ -4,9 +4,13 @@ set -e
 VIRTUAL_ENV_PATH=~/.virtualenvs/dsd/bin/activate
 
 function main {
+  source ${VIRTUAL_ENV_PATH}
   case "$1" in
     "ut" )
       run_unit_test;;
+
+    "ft" )
+      run_functional_test;;
 
     "rs" )
       run_server;;
@@ -15,12 +19,14 @@ function main {
 }
 
 function run_unit_test {
-  source ${VIRTUAL_ENV_PATH}
   python manage.py test -v 2 --noinput
 }
 
+function run_functional_test {
+  echo 'functional tests'
+}
+
 function run_server {
-  source ${VIRTUAL_ENV_PATH}
   python manage.py runserver
 }
 
