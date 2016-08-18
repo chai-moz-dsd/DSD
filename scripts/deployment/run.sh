@@ -7,4 +7,4 @@ echo "Run new docker container"
 docker run -p 80:80 -p 8000:8000 --name=dsd -d chai/dsd:$1
 
 echo "login container and run unit tests"
-docker exec -it dsd bash ./go ut
+docker exec dsd bash ./go ut
