@@ -5,7 +5,7 @@ echo "Copy Dockerfile"
 cp ./${JOB_NAME}/Dockerfile ./
 
 echo "Build docker image"
-docker build -t chai/dsd:${BUILD_NUMBER} .
+docker build -t chaimozdsd/dsd:${BUILD_NUMBER} .
 
 echo "Remove old images"
 docker images | grep -P '^\S+dsd\s+([0-9]+)\b' | \

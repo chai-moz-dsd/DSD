@@ -7,7 +7,7 @@ docker images | grep -P '${REPO_ADDRESS}' | awk '{print $3}' | xargs -I {} docke
 docker ps -a | grep -P 'dsd$' | awk '{print$1}' | xargs -I {} docker rm -f {} || true
 
 echo "Pull the latest docker container"
-docker pull ${REPO_ADDRESS}/chai/dsd:latest
+docker pull ${REPO_ADDRESS}/chaimozdsd/dsd:latest
 
 echo "Run the latest docker image"
-docker run -p 80:80 -p 8000:8000 --name=dsd -d chai/dsd:latest
+docker run -p 80:80 -p 8000:8000 --name=dsd -d chaimozdsd/dsd:latest
