@@ -7,7 +7,7 @@ You can create virtual environment with  [virtualenvwrapper](http://virtualenvwr
 
 #### Clone the repository
 ``` bash
-$ git clone https://github.com/chai-moz-dsd/DSD.git
+$ git clone https://github.com/chai-moz-dsd/chai.git
 ```
 
 #### Create an virtual environment
