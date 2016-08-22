@@ -9,14 +9,18 @@ https://docs.djangoproject.com/en/1.10/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
+from os.path import join, exists
 
+import datetime
+import logging
+import logging.config
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
 import psycopg2
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -29,7 +33,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'raven.contrib.django.raven_compat'
 ]
 
 MIDDLEWARE = [
@@ -71,15 +75,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'chai.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        },
+    },
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -99,7 +101,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
@@ -113,10 +114,94 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = 'dsd/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, "dsd/static/")
+
+# Logging configuration
+LOGGING_DIR = join(BASE_DIR, 'logs/')
+
+LOG_SUFFIX = datetime.datetime.today().strftime('%Y%m%d')
+os.mkdir(LOGGING_DIR) if not exists(LOGGING_DIR) else None
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': "[%(asctime)s] %(levelname)s [%(filename)s : %(funcName)s():%(lineno)s] %(message)s",
+            'datefmt': "%Y-%m-%d %H:%M:%S"
+        },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'null': {
+            'class': 'logging.NullHandler',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard'
+        },
+        'debug_file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': LOGGING_DIR + "/debug.%s.log" % LOG_SUFFIX,
+            'maxBytes': 1024 * 1024 * 5,
+            'backupCount': 10,
+            'formatter': 'standard'
+        },
+        'request_file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': LOGGING_DIR + '/django_request.%s.log' % LOG_SUFFIX,
+            'maxBytes': 1024 * 1024 * 5,
+            'backupCount': 30,
+            'formatter': 'standard'
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'sentry': {
+            'level': 'ERROR',
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+            'tags': {'CHAI': 'DSD'},
+        }
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console', 'debug_file'],
+            'level': 'DEBUG'
+        },
+        'django.request': {
+            'handlers': ['request_file'],
+            'level': 'ERROR',
+            'propagate': False
+        },
+        'celery.task': {
+            'handlers': ['console', 'debug_file', 'sentry'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+
+        'celery.work': {
+            'handlers': ['console', 'debug_file', 'sentry'],
+            'level': 'DEBUG',
+            'propagate': False
+        }
+    }
+}
+
+CELERYD_HIJACK_ROOT_LOGGER = False
+CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
+LOGGING_CONFIG = None
+logging.config.dictConfig(LOGGING)
