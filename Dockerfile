@@ -38,14 +38,17 @@ RUN pip install virtualenv
 # Create dsd virtual env
 RUN virtualenv ~/.virtualenvs/dsd && virtualenv -p /usr/local/bin/python ~/.virtualenvs/dsd
 
-# Copy source code
-COPY ./chai /opt/app/chai
+# Copy requirements
+COPY ./chai/requirements.txt /opt/app/chai/requirements.txt
 
 # Set work dir
 WORKDIR /opt/app/chai
 
 # Install dependenices
 RUN /bin/bash -c "source ~/.virtualenvs/dsd/bin/activate && pip install -r requirements.txt"
+
+# Copy source code
+COPY ./chai /opt/app/chai
 
 # Collect static files
 RUN /bin/bash -c "source ~/.virtualenvs/dsd/bin/activate && python manage.py collectstatic --no-input"
