@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
-VIRTUAL_ENV_PATH=~/.virtualenvs/dsd/bin/activate
-
 function main {
-  source ${VIRTUAL_ENV_PATH}
   case "$1" in
     "ut" )
       run_unit_test;;
