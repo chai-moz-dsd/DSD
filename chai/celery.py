@@ -12,7 +12,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'chai.settings_prod')
 logger = get_task_logger(__name__)
 
 app = Celery('dsd', broker='redis://localhost:6379/0', backend='redis://',
-             include=['dsd.service.flow_scheduler'])
+             include=['dsd.service.scheduler'])
 
 CELERY_TIMEZONE = settings.TIME_ZONE
 
