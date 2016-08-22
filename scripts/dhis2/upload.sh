@@ -1,5 +1,5 @@
 password=$1
 
-echo "push docker image to the repo"
+echo "push dhis2 image to the repo"
 docker login -u="chaimozdsd" -p=${password}
 docker push chaimozdsd/dhis2
