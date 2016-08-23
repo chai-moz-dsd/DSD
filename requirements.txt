@@ -1,7 +1,7 @@
 Django==1.10
 
 # Django Scheduler
-django-celery==3.1.17
+django-scheduler==0.8
 
 # Django Rest Framework
 djangorestframework==3.1.3
