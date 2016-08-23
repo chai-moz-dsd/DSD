@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+
+<html ng-app="chaiApp">
+
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+        <script src="angular-route/angular-route.js"></script>
+        <script src="app.js"></script>
+        <script src="app.module.js"></script>
+        <script src="app.config.js"></script>
+        <script src="diease/diease-list.component.js"></script>
+        <script src="locations/locations-list.component.js"></script>
+    </head>
+
+    <body>
+        <h1>Chai Table.</h1>
+        <a href="/dieases" >dieases</a>
+        <a href="/locations">locations</a>
+        <div ng-view></div>
+    </body>
+</html>
