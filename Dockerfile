@@ -54,7 +54,7 @@ COPY ./chai /opt/app/chai
 RUN /bin/bash -c "source ~/.virtualenvs/dsd/bin/activate && python manage.py collectstatic --no-input"
 
 # Expose ports
-EXPOSE 80 8000
+EXPOSE 80
 
 # Entrypoint
 CMD ["/usr/bin/supervisord"]
