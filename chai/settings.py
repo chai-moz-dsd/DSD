@@ -155,7 +155,7 @@ LOGGING = {
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': LOGGING_DIR + "/debug.%s.log" % LOG_SUFFIX,
             'maxBytes': 1024 * 1024 * 5,
-            'backupCount': 10,
+            'backupCount': 50,
             'formatter': 'standard'
         },
         'request_file': {
@@ -163,18 +163,13 @@ LOGGING = {
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': LOGGING_DIR + '/django_request.%s.log' % LOG_SUFFIX,
             'maxBytes': 1024 * 1024 * 5,
-            'backupCount': 30,
+            'backupCount': 50,
             'formatter': 'standard'
         },
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        },
-        'sentry': {
-            'level': 'ERROR',
-            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
-            'tags': {'CHAI': 'DSD'},
         }
     },
     'loggers': {
@@ -188,13 +183,13 @@ LOGGING = {
             'propagate': False
         },
         'celery.task': {
-            'handlers': ['console', 'debug_file', 'sentry'],
+            'handlers': ['console', 'debug_file'],
             'level': 'DEBUG',
             'propagate': False
         },
 
         'celery.work': {
-            'handlers': ['console', 'debug_file', 'sentry'],
+            'handlers': ['console', 'debug_file'],
             'level': 'DEBUG',
             'propagate': False
         }
