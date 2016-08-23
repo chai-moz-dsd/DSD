@@ -64,8 +64,8 @@ COPY ./chai/requirements.txt /opt/app/chai/requirements.txt
 RUN virtualenv ~/.virtualenvs/dsd
 RUN /bin/bash -c "source ~/.virtualenvs/dsd/bin/activate && cd /opt/app/chai && pip install -r requirements.txt"
 
-COPY ./contacts/package.json /opt/app/contacts/package.json
-RUN cd /opt/app/contacts/ && npm install
+#COPY ./contacts/package.json /opt/app/contacts/package.json
+#RUN cd /opt/app/contacts/ && npm install
 
 COPY ./chai/dsd/client/package.json /opt/app/chai/dsd/client/package.json
 COPY ./chai/dsd/client/bower.json /opt/app/chai/dsd/client/bower.json
