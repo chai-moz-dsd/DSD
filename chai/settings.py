@@ -130,7 +130,7 @@ STATICFILES_DIRS = (
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, "dsd/")
+STATIC_ROOT = os.path.join(BASE_DIR, 'dsd/')
 
 # Logging configuration
 LOGGING_DIR = join(BASE_DIR, 'logs/')
