@@ -5,3 +5,8 @@ celerybeat-schedule.db
 *.pyc
 *.rdb
 /logs
+dsd/.Python
+dsd/bin
+dsd/include
+dsd/lib
+dsd/man
