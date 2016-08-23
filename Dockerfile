@@ -28,6 +28,7 @@ RUN apt-get install -y python-dev nginx
 RUN pip3 install uwsgi
 COPY ./chai/scripts/ /opt/app/chai/scripts/
 RUN mkdir -p /etc/uwsgi/sites
+RUN rm /etc/nginx/sites-enabled/default
 RUN ln -sf /opt/app/chai/scripts/config/dsd.uwsgi.ini /etc/uwsgi/sites/dsd.uwsgi.ini
 RUN ln -sf /opt/app/chai/scripts/config/dsd.nginx.config /etc/nginx/sites-enabled
 RUN ln -sf /opt/app/chai/scripts/config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
