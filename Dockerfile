@@ -62,7 +62,7 @@ RUN virtualenv ~/.virtualenvs/dsd && virtualenv -p /usr/local/bin/python ~/.virt
 ##############################################################################
 COPY ./chai/requirements.txt /opt/app/chai/requirements.txt
 RUN virtualenv ~/.virtualenvs/dsd
-RUN /bin/bash -c "source ~/.virtualenvs/dsd/bin/activate && cd /opt/app/dsd && pip install -r requirements.txt"
+RUN /bin/bash -c "source ~/.virtualenvs/dsd/bin/activate && cd /opt/app/chai && pip install -r requirements.txt"
 
 COPY ./contacts/package.json /opt/app/contacts/package.json
 RUN cd /opt/app/contacts/ && npm install
