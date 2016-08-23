@@ -1,5 +1,5 @@
 # Base OS
-FROM tomcat:8.5.4-jre8
+FROM tomcat:7-jre8
 
 # Install wget
 RUN apt-get update
