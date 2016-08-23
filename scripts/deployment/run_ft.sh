@@ -12,5 +12,5 @@ if [ $? -ne 0 ]; then
     docker ps -a | grep -P 'dsd-${tag}$' | awk '{print$1}' | xargs -I {} docker rm -f {} || true
 fi
 
-echo "Remove old docker container"
+echo "Remove current container"
 docker ps -a | grep -P 'dsd-${tag}$' | awk '{print$1}' | xargs -I {} docker rm -f {} || true

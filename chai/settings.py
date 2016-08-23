@@ -9,12 +9,11 @@ https://docs.djangoproject.com/en/1.10/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
-from os.path import join, exists
-
 import datetime
 import logging
 import logging.config
 import os
+from os.path import join, exists
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
@@ -42,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'raven.contrib.django.raven_compat'
+    'schedule',
 ]
 
 MIDDLEWARE = [
@@ -53,6 +52,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+TEMPLATE_CONTEXT_PROCESSORS = [
+    'django.core.context_processors.request',
 ]
 
 ROOT_URLCONF = 'chai.urls'
