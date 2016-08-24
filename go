@@ -15,9 +15,6 @@ function main {
     "rs" )
       run_server;;
 
-    "sc" )
-      start_celery;;
-
     "rdb" )
       reset_db;;
   esac
@@ -34,16 +31,6 @@ function run_functional_test {
 function run_server {
   python manage.py runserver
 }
-
-function start_celery {
-    if [ "$1" = "prod" ]; then
-        export DJANGO_SETTINGS_MODULE="chai.settings_prod"
-    else
-        export DJANGO_SETTINGS_MODULE="chai.settings_dev"
-    fi
-    celery worker -A chai -B --loglevel=INFO
-}
-
 
 function reset_db {
   if [ "$1" = "test" ]; then
