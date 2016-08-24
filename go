@@ -17,6 +17,9 @@ function main {
 
     "sc" )
       start_celery;;
+
+    "rdb" )
+      reset_db;;
   esac
 }
 
@@ -41,6 +44,18 @@ function start_celery {
     celery worker -A chai -B --loglevel=INFO
 }
 
+
+function reset_db {
+  if [ "$1" = "test" ]; then
+    echo "+++ Resetting test database dsd_test..."
+    echo "drop database dsd_test; create database dsd_test;" | psql -h localhost -U postgres
+    python manage.py migrate --settings=dsd.test_settings
+  else
+    echo "+++ Resetting database dsd..."
+    echo "drop database dsd; create database dsd;" | psql -h localhost -U postgres
+    python manage.py migrate
+  fi
+}
 
 main $@
 exit 0

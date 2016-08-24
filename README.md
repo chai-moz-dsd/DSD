@@ -14,7 +14,7 @@ $ git clone https://github.com/chai-moz-dsd/chai.git
 *Example 1 - Using virtualenvwrapper*
 ``` bash
 $ source /usr/local/bin/virtualenvwrapper.sh
-$ mkvirtualenv dsd
+$ mkvirtualenv -p python3 dsd
 $ workon dsd
 ```
 *Example 2 - Using virtualenv within project directory*

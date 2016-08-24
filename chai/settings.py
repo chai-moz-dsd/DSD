@@ -42,8 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'schedule',
     'dsd',
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -56,9 +56,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-TEMPLATE_CONTEXT_PROCESSORS = [
-    'django.core.context_processors.request',
-]
 
 ROOT_URLCONF = 'chai.urls'
 
@@ -85,6 +82,14 @@ WSGI_APPLICATION = 'chai.wsgi.application'
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dsd',
+        'USER': 'postgres',
+        'HOST': 'localhost',
+        'PORT': '5432',
+        'OPTIONS': {
+            'isolation_level': psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE,
+        },
     },
 }
 
@@ -132,7 +137,8 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'dsd/')
 
-# Logging configuration
+
+# ********************Logger configuration********************
 LOGGING_DIR = join(BASE_DIR, 'logs/')
 
 LOG_SUFFIX = datetime.datetime.today().strftime('%Y%m%d')
@@ -206,8 +212,20 @@ LOGGING = {
         }
     }
 }
-
-CELERYD_HIJACK_ROOT_LOGGER = False
-CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
 LOGGING_CONFIG = None
 logging.config.dictConfig(LOGGING)
+
+
+# ********************Crontab configuration********************
+CELERYD_HIJACK_ROOT_LOGGER = False
+BROKER_URL = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+CRONJOBS = (
+    ('*/1 * * * *', 'dsd.service.scheduler.pull_data'),
+)
+
+
+
