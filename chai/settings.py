@@ -139,11 +139,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'dsd/')
 
 
 # ********************Logger configuration********************
-LOGGING_DIR = join(BASE_DIR, 'logs/')
+VOLUME_ROOT = join(BASE_DIR, 'volume')
+os.mkdir(VOLUME_ROOT) if not exists(VOLUME_ROOT) else None
 
-LOG_SUFFIX = datetime.datetime.today().strftime('%Y%m%d')
+LOGGING_DIR = join(VOLUME_ROOT, 'logs')
 os.mkdir(LOGGING_DIR) if not exists(LOGGING_DIR) else None
 
+LOG_SUFFIX = datetime.datetime.today().strftime('%Y%m%d')
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

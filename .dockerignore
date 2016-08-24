@@ -4,6 +4,7 @@
 */.coverage
 */*.iml
 */*.Python
+*/volume/
 
 !*/.git/HEAD
 !*/.git/refs/heads
