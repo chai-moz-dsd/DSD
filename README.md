@@ -19,7 +19,7 @@ $ workon dsd
 ```
 *Example 2 - Using virtualenv within project directory*
 ``` bash
-$ virtualenv dsd
+$ virtualenv -p /usr/local/bin/python3 dsd
 $ source dsd/bin/activate
 ```
 
