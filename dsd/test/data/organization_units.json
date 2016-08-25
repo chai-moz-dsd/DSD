@@ -1,0 +1,34 @@
+[
+  {
+    "id": "00000000000",
+    "name": "MoH",
+    "shortName": "MoH",
+    "openingDate": "2016-08-25"
+  },
+  {
+    "id": "12345678901",
+    "name": "NAMPULA",
+    "shortName": "NAMPULA",
+    "openingDate": "2016-08-25",
+    "description": "province 1",
+    "data_creation": null,
+    "user_creation": 0,
+    "state": 0,
+    "parent": {
+      "id": "00000000000"
+    }
+  },
+  {
+    "id": "98765432109",
+    "name": "TETE",
+    "shortName": "TETE",
+    "openingDate": "2016-08-25",
+    "description": "province 2",
+    "data_creation": null,
+    "user_creation": 0,
+    "state": 1,
+    "parent": {
+      "id": "00000000000"
+    }
+  }
+]
