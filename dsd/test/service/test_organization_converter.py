@@ -4,8 +4,8 @@ from django.test import TestCase
 from mock import patch
 
 from dsd.models import Province, District, Facility
-from dsd.service.organization_converter import convert_province_to_json, convert_district_to_json, \
-    convert_facility_to_json
+from dsd.service.organization_converter import convert_province_to_dict, convert_district_to_dict, \
+    convert_facility_to_dict
 from dsd.test.factories.district_factory import DistrictFactory
 from dsd.test.factories.facility_factory import FacilityFactory
 from dsd.test.factories.province_factory import ProvinceFactory
@@ -28,7 +28,7 @@ class OrganizationConverterTest(TestCase):
         ProvinceFactory(province_name='MANICA', description='province 1', data_creation=datetime.date(2016, 8, 15))
 
         province = Province.objects.first()
-        _, province_dict = convert_province_to_json(province, '00000000000')
+        _, province_dict = convert_province_to_dict(province, '00000000000')
 
         self.assertEqual(province_dict, expected_province_dict)
 
@@ -47,7 +47,7 @@ class OrganizationConverterTest(TestCase):
         DistrictFactory(district_name='MACOMIA', description='district 1', data_creation=datetime.date(2016, 8, 30))
 
         district = District.objects.first()
-        _, actual_district_dict = convert_district_to_json(district, '12345678901')
+        _, actual_district_dict = convert_district_to_dict(district, '12345678901')
 
         self.assertEqual(actual_district_dict, expected_district_dict)
 
@@ -84,6 +84,6 @@ class OrganizationConverterTest(TestCase):
                         device_serial_opt='356670060276714', device_serial='356670060320751', device_number='97')
 
         facility = Facility.objects.first()
-        actual_facility_dict = convert_facility_to_json(facility, '12345678901')
+        actual_facility_dict = convert_facility_to_dict(facility, '12345678901')
 
         self.assertEqual(actual_facility_dict, expected_facility_dict)
