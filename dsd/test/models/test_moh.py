@@ -1,3 +1,5 @@
+import json
+
 from django.test import TestCase
 from mock import patch
 
@@ -8,31 +10,8 @@ from dsd.test.helpers.fake_date import FakeDate
 
 class MoHTest(TestCase):
     def setUp(self):
-        self.expected_json = [{'id': '00000000000',
-                               'name': 'MoH',
-                               'shortName': 'MoH',
-                               'openingDate': '2016-08-25',
-                               },
-                              {'id': '12345678901',
-                               'name': 'NAMPULA',
-                               'shortName': 'NAMPULA',
-                               'openingDate': '2016-08-25',
-                               'description': 'province 1',
-                               'data_creation': None,
-                               'user_creation': 0,
-                               'state': 0,
-                               'parent': {'id': '00000000000'}
-                               },
-                              {'id': '98765432109',
-                               'name': 'TETE',
-                               'shortName': 'TETE',
-                               'openingDate': '2016-08-25',
-                               'description': 'province 2',
-                               'data_creation': None,
-                               'user_creation': 0,
-                               'state': 1,
-                               'parent': {'id': '00000000000'}
-                               }]
+        with open('dsd/test/data/organization_units.json') as organization_units:
+            self.expected_json = json.loads(organization_units.read())
 
     @patch('datetime.date', FakeDate)
     @patch('dsd.util.id_generator.generate_id')

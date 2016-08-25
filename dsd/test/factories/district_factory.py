@@ -1,4 +1,4 @@
-from datetime import date
+import datetime
 
 import factory
 
@@ -13,6 +13,6 @@ class DistrictFactory(factory.DjangoModelFactory):
     district_name = factory.Iterator(['ANCUABE', 'BALAMA', 'CHIURE', 'CIADADE DE PEMBA', 'IBO', 'MACOMIA'])
     description = factory.sequence(lambda n: "Description:{0}".format(n))
     user_creation = 0
-    data_creation = date.today()
+    data_creation = datetime.date.today()
     state = 1
     province = factory.SubFactory(ProvinceFactory)
