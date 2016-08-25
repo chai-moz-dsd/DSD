@@ -1,5 +1,3 @@
-
-# Base OS
 FROM ubuntu:14.04
 MAINTAINER chai-dsd <chai-dsd@thoughtworks.com>
 
@@ -32,6 +30,7 @@ RUN rm /etc/nginx/sites-enabled/default
 RUN ln -sf /opt/app/chai/scripts/config/dsd.uwsgi.ini /etc/uwsgi/sites/dsd.uwsgi.ini
 RUN ln -sf /opt/app/chai/scripts/config/dsd.nginx.config /etc/nginx/sites-enabled
 RUN ln -sf /opt/app/chai/scripts/config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
 
 ##############################################################################
 ## install NodeJS
