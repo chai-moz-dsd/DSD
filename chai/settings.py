@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import datetime
 import logging
 import logging.config
+
 import os
 from os.path import join, exists
 
@@ -56,7 +57,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-
 ROOT_URLCONF = 'chai.urls'
 
 TEMPLATES = [
@@ -97,18 +97,10 @@ DATABASES = {
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'}
 ]
 
 # Internationalization
@@ -136,7 +128,6 @@ STATICFILES_DIRS = (
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'dsd/')
-
 
 # ********************Logger configuration********************
 VOLUME_ROOT = join(BASE_DIR, 'volume')
@@ -217,17 +208,6 @@ LOGGING = {
 LOGGING_CONFIG = None
 logging.config.dictConfig(LOGGING)
 
-
-# ********************Crontab configuration********************
-CELERYD_HIJACK_ROOT_LOGGER = False
-BROKER_URL = 'redis://localhost:6379/0'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-
 CRONJOBS = (
     ('*/1 * * * *', 'dsd.service.scheduler.pull_data'),
 )
-
-
-
