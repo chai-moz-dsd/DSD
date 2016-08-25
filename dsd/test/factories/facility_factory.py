@@ -16,7 +16,7 @@ class FacilityFactory(factory.DjangoModelFactory):
     code_us = ''
     sorting_us = ''
     level_us = ''
-    ugly_us = ''
+    fea_us = ''
     province_capital_dist = None
     device_serial = ''
     sim_number = factory.sequence(lambda n: "SimNumber:{0}".format(n))

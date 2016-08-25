@@ -36,10 +36,12 @@ function reset_db {
   if [ "$1" = "test" ]; then
     echo "+++ Resetting test database dsd_test..."
     echo "drop database dsd_test; create database dsd_test;" | psql -h localhost -U postgres
+    python manage.py makemigrations --settings=dsd.test_settings
     python manage.py migrate --settings=dsd.test_settings
   else
     echo "+++ Resetting database dsd..."
     echo "drop database dsd; create database dsd;" | psql -h localhost -U postgres
+    python manage.py makemigrations
     python manage.py migrate
   fi
 }

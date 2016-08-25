@@ -4,6 +4,7 @@ __pycache__
 celerybeat-schedule.db
 *.pyc
 *.rdb
+.coverage
 /volume
 dsd/.Python
 dsd/bin
