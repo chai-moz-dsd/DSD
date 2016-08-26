@@ -4,8 +4,7 @@ MAINTAINER chai-dsd <chai-dsd@thoughtworks.com>
 # Install basic tools, postgres, supervisor and pip
 RUN apt-get update \
     && apt-get install -y wget curl build-essential libpq-dev git openssl \
-    && apt-get install -y postgresql postgresql-contrib \
-    && apt-get install -y supervisor python-pip
+    && apt-get install -y postgresql postgresql-contrib
 
 # Install Python
 ARG python_version=3.5.2
@@ -17,6 +16,9 @@ RUN cd /opt \
     && make install \
     && ln -fs /opt/Python-$python_version/Python/ /usr/bin/python \
     && ln -s /usr/local/bin/python3.5 /usr/local/bin/python
+
+# install supervisor and pip
+RUN apt-get install -y supervisor python-pip
 
 # Install nginx uwsgi and config nginx uwsgi supervisor
 # !!! Use pip3 to install uwsgi, otherwise uwsgi will use python2
