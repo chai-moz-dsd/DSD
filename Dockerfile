@@ -45,8 +45,7 @@ RUN gpg --keyserver pool.sks-keyservers.net --recv-keys 7937DFD2AB06298B2293C318
     && rm "node-v0.10.21-linux-x64.tar.gz" SHASUMS256.txt.asc \
     && npm install -g npm@1.4.28 \
     && npm install -g npm@"1.3.11" \
-
-RUN npm cache clear
+    && npm cache clear
 
 # Install virtualenv
 RUN pip install virtualenv
