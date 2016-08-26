@@ -4,7 +4,7 @@ from django.test import TestCase
 from mock import patch
 
 from dsd.models import Province, District, Facility
-from dsd.service.organization_converter import convert_province_to_dict, convert_district_to_dict, \
+from dsd.services.organization_service import convert_province_to_dict, convert_district_to_dict, \
     convert_facility_to_dict
 from dsd.test.factories.district_factory import DistrictFactory
 from dsd.test.factories.facility_factory import FacilityFactory
@@ -12,7 +12,7 @@ from dsd.test.factories.province_factory import ProvinceFactory
 from dsd.test.helpers.fake_date import FakeDate
 
 
-class OrganizationConverterTest(TestCase):
+class OrganizationServiceTest(TestCase):
     @patch('dsd.util.id_generator.generate_id')
     def test_should_convert_province_to_json(self, mock_generate_id):
         expected_province_dict = {'id': '12345678901',

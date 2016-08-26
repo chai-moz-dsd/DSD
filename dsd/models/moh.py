@@ -1,7 +1,7 @@
 import datetime
 
 from dsd.models import Province
-from dsd.service.organization_converter import convert_province_to_dict, convert_district_to_dict, \
+from dsd.services.organization_service import convert_province_to_dict, convert_district_to_dict, \
     convert_facility_to_dict
 from dsd.util import id_generator
 
