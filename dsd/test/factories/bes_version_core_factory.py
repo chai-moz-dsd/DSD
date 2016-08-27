@@ -23,12 +23,12 @@ class BesVersionCoreFactory(factory.DjangoModelFactory):
     sim_serial_test_output = None
     note_intro = None
     bes_year = datetime.today()
-    diarrhea_deaths04 = 0
-    diarrhea_deaths15 = 0
-    measles_deaths_nv = 0
-    meningitis_deaths5 = 0
+    deaths_diarrhea_04 = 0
+    deaths_diarrhea_15 = 0
+    deaths_measles_nv = 0
+    deaths_meningitis_5 = 0
     cases_diarrhea_04 = 1
-    meningitis_deaths04 = 0
+    deaths_meningitis_04 = 0
     device_id_test_output = None
     date_week_end = datetime.today()
     note_measles = None

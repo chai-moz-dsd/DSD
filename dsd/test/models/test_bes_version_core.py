@@ -12,7 +12,7 @@ class BesVersionCoreTest(TestCase):
         self.assertEqual(BesVersionCore.objects.count(), 1)
 
         BesVersionCoreFactory()
-        self.assertEqual(BesVersionCore.objects.count(), 1)
+        self.assertEqual(BesVersionCore.objects.count(), 2)
 
     def test_should_find_specific_bes_version_core(self):
         uri = uuid.uuid4()
