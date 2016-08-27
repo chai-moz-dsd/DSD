@@ -12,6 +12,8 @@ from dsd.models.moh import MoH
 from dsd.repositories.dhis2_remote_repository import add_attribute, HEADER_DHIS2, add_attribute_to_schemas, \
     add_organization_unit, add_data_set_elements
 from dsd.repositories.request_template.add_attribute_template import AddAttributeRequestTemplate
+from dsd.services.data_set_service import build_data_set_element_request_body_as_json
+from dsd.test.factories.data_set_element_factory import DataSetElementFactory
 from dsd.test.factories.district_factory import DistrictFactory
 from dsd.test.factories.facility_factory import FacilityFactory
 from dsd.test.factories.province_factory import ProvinceFactory
@@ -103,9 +105,11 @@ class DHIS2RemoteRepositoryTest(TestCase):
     @patch('requests.post')
     def test_should_add_data_set_elements(self, mock_post):
         mock_post.return_value = MagicMock(status_code=HTTP_201_CREATED)
-        response = add_data_set_elements(request_body=add_attribute_request_body)
+        data_set_element_list = [DataSetElementFactory(), DataSetElementFactory(), DataSetElementFactory()]
+        request_body = build_data_set_element_request_body_as_json(data_set_element_list)
+        response = add_data_set_elements(request_body=request_body)
         self.assertEqual(response.status_code, HTTP_201_CREATED)
         requests.post.assert_called_once_with(url=settings.DHIS2_URLS.get(settings.KEY_ADD_DATA_SET_ELEMENTS),
                                               headers=HEADER_DHIS2,
                                               verify=settings.DHIS2_SSL_VERIFY,
-                                              data=add_attribute_request_body)
+                                              data=request_body)
