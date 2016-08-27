@@ -1,10 +1,9 @@
 FROM ubuntu:14.04
 MAINTAINER chai-dsd <chai-dsd@thoughtworks.com>
 
-# Install basic tools, postgres, supervisor and pip
+# Install basic tools, supervisor and pip
 RUN apt-get update \
-    && apt-get install -y wget curl build-essential libpq-dev git openssl \
-    && apt-get install -y postgresql postgresql-contrib
+    && apt-get install -y wget curl build-essential libpq-dev git openssl
 
 # Install Python
 ARG python_version=3.5.2
