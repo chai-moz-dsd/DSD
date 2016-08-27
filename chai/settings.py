@@ -86,7 +86,7 @@ DATABASES = {
         'NAME': 'dsd',
         'USER': 'dsd',
         'HOST': 'db',
-        'PORT': 5432,
+        'PORT': 5431,
         'OPTIONS': {
             'isolation_level': psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE,
         },
