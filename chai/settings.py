@@ -220,8 +220,11 @@ DHIS2_BASE_URL = 'https://localhost:8080/'
 KEY_ADD_ATTRIBUTE_TO_SCHEMAS = 'add_attribute_to_schemas'
 KEY_ADD_ATTRIBUTE = 'add_attribute'
 KEY_ADD_ORGANIZATION_UNIT = 'add_organization_unit'
+KEY_ADD_DATA_SET_ELEMENTS = 'add_data_set_elements'
+
 DHIS2_URLS = {
-    KEY_ADD_ORGANIZATION_UNIT: '%sapi/24/organisationUnits' % KEY_ADD_ORGANIZATION_UNIT,
     KEY_ADD_ATTRIBUTE_TO_SCHEMAS: "%sapi/24/schemas/attribute" % DHIS2_BASE_URL,
-    KEY_ADD_ATTRIBUTE: "%sapi/24/attribute" % DHIS2_BASE_URL
+    KEY_ADD_ATTRIBUTE: "%sapi/24/attribute" % DHIS2_BASE_URL,
+    KEY_ADD_ORGANIZATION_UNIT: '%sapi/24/organisationUnits' % DHIS2_BASE_URL,
+    KEY_ADD_DATA_SET_ELEMENTS: '%sapi/24/dataValueSets' % DHIS2_BASE_URL,
 }

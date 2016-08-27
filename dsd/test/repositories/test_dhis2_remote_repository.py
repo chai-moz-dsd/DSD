@@ -10,7 +10,7 @@ from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 from dsd.exceptions.remote_request_exception import RemoteRequestException
 from dsd.models.moh import MoH
 from dsd.repositories.dhis2_remote_repository import add_attribute, HEADER_DHIS2, add_attribute_to_schemas, \
-    add_organization_unit
+    add_organization_unit, add_data_set_elements
 from dsd.repositories.request_template.add_attribute_template import AddAttributeRequestTemplate
 from dsd.test.factories.district_factory import DistrictFactory
 from dsd.test.factories.facility_factory import FacilityFactory
@@ -20,10 +20,6 @@ from dsd.test.helpers.fake_date import FakeDate
 add_attribute_request_body = AddAttributeRequestTemplate().build(code=1, valueType='NUMBER',
                                                                  organisationUnitAttribute=True,
                                                                  name='Sim number')
-
-add_organization_request_body = AddAttributeRequestTemplate().build(code=1, valueType='NUMBER',
-                                                                    organisationUnitAttribute=True,
-                                                                    name='Sim number')
 
 
 class DHIS2RemoteRepositoryTest(TestCase):
@@ -56,6 +52,12 @@ class DHIS2RemoteRepositoryTest(TestCase):
                                               headers=HEADER_DHIS2,
                                               verify=settings.DHIS2_SSL_VERIFY,
                                               data=add_organization_unit_request_body)
+
+    @override_settings(DHIS2_SSL_VERIFY=False)
+    @patch('requests.post', side_effect=ConnectionError())
+    def test_should_raise_remote_request_exception_when_add_organization_unit_connection_error(self, _):
+        with self.assertRaises(RemoteRequestException):
+            add_organization_unit(request_body=add_attribute_request_body)
 
     @override_settings(DHIS2_SSL_VERIFY=False)
     @patch('requests.post')
@@ -93,6 +95,17 @@ class DHIS2RemoteRepositoryTest(TestCase):
 
     @override_settings(DHIS2_SSL_VERIFY=False)
     @patch('requests.post', side_effect=ConnectionError())
-    def test_should_raise_remote_request_exception_when_add_attribute_to_schemas_connection_error(self, mock_post):
+    def test_should_raise_remote_request_exception_when_add_attribute_to_schemas_connection_error(self, _):
         with self.assertRaises(RemoteRequestException):
             add_attribute_to_schemas(request_body=add_attribute_request_body)
+
+    @override_settings(DHIS2_SSL_VERIFY=False)
+    @patch('requests.post')
+    def test_should_add_data_set_elements(self, mock_post):
+        mock_post.return_value = MagicMock(status_code=HTTP_201_CREATED)
+        response = add_data_set_elements(request_body=add_attribute_request_body)
+        self.assertEqual(response.status_code, HTTP_201_CREATED)
+        requests.post.assert_called_once_with(url=settings.DHIS2_URLS.get(settings.KEY_ADD_DATA_SET_ELEMENTS),
+                                              headers=HEADER_DHIS2,
+                                              verify=settings.DHIS2_SSL_VERIFY,
+                                              data=add_attribute_request_body)
