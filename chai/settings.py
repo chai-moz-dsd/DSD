@@ -91,16 +91,6 @@ DATABASES = {
             'isolation_level': psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE,
         },
     },
-    'staging': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dsd',
-        'USER': 'postgres',
-        'HOST': '52.42.224.43',
-        'PORT': '5432',
-        'OPTIONS': {
-            'isolation_level': psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE,
-        },
-    },
 }
 
 # Password validation
