@@ -1,10 +1,8 @@
-import requests
-from django.conf import settings
+from dsd.repositories.dhis2_oauth_token import *
 
 from dsd.exceptions.remote_request_exception import RemoteRequestException
 
-CONTENT_TYPE = {"Content-Type": "application/json"}
-HEADER_DHIS2 = {'Authorization': 'Token %s' % settings.DHIS2_API_TOKEN, "Content-Type": "application/json"}
+CONTENT_TYPE = {'Content-Type': 'application/json'}
 
 
 def add_data_set_elements(request_body):
@@ -27,7 +25,7 @@ def __post_request(url, data):
     try:
         return requests.post(url=url,
                              data=data,
-                             headers=HEADER_DHIS2,
+                             headers=get_oauth_header(),
                              verify=settings.DHIS2_SSL_VERIFY)
     except ConnectionError:
         raise RemoteRequestException()
@@ -37,3 +35,6 @@ def parse_attributes(attributes_list):
     for attribute in attributes_list:
         # validation
         add_attribute(attribute)
+
+def get_oauth_header():
+    return {'Authorization': 'bearer %s' % get_access_token(), 'Content-Type': 'application/json'}

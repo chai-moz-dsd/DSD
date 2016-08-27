@@ -41,6 +41,7 @@ function run_functional_test {
 }
 
 function run_server {
+  python manage.py createcachetable dsd_cache
   python manage.py runserver
 }
 

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'dsd',
     'django_crontab',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -103,6 +104,13 @@ DATABASES = {
     },
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'dsd_cache',
+    }
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
@@ -125,6 +133,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+SHELL_PLUS = "ipython"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
@@ -225,16 +235,18 @@ CRONJOBS = (
 # DHIS2 configuration
 DHIS2_SSL_VERIFY = False
 DHIS2_API_TOKEN = '8838393847493930394848'
-DHIS2_BASE_URL = 'https://localhost:8080/'
+DHIS2_BASE_URL = 'http://52.32.36.132:8080/'
 
 KEY_ADD_ATTRIBUTE_TO_SCHEMAS = 'add_attribute_to_schemas'
 KEY_ADD_ATTRIBUTE = 'add_attribute'
 KEY_ADD_ORGANIZATION_UNIT = 'add_organization_unit'
 KEY_ADD_DATA_SET_ELEMENTS = 'add_data_set_elements'
+OAUTH2_TOKEN = 'oauth2_token'
 
 DHIS2_URLS = {
     KEY_ADD_ATTRIBUTE_TO_SCHEMAS: "%sapi/24/schemas/attribute" % DHIS2_BASE_URL,
     KEY_ADD_ATTRIBUTE: "%sapi/24/attribute" % DHIS2_BASE_URL,
     KEY_ADD_ORGANIZATION_UNIT: '%sapi/24/organisationUnits' % DHIS2_BASE_URL,
     KEY_ADD_DATA_SET_ELEMENTS: '%sapi/24/dataValueSets' % DHIS2_BASE_URL,
+    OAUTH2_TOKEN: "%suaa/oauth/token" % DHIS2_BASE_URL
 }
