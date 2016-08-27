@@ -7,8 +7,13 @@ function main {
   source ${VIRTUAL_ENV_PATH}
   case "$1" in
     "ut" )
-      run_unit_test;;
-
+      if [ "$2" = "--prod" ]; then
+        run_unit_test --dev
+      elif [ "$2" = "--ci" ]; then
+        run_unit_test --ci
+      else
+        run_unit_test
+      fi;;
     "ft" )
       run_functional_test;;
 
@@ -21,7 +26,14 @@ function main {
 }
 
 function run_unit_test {
-  python manage.py test -v 2 --noinput
+  if [ "$1" = "--prod" ]; then
+    python manage.py test -v 2 --noinput --settings=chai.settings_prod
+  elif [ "$1" = "--ci" ]; then
+    python manage.py test -v 2 --noinput --settings=chai.settings_ci
+  else
+    python manage.py test -v 2 --noinput --settings=chai.settings_dev
+  fi
+
 }
 
 function run_functional_test {
