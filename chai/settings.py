@@ -82,16 +82,6 @@ WSGI_APPLICATION = 'chai.wsgi.application'
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DATABASES = {
-    'default12': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dsd',
-        'USER': 'dsd',
-        'HOST': 'db',
-        'PORT': 5431,
-        'OPTIONS': {
-            'isolation_level': psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE,
-        },
-    },
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'dsd',
@@ -138,12 +128,6 @@ SHELL_PLUS = "ipython"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-
-STATICFILES_DIRS = (
-    os.path.normpath(os.path.join(BASE_DIR, 'dsd/client/bower_components/')),
-    os.path.normpath(os.path.join(BASE_DIR, 'dsd/client/app/views/')),
-    os.path.normpath(os.path.join(BASE_DIR, 'dsd/client/app/scripts/')),
-)
 
 STATIC_URL = '/static/'
 
