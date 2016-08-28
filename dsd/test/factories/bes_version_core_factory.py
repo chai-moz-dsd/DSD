@@ -3,7 +3,7 @@ from datetime import datetime
 
 import factory
 
-from dsd.models import BesVersionCore
+from dsd.models.remote.bes_version_core import BesVersionCore
 
 
 class BesVersionCoreFactory(factory.DjangoModelFactory):

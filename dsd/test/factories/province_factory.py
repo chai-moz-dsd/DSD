@@ -1,8 +1,6 @@
-import datetime
-
 import factory
 
-from dsd.models import Province
+from dsd.models.remote.province import Province
 
 
 class ProvinceFactory(factory.DjangoModelFactory):

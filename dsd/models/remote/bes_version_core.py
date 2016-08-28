@@ -3,7 +3,7 @@ from django.db import models
 
 class BesVersionCore(models.Model):
     class Meta:
-        app_label = 'dsd'
+        app_label = 'chai'
         db_table = 'BES_VERSAO1_0_CORE'
 
     uri = models.CharField(max_length=80, db_column='_URI', unique=True)

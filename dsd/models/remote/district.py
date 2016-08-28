@@ -1,11 +1,11 @@
 from django.db import models
 
-from dsd.models import Province
+from dsd.models.remote.province import Province
 
 
 class District(models.Model):
     class Meta:
-        app_label = 'dsd'
+        app_label = 'chai'
         db_table = 'districts'
 
     district_name = models.CharField(max_length=255, unique=True)

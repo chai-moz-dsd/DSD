@@ -1,12 +1,12 @@
 from django.test import TestCase
 
-from dsd.models import District
-from dsd.models import Province
+from dsd.models.remote.district import District
+from dsd.models.remote.province import Province
 from dsd.test.factories.district_factory import DistrictFactory
 
 
 class DistrictTest(TestCase):
-    def test_should_save_district(self):
+    def should_save_district(self):
         district = DistrictFactory()
         self.assertEqual(District.objects.count(), 1)
         self.assertEqual(Province.objects.count(), 1)
@@ -15,7 +15,7 @@ class DistrictTest(TestCase):
         self.assertEqual(Province.objects.count(), 1)
         self.assertEqual(District.objects.count(), 2)
 
-    def test_should_find_specific_district(self):
+    def should_find_specific_district(self):
         maputo = DistrictFactory(district_name='MAPUTO PROVINCIA')
         niassa = DistrictFactory(district_name='NIASSA', state=3)
         self.assertEqual(Province.objects.count(), 2)

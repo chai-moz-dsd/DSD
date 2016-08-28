@@ -1,12 +1,12 @@
 from django.test import TestCase
 
-from dsd.models import Facility
-from dsd.models import Province
+from dsd.models.remote.facility import Facility
+from dsd.models.remote.province import Province
 from dsd.test.factories.facility_factory import FacilityFactory
 
 
 class FacilityTest(TestCase):
-    def test_should_save_facility(self):
+    def should_save_facility(self):
         FacilityFactory()
         self.assertEqual(Facility.objects.count(), 1)
         self.assertEqual(Province.objects.count(), 1)
@@ -15,7 +15,7 @@ class FacilityTest(TestCase):
         self.assertEqual(Province.objects.count(), 2)
         self.assertEqual(Facility.objects.count(), 2)
 
-    def test_should_find_specific_facility(self):
+    def should_find_specific_facility(self):
         hospital = FacilityFactory(facility_name='HOSPITAL DISTRITAL DE MACOMIA')
         des = FacilityFactory(facility_name='DESCONHECIDO', state=3)
         self.assertEqual(Province.objects.count(), 2)

@@ -1,18 +1,18 @@
 from django.test import TestCase
 
-from dsd.models import Province
+from dsd.models.remote.province import Province
 from dsd.test.factories.province_factory import ProvinceFactory
 
 
 class ProvinceTest(TestCase):
-    def test_should_save_province(self):
+    def should_save_province(self):
         ProvinceFactory(province_name='NAMPULA')
         self.assertEqual(Province.objects.count(), 1)
 
         ProvinceFactory(province_name='NIASSA', state=2)
         self.assertEqual(Province.objects.count(), 2)
 
-    def test_should_find_specific_province(self):
+    def should_find_specific_province(self):
         maputo = ProvinceFactory(province_name='MAPUTO PROVINCIA')
         niassa = ProvinceFactory(province_name='NIASSA', state=3)
 

@@ -3,7 +3,7 @@ from django.db import models
 
 class SenderFromVersionCore(models.Model):
     class Meta:
-        app_label = 'dsd'
+        app_label = 'chai'
         db_table = 'REMETENTE_FORM_VERSAO1_1_CORE'
 
     uri = models.CharField(max_length=80, db_column='_URI', unique=True)

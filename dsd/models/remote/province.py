@@ -3,7 +3,7 @@ from django.db import models
 
 class Province(models.Model):
     class Meta:
-        app_label = 'dsd'
+        app_label = 'chai'
         db_table = 'provinces'
 
     province_name = models.CharField(max_length=255, unique=True, null=True)

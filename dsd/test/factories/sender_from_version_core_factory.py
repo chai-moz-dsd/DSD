@@ -3,7 +3,7 @@ from datetime import datetime
 
 import factory
 
-from dsd.models import SenderFromVersionCore
+from dsd.models.remote.sender_from_version_core import SenderFromVersionCore
 
 
 class SenderFromVersionCoreFactory(factory.DjangoModelFactory):

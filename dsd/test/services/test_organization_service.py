@@ -3,7 +3,9 @@ import datetime
 from django.test import TestCase
 from mock import patch
 
-from dsd.models import Province, District, Facility
+from dsd.models.remote.province import Province
+from dsd.models.remote.district import District
+from dsd.models.remote.facility import Facility
 from dsd.services.organization_service import convert_province_to_dict, convert_district_to_dict, \
     convert_facility_to_dict
 from dsd.test.factories.district_factory import DistrictFactory
@@ -14,7 +16,7 @@ from dsd.test.helpers.fake_date import FakeDate
 
 class OrganizationServiceTest(TestCase):
     @patch('dsd.util.id_generator.generate_id')
-    def test_should_convert_province_to_json(self, mock_generate_id):
+    def should_convert_province_to_json(self, mock_generate_id):
         expected_province_dict = {'id': '12345678901',
                                   'name': 'MANICA',
                                   'shortName': 'MANICA',
@@ -33,7 +35,7 @@ class OrganizationServiceTest(TestCase):
         self.assertEqual(province_dict, expected_province_dict)
 
     @patch('dsd.util.id_generator.generate_id')
-    def test_should_convert_district_to_json(self, mock_generate_id):
+    def should_convert_district_to_json(self, mock_generate_id):
         expected_district_dict = {'id': '98765432109',
                                   'name': 'MACOMIA',
                                   'shortName': 'MACOMIA',
@@ -53,7 +55,7 @@ class OrganizationServiceTest(TestCase):
 
     @patch('datetime.date', FakeDate)
     @patch('dsd.util.id_generator.generate_id')
-    def test_should_convert_facility_to_json(self, mock_generate_id):
+    def should_convert_facility_to_json(self, mock_generate_id):
         expected_facility_dict = {'id': '98765432109',
                                   'name': 'DESCONHECIDO',
                                   'shortName': 'DESCONHECIDO',
