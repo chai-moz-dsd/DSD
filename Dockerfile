@@ -25,12 +25,6 @@ RUN apt-get install -y python-dev nginx \
     && pip3 install uwsgi
 COPY ./chai/scripts/ /opt/app/chai/scripts/
 
-RUN mkdir -p /etc/uwsgi/sites \
-    && rm /etc/nginx/sites-enabled/default \
-    && ln -sf /opt/app/chai/scripts/config/dsd.uwsgi.ini /etc/uwsgi/sites/dsd.uwsgi.ini \
-    && ln -sf /opt/app/chai/scripts/config/dsd.nginx.config /etc/nginx/sites-enabled \
-    && ln -sf /opt/app/chai/scripts/config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
 # Install virtualenv
 RUN pip install virtualenv
 
@@ -48,6 +42,12 @@ RUN /bin/bash -c "source ~/.virtualenvs/dsd/bin/activate && pip install -r requi
 
 # Copy source code
 COPY ./chai /opt/app/chai
+
+RUN mkdir -p /etc/uwsgi/sites \
+    && rm /etc/nginx/sites-enabled/default \
+    && ln -sf /opt/app/chai/scripts/config/dsd.uwsgi.ini /etc/uwsgi/sites/dsd.uwsgi.ini \
+    && ln -sf /opt/app/chai/scripts/config/dsd.nginx.config /etc/nginx/sites-enabled \
+    && ln -sf /opt/app/chai/scripts/config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Collect static files
 RUN /bin/bash -c "source ~/.virtualenvs/dsd/bin/activate && python manage.py collectstatic --no-input"
