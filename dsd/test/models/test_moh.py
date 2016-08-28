@@ -23,14 +23,14 @@ class MoHTest(TestCase):
                                         '55555555555', '6666666666']
 
         province_1 = ProvinceFactory(province_name='NAMPULA', description='province 1', state=0,
-                                     data_creation=datetime.date(2016, 8, 15))
+                                     data_creation=datetime.date(2016, 8, 25))
         province_2 = ProvinceFactory(province_name='TETE', description='province 2', state=1,
-                                     data_creation=datetime.date(2016, 8, 15))
+                                     data_creation=datetime.date(2016, 8, 25))
 
         district_1 = DistrictFactory(district_name='MACOMIA', description='district 1', state=0,
-                                     data_creation=datetime.date(2016, 8, 30), province=province_1)
+                                     data_creation=datetime.date(2016, 8, 25), province=province_1)
         district_2 = DistrictFactory(district_name='BALAMA', description='district 2', state=1,
-                                     data_creation=datetime.date(2016, 8, 30), province=province_2)
+                                     data_creation=datetime.date(2016, 8, 25), province=province_2)
 
         FacilityFactory(facility_name='DESCONHECIDO', district=district_1, province=province_1)
         FacilityFactory(facility_name='POSTO DE SAUDE', district=district_2, province=province_2)
@@ -40,4 +40,5 @@ class MoHTest(TestCase):
 
         print(actual_dict)
         print(self.expected_dict)
+        self.maxDiff = None
         self.assertEqual(actual_dict, self.expected_dict)
