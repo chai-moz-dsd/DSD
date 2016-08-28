@@ -1,4 +1,5 @@
 dhis2-db:
+  autoredeploy: true
   image: 'chaimozdsd/dhis2_db:9.4'
   environment:
     - PG_DATA=/var/lib/postgresql/data/pgdata
@@ -6,12 +7,14 @@ dhis2-db:
     - POSTGRES_PASSWORD=dhis
     - POSTGRES_USER=dhis
 dsd-db:
+  autoredeploy: true
   image: 'chaimozdsd/db:9.5'
   environment:
     - PG_DATA=/var/lib/postgresql/data/pgdata
     - POSTGRES_DB=dsd
     - POSTGRES_USER=dsd
 dhis2:
+  autoredeploy: true
   image: 'chaimozdsd/dhis2:2.24'
   command: 'catalina.sh run'
   entrypoint: './wait-for-it.sh -t 0 dhis2-db:5432 --'
@@ -20,6 +23,7 @@ dhis2:
   ports:
     - '8080:8080'
 dsd:
+  autoredeploy: true
   image: 'chaimozdsd/dsd:latest'
   links:
     - dhis2
