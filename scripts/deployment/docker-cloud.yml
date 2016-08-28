@@ -1,0 +1,30 @@
+dhis2-db:
+  image: 'chaimozdsd/dhis2_db:9.4'
+  environment:
+    - PG_DATA=/var/lib/postgresql/data/pgdata
+    - POSTGRES_DB=dhis
+    - POSTGRES_PASSWORD=dhis
+    - POSTGRES_USER=dhis
+dsd-db:
+  image: 'chaimozdsd/db:9.5'
+  environment:
+    - PG_DATA=/var/lib/postgresql/data/pgdata
+    - POSTGRES_DB=dsd
+    - POSTGRES_USER=dsd
+dhis2:
+  image: 'chaimozdsd/dhis2:2.24'
+  command: 'catalina.sh run'
+  entrypoint: './wait-for-it.sh -t 0 dhis2-db:5432 --'
+  environment:
+    - 'JAVA_OPTS=-Xmx1024m -Xms4000m'
+  ports:
+    - '8080:8080'
+dsd:
+  image: 'chaimozdsd/dsd:latest'
+  links:
+    - dhis2
+    - dsd-db
+  ports:
+    - '80:80'
+  volumes:
+    - '/opt/app/chai/volume:/opt/app/chai/volume'
