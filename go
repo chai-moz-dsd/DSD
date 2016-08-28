@@ -41,8 +41,8 @@ function run_functional_test {
 }
 
 function run_server {
-  python manage.py createcachetable dsd_cache
-  python manage.py runserver
+  python manage.py createcachetable --settings=chai.settings_dev dsd_cache
+  python manage.py runserver --settings=chai.settings_dev
 }
 
 function reset_db {
