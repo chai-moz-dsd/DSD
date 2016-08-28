@@ -3,7 +3,7 @@ MAINTAINER chai-dsd <chai-dsd@thoughtworks.com>
 
 # Install basic tools, supervisor and pip
 RUN apt-get update \
-    && apt-get install -y wget curl build-essential libpq-dev git openssl
+    && apt-get install -y wget curl build-essential libpq-dev git openssl libsqlite3-dev
 
 # Install Python
 ARG python_version=3.5.2
