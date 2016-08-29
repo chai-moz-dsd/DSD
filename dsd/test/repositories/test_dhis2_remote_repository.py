@@ -29,8 +29,8 @@ class DHIS2RemoteRepositoryTest(TestCase):
     @patch('requests.post')
     @override_settings(DHIS2_SSL_VERIFY=False)
     def test_should_add_organization_unit(self, mock_post, mock_get_access_token, mock_generate_id):
-        mock_generate_id.side_effect = ['00000000000', '1111111111', '2222222222', '33333333333', '44444444444',
-                                        '55555555555', '6666666666']
+        mock_generate_id.side_effect = ['00000000000', '11111111111', '22222222222', '33333333333', '44444444444',
+                                        '55555555555', '66666666666']
 
         province_1 = ProvinceFactory(province_name='NAMPULA', description='province 1', state=0,
                                      data_creation=datetime.date(2016, 8, 15))
