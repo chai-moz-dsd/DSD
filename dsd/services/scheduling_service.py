@@ -7,7 +7,7 @@ from dsd.services.sync_province import sync_province
 logger = logging.getLogger(__name__)
 
 
-def pull_data():
+def sync_data():
     logger.info('Sync start...')
     sync_metadata()
     logger.info('Sync end...')
