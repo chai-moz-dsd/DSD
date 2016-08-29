@@ -1,6 +1,6 @@
 import factory
 
-from dsd.models.remote.province import Province
+from dsd.models import Province
 
 
 class ProvinceFactory(factory.DjangoModelFactory):

@@ -30,7 +30,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
     @patch('dsd.repositories.dhis2_remote_repository.get_access_token')
     @patch('requests.post')
     @override_settings(DHIS2_SSL_VERIFY=False)
-    def should_add_organization_unit(self, mock_post, mock_get_access_token, mock_generate_id):
+    def test_should_add_organization_unit(self, mock_post, mock_get_access_token, mock_generate_id):
         mock_generate_id.side_effect = ['00000000000', '1111111111', '2222222222', '33333333333', '44444444444',
                                         '55555555555', '6666666666']
 

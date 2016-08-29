@@ -2,19 +2,19 @@ import uuid
 
 from django.test import TestCase
 
-from dsd.models.remote.sender_from_version_core import SenderFromVersionCore
+from dsd.models import SenderFromVersionCore
 from dsd.test.factories.sender_from_version_core_factory import SenderFromVersionCoreFactory
 
 
 class SenderFromVersionCoreTest(TestCase):
-    def should_save_sender_from_version_core(self):
+    def test_should_save_sender_from_version_core(self):
         SenderFromVersionCoreFactory(uri=uuid.uuid4())
         self.assertEqual(SenderFromVersionCore.objects.count(), 1)
 
         SenderFromVersionCoreFactory()
         self.assertEqual(SenderFromVersionCore.objects.count(), 2)
 
-    def should_find_specific_sender_from_version_core(self):
+    def test_should_find_specific_sender_from_version_core(self):
         uri = uuid.uuid4()
         maputo = SenderFromVersionCoreFactory(uri=uri)
         SenderFromVersionCoreFactory()

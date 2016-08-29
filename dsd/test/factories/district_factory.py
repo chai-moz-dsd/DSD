@@ -1,6 +1,6 @@
 import factory
 
-from dsd.models.remote.district import District
+from dsd.models import District
 from dsd.test.factories.province_factory import ProvinceFactory
 
 

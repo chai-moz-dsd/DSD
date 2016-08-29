@@ -18,7 +18,7 @@ class MoHTest(TestCase):
 
     @patch('datetime.date', FakeDate)
     @patch('dsd.util.id_generator.generate_id')
-    def should_get_moh(self, mock_generate_id):
+    def test_should_get_moh(self, mock_generate_id):
         mock_generate_id.side_effect = ['00000000000', '1111111111', '2222222222', '33333333333', '44444444444',
                                         '55555555555', '6666666666']
 
