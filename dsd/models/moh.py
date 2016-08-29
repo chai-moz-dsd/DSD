@@ -26,17 +26,18 @@ class MoH(object):
     def convert_provinces(self, moh, moh_id):
         for province in self.provinces:
             province_id, province_dict = convert_province_to_dict(province, moh_id)
-            res = {k:v for k,v in province_dict.items() if (v is not None and v != "")}
+            res = MoH.compact_dict(province_dict)
             moh.append(res)
             self.convert_districts(moh, province, province_id)
 
         return moh
 
+
     @staticmethod
     def convert_districts(moh, province, province_id):
         for district in province.district_set.all():
             district_id, district_dict = convert_district_to_dict(district, province_id)
-            res = {k:v for k,v in district_dict.items() if (v is not None and v != "")}
+            res = MoH.compact_dict(district_dict)
             moh.append(res)
             MoH.convert_facilities(moh, district, district_id)
 
@@ -44,5 +45,8 @@ class MoH(object):
     def convert_facilities(moh, district, district_id):
         for facility in district.facility_set.all():
             facility_dict = convert_facility_to_dict(facility, district_id)
-            res = {k:v for k,v in facility_dict.items() if (v is not None and v != "")}
+            res = MoH.compact_dict(facility_dict)
             moh.append(res)
+
+    def compact_dict(dict):
+        return {k: v for k, v in dict.items() if (v is not None and v != "")}
