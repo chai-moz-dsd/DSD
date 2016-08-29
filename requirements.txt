@@ -9,6 +9,7 @@ djangorestframework-hstore==1.1
 
 # Crontab
 django-crontab==0.7.0
+ipython==5.1.0
 
 # Test
 mock==1.0.1
