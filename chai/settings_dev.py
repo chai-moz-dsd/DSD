@@ -13,7 +13,7 @@ DATABASES = {
     },
     'chai': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'chai',
+        'NAME': 'mBES',
         'USER': 'chai',
         'PASSWORD': os.getenv('CHAI_DB_PASSWORD', 'invalid_password'),
         'HOST': '52.42.224.43',
