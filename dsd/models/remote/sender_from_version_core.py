@@ -4,7 +4,7 @@ from django.db import models
 class SenderFromVersionCore(models.Model):
     class Meta:
         app_label = 'chai'
-        db_table = 'REMETENTE_FORM_VERSAO1_1_CORE'
+        db_table = 'REMETENTE_MIDDLEWARE_CORE'
 
     uri = models.CharField(max_length=80, db_column='_URI', unique=True)
     creator_uri_user = models.CharField(max_length=80, db_column='_CREATOR_URI_USER')

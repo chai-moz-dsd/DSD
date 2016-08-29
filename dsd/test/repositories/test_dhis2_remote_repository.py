@@ -1,17 +1,15 @@
 import datetime
 import uuid
 
-import requests
-from django.conf import settings
 from django.test import TestCase
 from django.test import override_settings
 from mock import MagicMock, call, patch
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 
 from dsd.models.moh import MoH
+from dsd.repositories.dhis2_oauth_token import *
 from dsd.repositories.dhis2_remote_repository import *
 from dsd.repositories.request_template.add_attribute_template import AddAttributeRequestTemplate
-from dsd.repositories.dhis2_oauth_token import *
 from dsd.services.data_set_service import build_data_set_element_request_body_as_json
 from dsd.test.factories.data_set_element_factory import DataSetElementFactory
 from dsd.test.factories.district_factory import DistrictFactory
