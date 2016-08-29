@@ -242,7 +242,7 @@ OAUTH2_TOKEN = 'oauth2_token'
 
 DHIS2_URLS = {
     KEY_ADD_ATTRIBUTE_TO_SCHEMAS: "%sapi/24/schemas/attribute" % DHIS2_BASE_URL,
-    KEY_ADD_ATTRIBUTE: "%sapi/24/attribute" % DHIS2_BASE_URL,
+    KEY_ADD_ATTRIBUTE: "%sapi/24/attributes" % DHIS2_BASE_URL,
     KEY_ADD_ORGANIZATION_UNIT: '%sapi/24/organisationUnits' % DHIS2_BASE_URL,
     KEY_ADD_DATA_SET_ELEMENTS: '%sapi/24/dataValueSets' % DHIS2_BASE_URL,
     OAUTH2_TOKEN: "%suaa/oauth/token" % DHIS2_BASE_URL

@@ -1,0 +1,100 @@
+[
+  {
+    "code": "province_capital_dist",
+    "valueType": "TEXT",
+    "organisationUnitAttribute": true,
+    "name": "province_capital_dist"
+  },
+  {
+    "code": "device_serial_opt",
+    "valueType": "TEXT",
+    "organisationUnitAttribute": true,
+    "name": "device_serial_opt"
+  },
+  {
+    "code": "sim_serial_opt",
+    "valueType": "TEXT",
+    "organisationUnitAttribute": true,
+    "name": "sim_serial_opt"
+  },
+  {
+    "code": "phone_contact_opt",
+    "valueType": "TEXT",
+    "organisationUnitAttribute": true,
+    "name": "phone_contact_opt"
+  },
+  {
+    "code": "state",
+    "valueType": "NUMBER",
+    "organisationUnitAttribute": true,
+    "name": "state"
+  },
+  {
+    "code": "code_us",
+    "valueType": "TEXT",
+    "organisationUnitAttribute": true,
+    "name": "code_us"
+  },
+  {
+    "code": "mac_number",
+    "valueType": "TEXT",
+    "organisationUnitAttribute": true,
+    "name": "mac_number"
+  },
+  {
+    "code": "fea_us",
+    "valueType": "TEXT",
+    "organisationUnitAttribute": true,
+    "name": "fea_us"
+  },
+  {
+    "code": "device_serial",
+    "valueType": "TEXT",
+    "organisationUnitAttribute": true,
+    "name": "device_serial"
+  },
+  {
+    "code": "sorting_us",
+    "valueType": "TEXT",
+    "organisationUnitAttribute": true,
+    "name": "sorting_us"
+  },
+  {
+    "code": "sim_serial",
+    "valueType": "TEXT",
+    "organisationUnitAttribute": true,
+    "name": "sim_serial"
+  },
+  {
+    "code": "person_contact_opt",
+    "valueType": "TEXT",
+    "organisationUnitAttribute": true,
+    "name": "person_contact_opt"
+  },
+  {
+    "code": "level_us",
+    "valueType": "TEXT",
+    "organisationUnitAttribute": true,
+    "name": "level_us"
+  },
+  {
+    "code": "sim_number",
+    "valueType": "TEXT",
+    "organisationUnitAttribute": true,
+    "name": "sim_number"
+  },
+  {
+    "code": "device_number",
+    "valueType": "TEXT",
+    "organisationUnitAttribute": true,
+    "name": "device_number"
+  },
+  {
+    "code": "userCreation",
+    "valueType": "NUMBER",
+    "organisationUnitAttribute": true,
+    "name": "device_number"
+  }
+]
+
+

@@ -10,51 +10,37 @@
     "shortName": "NAMPULA",
     "name": "NAMPULA",
     "userCreation": 0,
-    "id": "1111111111",
+    "id": "11111111111",
     "parent": {
       "id": "00000000000"
     },
     "description": "province 1",
-    "state": 0
+    "state": 1
   },
   {
     "openingDate": "2016-08-25",
     "shortName": "MACOMIA",
     "name": "MACOMIA",
     "userCreation": 0,
-    "id": "2222222222",
+    "id": "22222222222",
     "parent": {
-      "id": "1111111111"
+      "id": "11111111111"
     },
     "description": "district 1",
     "state": 0
   },
   {
-    "province_capital_dist": null,
     "parent": {
-      "id": "2222222222"
+      "id": "22222222222"
     },
-    "device_serial_opt": "",
-    "sim_serial_opt": null,
-    "phone_contact_opt": null,
     "state": 1,
     "code_us": "797",
-    "latitude": "",
     "id": "33333333333",
-    "mac_number": "",
-    "fea_us": "",
-    "device_serial": "",
     "sorting_us": "HEALTH POST",
     "openingDate": "2016-08-25",
     "shortName": "DESCONHECIDO",
-    "sim_serial": null,
-    "sim_number_opt": null,
-    "longitude": "",
-    "person_contact_opt": null,
     "name": "DESCONHECIDO",
-    "level_us": "LEVEL 1",
-    "sim_number": null,
-    "device_number": ""
+    "level_us": "LEVEL 1"
   },
   {
     "openingDate": "2016-08-25",
@@ -81,30 +67,16 @@
     "state": 1
   },
   {
-    "province_capital_dist": null,
     "parent": {
       "id": "55555555555"
     },
-    "device_serial_opt": "",
-    "sim_serial_opt": null,
-    "phone_contact_opt": null,
     "state": 1,
     "code_us": "797",
-    "latitude": "",
-    "id": "6666666666",
-    "mac_number": "",
-    "fea_us": "",
-    "device_serial": "",
+    "id": "66666666666",
     "sorting_us": "HEALTH POST",
     "openingDate": "2016-08-25",
     "shortName": "POSTO DE SAUDE",
-    "sim_serial": null,
-    "sim_number_opt": null,
-    "longitude": "",
-    "person_contact_opt": null,
     "name": "POSTO DE SAUDE",
-    "level_us": "LEVEL 1",
-    "sim_number": null,
-    "device_number": ""
+    "level_us": "LEVEL 1"
   }
 ]
