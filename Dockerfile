@@ -53,7 +53,7 @@ RUN mkdir -p /etc/uwsgi/sites \
 RUN /bin/bash -c "source ~/.virtualenvs/dsd/bin/activate && python manage.py collectstatic --no-input"
 
 # Start cron job
-RUN cron
+RUN /bin/bash cron
 
 # Expose ports
 EXPOSE 80
