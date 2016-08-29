@@ -8,7 +8,7 @@ function main {
   case "$1" in
     "ut" )
       if [ "$2" = "--prod" ]; then
-        run_unit_test --dev
+        run_unit_test --prod
       elif [ "$2" = "--ci" ]; then
         run_unit_test --ci
       else
@@ -18,8 +18,13 @@ function main {
       run_functional_test;;
 
     "rs" )
-      run_server;;
-
+      if [ "$2" = "--prod" ]; then
+        run_server --prod
+      elif [ "$2" = "--ci" ]; then
+        run_server --ci
+      else
+        run_server
+      fi;;
     "sh" )
       run_shell;;
 
@@ -44,8 +49,19 @@ function run_functional_test {
 }
 
 function run_server {
-  python manage.py createcachetable --settings=chai.settings_dev dsd_cache
-  python manage.py runserver --settings=chai.settings_dev
+  if [ "$1" = "--prod" ]; then
+    python manage.py crontab add --settings=chai.settings_prod
+    python manage.py createcachetable --settings=chai.settings_prod dsd_cache
+    python manage.py runserver --settings=chai.settings_prod
+  elif [ "$1" = "--ci" ]; then
+    python manage.py crontab add --settings=chai.settings_ci
+    python manage.py createcachetable --settings=chai.settings_ci dsd_cache
+    python manage.py runserver --settings=chai.settings_ci
+  else
+    python manage.py crontab add --settings=chai.settings_dev
+    python manage.py createcachetable --settings=chai.settings_dev dsd_cache
+    python manage.py runserver --settings=chai.settings_dev
+  fi
 }
 
 function run_shell {
