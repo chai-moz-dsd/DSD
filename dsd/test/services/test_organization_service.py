@@ -13,8 +13,7 @@ from dsd.test.helpers.fake_date import FakeDate
 
 
 class OrganizationServiceTest(TestCase):
-    @patch('dsd.util.id_generator.generate_id')
-    def test_should_convert_province_to_json(self, mock_generate_id):
+    def test_should_convert_province_to_json(self):
         expected_province_dict = {'id': '12345678901',
                                   'name': 'MANICA',
                                   'shortName': 'MANICA',
@@ -24,16 +23,15 @@ class OrganizationServiceTest(TestCase):
                                   'state': 1,
                                   'parent': {'id': '00000000000'}}
 
-        mock_generate_id.return_value = '12345678901'
-        ProvinceFactory(province_name='MANICA', description='province 1', data_creation=datetime.date(2016, 8, 15))
+        ProvinceFactory(uid='12345678901', province_name='MANICA', description='province 1',
+                        data_creation=datetime.date(2016, 8, 15))
 
         province = Province.objects.first()
-        _, province_dict = convert_province_to_dict(province, '00000000000')
+        province_dict = convert_province_to_dict(province, '00000000000')
 
         self.assertEqual(province_dict, expected_province_dict)
 
-    @patch('dsd.util.id_generator.generate_id')
-    def test_should_convert_district_to_json(self, mock_generate_id):
+    def test_should_convert_district_to_json(self):
         expected_district_dict = {'id': '98765432109',
                                   'name': 'MACOMIA',
                                   'shortName': 'MACOMIA',
@@ -43,17 +41,16 @@ class OrganizationServiceTest(TestCase):
                                   'state': 1,
                                   'parent': {'id': '12345678901'}}
 
-        mock_generate_id.return_value = '98765432109'
-        DistrictFactory(district_name='MACOMIA', description='district 1', data_creation=datetime.date(2016, 8, 30))
+        DistrictFactory(uid='98765432109', district_name='MACOMIA', description='district 1',
+                        data_creation=datetime.date(2016, 8, 30))
 
         district = District.objects.first()
-        _, actual_district_dict = convert_district_to_dict(district, '12345678901')
+        actual_district_dict = convert_district_to_dict(district, '12345678901')
 
         self.assertEqual(actual_district_dict, expected_district_dict)
 
     @patch('datetime.date', FakeDate)
-    @patch('dsd.util.id_generator.generate_id')
-    def should_convert_facility_to_json(self, mock_generate_id):
+    def should_convert_facility_to_json(self):
         expected_facility_dict = {'id': '98765432109',
                                   'name': 'DESCONHECIDO',
                                   'shortName': 'DESCONHECIDO',
@@ -78,10 +75,10 @@ class OrganizationServiceTest(TestCase):
                                   'device_serial_opt': '356670060276714',
                                   'parent': {'id': '12345678901'}}
 
-        mock_generate_id.return_value = '98765432109'
-        FacilityFactory(facility_name='DESCONHECIDO', sim_number='258823197418', sim_serial='8925801150348700919',
-                        latitude='-17.15', longitude='35.74', mac_number='74:ba:db:20:a6:44',
-                        device_serial_opt='356670060276714', device_serial='356670060320751', device_number='97')
+        FacilityFactory(uid='98765432109', facility_name='DESCONHECIDO', sim_number='258823197418',
+                        sim_serial='8925801150348700919',latitude='-17.15', longitude='35.74',
+                        mac_number='74:ba:db:20:a6:44',device_serial_opt='356670060276714',
+                        device_serial='356670060320751', device_number='97')
 
         facility = Facility.objects.first()
         actual_facility_dict = convert_facility_to_dict(facility, '12345678901')

@@ -1,6 +1,6 @@
 [
   {
-    "id": "00000000000",
+    "id": "MOH12345678",
     "shortName": "MoH",
     "name": "MoH",
     "openingDate": "2016-08-25"
@@ -12,7 +12,7 @@
     "userCreation": 0,
     "id": "11111111111",
     "parent": {
-      "id": "00000000000"
+      "id": "MOH12345678"
     },
     "description": "province 1",
     "state": 0
@@ -22,7 +22,7 @@
     "shortName": "MACOMIA",
     "name": "MACOMIA",
     "userCreation": 0,
-    "id": "22222222222",
+    "id": "33333333333",
     "parent": {
       "id": "11111111111"
     },
@@ -31,11 +31,11 @@
   },
   {
     "parent": {
-      "id": "22222222222"
+      "id": "33333333333"
     },
     "state": 1,
     "code_us": "797",
-    "id": "33333333333",
+    "id": "55555555555",
     "sorting_us": "HEALTH POST",
     "openingDate": "2016-08-25",
     "shortName": "DESCONHECIDO",
@@ -47,9 +47,9 @@
     "shortName": "TETE",
     "name": "TETE",
     "userCreation": 0,
-    "id": "44444444444",
+    "id": "22222222222",
     "parent": {
-      "id": "00000000000"
+      "id": "MOH12345678"
     },
     "description": "province 2",
     "state": 1
@@ -59,16 +59,16 @@
     "shortName": "BALAMA",
     "name": "BALAMA",
     "userCreation": 0,
-    "id": "55555555555",
+    "id": "44444444444",
     "parent": {
-      "id": "44444444444"
+      "id": "22222222222"
     },
     "description": "district 2",
     "state": 1
   },
   {
     "parent": {
-      "id": "55555555555"
+      "id": "44444444444"
     },
     "state": 1,
     "code_us": "797",

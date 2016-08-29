@@ -1,38 +1,30 @@
 import datetime
 
-from dsd.util import id_generator
-
 
 def convert_province_to_dict(province, parent_id):
-    province_id = id_generator.generate_id()
-
-    return province_id, {'id': province_id,
-                         'name': province.province_name,
-                         'shortName': province.province_name,
-                         'openingDate': str(province.data_creation),
-                         'description': province.description,
-                         'userCreation': province.user_creation,
-                         'state': province.state,
-                         'parent': {'id': parent_id}}
+    return {'id': province.uid,
+            'name': province.province_name,
+            'shortName': province.province_name,
+            'openingDate': str(province.data_creation),
+            'description': province.description,
+            'userCreation': province.user_creation,
+            'state': province.state,
+            'parent': {'id': parent_id}}
 
 
 def convert_district_to_dict(district, parent_id):
-    district_id = id_generator.generate_id()
-
-    return district_id, {'id': district_id,
-                         'name': district.district_name,
-                         'shortName': district.district_name,
-                         'openingDate': str(district.data_creation),
-                         'description': district.description,
-                         'userCreation': district.user_creation,
-                         'state': district.state,
-                         'parent': {'id': parent_id}}
+    return {'id': district.uid,
+            'name': district.district_name,
+            'shortName': district.district_name,
+            'openingDate': str(district.data_creation),
+            'description': district.description,
+            'userCreation': district.user_creation,
+            'state': district.state,
+            'parent': {'id': parent_id}}
 
 
 def convert_facility_to_dict(facility, parent_id):
-    facility_id = id_generator.generate_id()
-
-    return {'id': facility_id,
+    return {'id': facility.uid,
             'name': facility.facility_name,
             'shortName': facility.facility_name,
             'openingDate': str(datetime.date.today()),
