@@ -1,5 +1,7 @@
 from chai.settings import *
 
+CRONTAB_DJANGO_SETTINGS_MODULE = 'chai.settings_dev'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
