@@ -1,11 +1,12 @@
 import uuid
 
 from django.test import TestCase
-from mock import MagicMock, call, patch
+from django.test import override_settings
+from mock import patch
+
 from dsd.repositories.dhis2_oauth_token import *
 from dsd.test.helpers.fake_cache import FakeCache
-from django.test import override_settings
-from rest_framework.status import HTTP_200_OK
+
 
 class DHIS2OauthTokenTest(TestCase):
     @patch('requests.post')

@@ -20,6 +20,9 @@ function main {
     "rs" )
       run_server;;
 
+    "sh" )
+      run_shell;;
+
     "rdb" )
       reset_db;;
   esac
@@ -31,7 +34,7 @@ function run_unit_test {
   elif [ "$1" = "--ci" ]; then
     python manage.py test -v 2 --noinput --settings=chai.settings_ci
   else
-    python manage.py test -v 2 --noinput --settings=chai.settings_dev
+    python manage.py test -v 2 --noinput --settings=chai.settings_test
   fi
 
 }
@@ -45,6 +48,9 @@ function run_server {
   python manage.py runserver --settings=chai.settings_dev
 }
 
+function run_shell {
+  python manage.py shell --settings=chai.settings_dev
+}
 function reset_db {
   if [ "$1" = "test" ]; then
     echo "+++ Resetting test database dsd_test..."
