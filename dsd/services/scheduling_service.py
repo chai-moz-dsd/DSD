@@ -1,11 +1,19 @@
 import logging
 
-from dsd.models import Province
-from dsd.models.remote.province import Province as ProvinceRemote
+from dsd.services.sync_district import sync_district
+from dsd.services.sync_facility import sync_facility
+from dsd.services.sync_province import sync_province
 
 logger = logging.getLogger(__name__)
 
 
 def pull_data():
-    logger.info("remote province count = %s" % ProvinceRemote.objects.count())
-    logger.info("remote province count = %s" % Province.objects.count())
+    logger.info('Sync start...')
+    sync_metadata()
+    logger.info('Sync end...')
+
+
+def sync_metadata():
+    sync_province()
+    sync_district()
+    sync_facility()

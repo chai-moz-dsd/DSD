@@ -28,6 +28,9 @@ function main {
     "sh" )
       run_shell;;
 
+    "schedule")
+      schedule;;
+
     "rdb" )
       reset_db;;
   esac
@@ -62,6 +65,10 @@ function run_server {
     python manage.py createcachetable --settings=chai.settings_dev dsd_cache
     python manage.py runserver --settings=chai.settings_dev
   fi
+}
+
+function schedule {
+    python manage.py crontab add --settings=chai.settings_dev
 }
 
 function run_shell {

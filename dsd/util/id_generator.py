@@ -2,4 +2,4 @@ import uuid
 
 
 def generate_id():
-    return str(uuid.uuid1())[-11:]
+    return str(uuid.uuid4())[-11:]
