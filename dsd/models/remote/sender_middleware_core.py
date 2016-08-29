@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class SenderFromVersionCore(models.Model):
+class SenderMiddlewareCore(models.Model):
     class Meta:
         app_label = 'chai'
         db_table = 'REMETENTE_MIDDLEWARE_CORE'

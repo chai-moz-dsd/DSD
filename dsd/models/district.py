@@ -10,8 +10,8 @@ class District(models.Model):
 
     uid = models.CharField(max_length=255)
     district_name = models.CharField(max_length=255, unique=True)
-    description = models.CharField(max_length=255, db_column='descricao', null=True)
-    user_creation = models.IntegerField(db_column='user_criacao', null=True)
-    data_creation = models.DateField(db_column='data_criacao', null=True)
-    state = models.IntegerField(db_column='estado', null=True)
+    description = models.CharField(max_length=255, null=True)
+    user_creation = models.IntegerField(null=True)
+    data_creation = models.DateField(null=True)
+    state = models.IntegerField(null=True)
     province = models.ForeignKey(Province)

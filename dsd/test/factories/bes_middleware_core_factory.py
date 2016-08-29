@@ -3,12 +3,12 @@ from datetime import datetime
 
 import factory
 
-from dsd.models.bes_version_core import BesVersionCore
+from dsd.models.bes_middleware_core import BesMiddlewareCore
 
 
-class BesVersionCoreFactory(factory.DjangoModelFactory):
+class BesMiddlewareCoreFactory(factory.DjangoModelFactory):
     class Meta:
-        model = BesVersionCore
+        model = BesMiddlewareCore
 
     uri = 'uuid:%s' % uuid.uuid4()
     creator_uri_user = 'uid:maputo-manhica|%s' % datetime.today()

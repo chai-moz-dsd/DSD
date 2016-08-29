@@ -8,7 +8,7 @@ class Province(models.Model):
 
     uid = models.CharField(max_length=255)
     province_name = models.CharField(max_length=255, unique=True, null=True)
-    description = models.CharField(max_length=255, db_column='descricao', null=True)
-    data_creation = models.DateField(db_column='data_criacao', null=True)
-    user_creation = models.IntegerField(db_column='user_criacao', null=True)
-    state = models.IntegerField(db_column='estado', null=True)
+    description = models.CharField(max_length=255, null=True)
+    data_creation = models.DateField(null=True)
+    user_creation = models.IntegerField(null=True)
+    state = models.IntegerField(null=True)

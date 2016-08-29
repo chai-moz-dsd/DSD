@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class BesVersionCore(models.Model):
+class BesMiddlewareCore(models.Model):
     class Meta:
         app_label = 'chai'
         db_table = 'BES_MIDDLEWARE_CORE'

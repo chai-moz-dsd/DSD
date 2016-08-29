@@ -3,12 +3,12 @@ from datetime import datetime
 
 import factory
 
-from dsd.models.sender_from_version_core import SenderFromVersionCore
+from dsd.models.sender_middleware_core import SenderMiddlewareCore
 
 
-class SenderFromVersionCoreFactory(factory.DjangoModelFactory):
+class SenderMiddlewareCoreFactory(factory.DjangoModelFactory):
     class Meta:
-        model = SenderFromVersionCore
+        model = SenderMiddlewareCore
 
     uri = 'uuid:%s' % uuid.uuid1()
     creator_uri_user = 'uid:maputo-manhica|%s' % datetime.today()
