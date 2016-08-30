@@ -9,7 +9,7 @@ from dsd.util import id_generator
 logger = logging.getLogger(__name__)
 
 
-def sync_province():
+def sync():
     all_remote_provinces = ProvinceRemote.objects.all()
     all_local_provinces = get_all_local_provinces(all_remote_provinces)
     all_valid_local_provinces = filter(is_valid_province, all_local_provinces)

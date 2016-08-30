@@ -231,14 +231,11 @@ LOGGING_CONFIG = None
 logging.config.dictConfig(LOGGING)
 
 CRONJOBS = (
-    ('*/1 * * * *', 'dsd.services.scheduling_service.sync_data'),
+    ('*/1 * * * *', 'dsd.scheduler.start'),
 )
-
-CRONTAB_DJANGO_SETTINGS_MODULE = 'chai.settings'
 
 # DHIS2 configuration
 DHIS2_SSL_VERIFY = False
-DHIS2_API_TOKEN = '8838393847493930394848'
 DHIS2_BASE_URL = 'http://52.32.36.132:8080/'
 
 KEY_ADD_ATTRIBUTE_TO_SCHEMAS = 'add_attribute_to_schemas'

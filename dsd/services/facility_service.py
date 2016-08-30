@@ -9,7 +9,7 @@ from dsd.util import id_generator
 logger = logging.getLogger(__name__)
 
 
-def sync_facility():
+def sync():
     all_remote_facilities = FacilityRemote.objects.all()
     all_local_facilities = get_all_local_facilities(all_remote_facilities)
     all_valid_local_facilities = filter(is_valid_facility, all_local_facilities)
