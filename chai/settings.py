@@ -226,7 +226,7 @@ LOGGING_CONFIG = None
 logging.config.dictConfig(LOGGING)
 
 CRONJOBS = (
-    ('* */1 * * *', 'dsd.services.scheduling_service.sync_data'),
+    ('*/1 * * * *', 'dsd.services.scheduling_service.sync_data'),
 )
 
 CRONTAB_DJANGO_SETTINGS_MODULE = 'chai.settings'

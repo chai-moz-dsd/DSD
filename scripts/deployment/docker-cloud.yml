@@ -4,15 +4,15 @@ dhis2-db:
   environment:
     - PG_DATA=/var/lib/postgresql/data/pgdata
     - POSTGRES_DB=dhis
-    - POSTGRES_PASSWORD=dhis
-    - POSTGRES_USER=dhis
+    - POSTGRES_PASSWORD=db_name
+    - POSTGRES_USER=db_user
 dsd-db:
   autoredeploy: true
   image: 'chaimozdsd/db:9.5'
   environment:
     - PG_DATA=/var/lib/postgresql/data/pgdata
-    - POSTGRES_DB=dsd
-    - POSTGRES_USER=dsd
+    - POSTGRES_DB=db_name
+    - POSTGRES_USER=db_user
 dhis2:
   autoredeploy: true
   image: 'chaimozdsd/dhis2:2.24'
@@ -25,6 +25,12 @@ dhis2:
 dsd:
   autoredeploy: true
   image: 'chaimozdsd/dsd:latest'
+  environment:
+    - CHAI_DB_HOST=db_host
+    - CHAI_DB_PASSWORD=db_password
+    - CHAI_DB_USERNAME=db_name
+    - DSD_DB_HOST=db_host
+    - DSD_DB_USERNAME=db_name
   links:
     - dhis2
     - dsd-db
