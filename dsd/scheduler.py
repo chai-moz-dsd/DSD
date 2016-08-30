@@ -4,6 +4,7 @@ from dsd.services import bes_middleware_core_service
 from dsd.services import district_service
 from dsd.services import facility_service
 from dsd.services import province_service
+from dsd.services import sender_middleware_core_service
 
 logger = logging.getLogger(__name__)
 
@@ -23,3 +24,4 @@ def sync_metadata():
 
 def sync_data():
     bes_middleware_core_service.sync()
+    sender_middleware_core_service.sync()

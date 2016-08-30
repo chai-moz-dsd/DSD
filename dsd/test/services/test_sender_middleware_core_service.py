@@ -5,8 +5,8 @@ from datetime import datetime, timedelta
 from django.test import TestCase
 from mock import patch
 
-from dsd.models.remote.sender_middleware_core import SenderMiddlewareCore as SenderMiddlewareCoreRemote
 from dsd.models import SenderMiddlewareCore
+from dsd.models.remote.sender_middleware_core import SenderMiddlewareCore as SenderMiddlewareCoreRemote
 from dsd.services import sender_middleware_core_service
 from dsd.services.sender_middleware_core_service import is_valid
 from dsd.test.factories.sender_middleware_core_factory import SenderMiddlewareCoreFactory
@@ -46,4 +46,4 @@ class SenderMiddlewareCoreTest(TestCase):
         ]
         sender_middleware_core_service.sync()
         self.assertEqual(SenderMiddlewareCore.objects.count(), 5)
-        self.assertEqual(SenderMiddlewareCore.objects.all().first().uri, uuid1)
+        self.assertEqual(SenderMiddlewareCore.objects.get(uri=uuid1).uri, uuid1)

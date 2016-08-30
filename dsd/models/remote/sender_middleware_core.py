@@ -6,7 +6,7 @@ class SenderMiddlewareCore(models.Model):
         app_label = 'chai'
         db_table = 'REMETENTE_MIDDLEWARE_CORE'
 
-    uri = models.CharField(max_length=80, db_column='_URI', unique=True)
+    uri = models.CharField(max_length=80, db_column='_URI', unique=True, primary_key=True)
     creator_uri_user = models.CharField(max_length=80, db_column='_CREATOR_URI_USER')
     creation_date = models.DateTimeField(db_column='_CREATION_DATE')
     last_update_uri_user = models.CharField(max_length=80, db_column='_LAST_UPDATE_URI_USER', null=True)

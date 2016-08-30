@@ -231,7 +231,7 @@ LOGGING_CONFIG = None
 logging.config.dictConfig(LOGGING)
 
 CRONJOBS = (
-    ('* */1 * * *', 'dsd.services.scheduling_service.sync_data'),
+    ('* */1 * * *', 'dsd.scheduler.start'),
 )
 
 # DHIS2 configuration

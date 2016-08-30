@@ -6,7 +6,7 @@ class SenderMiddlewareCore(models.Model):
         app_label = 'dsd'
         db_table = 'REMETENTE_MIDDLEWARE_CORE'
 
-    uri = models.CharField(max_length=80, unique=True)
+    uri = models.CharField(max_length=80, unique=True, primary_key=True)
     creator_uri_user = models.CharField(max_length=80)
     creation_date = models.DateTimeField()
     last_update_uri_user = models.CharField(max_length=80, null=True)

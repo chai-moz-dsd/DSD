@@ -2,6 +2,9 @@ from chai.settings import *
 
 CRONTAB_DJANGO_SETTINGS_MODULE = 'chai.settings_dev'
 
+CRONJOBS = (
+    ('*/1 * * * *', 'dsd.scheduler.start'),
+)
 
 DATABASES = {
     'default': {

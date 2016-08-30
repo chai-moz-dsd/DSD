@@ -46,4 +46,4 @@ class BesMiddlewareCoreTest(TestCase):
         ]
         bes_middleware_core_service.sync()
         self.assertEqual(BesMiddlewareCore.objects.count(), 5)
-        self.assertEqual(BesMiddlewareCore.objects.all().first().uri, uuid1)
+        self.assertEqual(BesMiddlewareCore.objects.get(uri=uuid1).uri, uuid1)

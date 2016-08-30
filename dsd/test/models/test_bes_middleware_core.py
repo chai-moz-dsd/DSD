@@ -15,14 +15,14 @@ class BesMiddlewareCoreTest(TestCase):
         self.assertEqual(BesMiddlewareCore.objects.count(), 2)
 
     def test_should_find_specific_bes_middleware_core(self):
-        uri = uuid.uuid4()
-        maputo = BesMiddlewareCoreFactory(uri=uri)
+        uri = str(uuid.uuid4())
+        one_record = BesMiddlewareCoreFactory(uri=uri)
         BesMiddlewareCoreFactory()
 
         actual_base_middleware_cores = BesMiddlewareCore.objects.filter()
         self.assertEqual(actual_base_middleware_cores.count(), 2)
-        self.assertEqual(actual_base_middleware_cores[0], maputo)
+        self.assertEqual(actual_base_middleware_cores[0], one_record)
 
         actual_base_middleware_cores = BesMiddlewareCore.objects.filter(uri=uri)
         self.assertEqual(actual_base_middleware_cores.count(), 1)
-        self.assertEqual(actual_base_middleware_cores[0], maputo)
+        self.assertEqual(actual_base_middleware_cores[0], one_record)
