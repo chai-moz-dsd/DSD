@@ -20,7 +20,12 @@ from os.path import join, exists
 
 import psycopg2
 
+import configparser
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+config = configparser.ConfigParser()
+config.read(os.path.join(BASE_DIR, 'volume/config/settings.ini'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -84,21 +89,21 @@ WSGI_APPLICATION = 'chai.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dsd',
-        'USER': os.environ.get('DSD_DB_USERNAME', 'invalid_username'),
-        'HOST': os.environ.get('DSD_DB_HOST', 'invalid_host'),
-        'PORT': '5432',
+        'NAME': config['LOCAL_DB']['LOCAL_DB_NAME'],
+        'USER': config['LOCAL_DB']['LOCAL_DB_USERNAME'],
+        'HOST': config['LOCAL_DB']['LOCAL_DB_HOST'],
+        'PORT': config['LOCAL_DB']['LOCAL_DB_PORT'],
         'OPTIONS': {
             'isolation_level': psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE,
         },
     },
     'chai': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'mBES',
-        'USER': os.environ.get('CHAI_DB_USERNAME', 'invalid_username'),
-        'PASSWORD': os.environ.get('CHAI_DB_PASSWORD', 'invalid_password'),
-        'HOST': os.environ.get('CHAI_DB_HOST', 'invalid_host'),
-        'PORT': '5432',
+        'NAME': config['REMOTE_DB']['REMOTE_DB_NAME'],
+        'USER': config['REMOTE_DB']['REMOTE_DB_USERNAME'],
+        'PASSWORD': config['REMOTE_DB']['REMOTE_DB_PASSWORD'],
+        'HOST': config['REMOTE_DB']['REMOTE_DB_HOST'],
+        'PORT': config['REMOTE_DB']['REMOTE_DB_PORT'],
         'OPTIONS': {
             'isolation_level': psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE,
         },
