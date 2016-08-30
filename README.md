@@ -23,15 +23,6 @@ $ virtualenv -p /usr/local/bin/python3 dsd
 $ source dsd/bin/activate
 ```
 
-#### Install neccessary packages
-``` bash
-$ pip install -r requirements.txt
-$ cd dsd/client
-$ npm install
-$ npm install -g bower
-$ bower install
-```
-
 #### Run Server
 ``` bash
 $ ./go rs
