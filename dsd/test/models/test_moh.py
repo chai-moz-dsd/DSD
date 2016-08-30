@@ -33,7 +33,7 @@ class MoHTest(TestCase):
         FacilityFactory(uid='66666666666', facility_name='POSTO DE SAUDE', district=district_2, province=province_2)
 
         moh = MoH()
-        actual_dict = moh.get_organization_as_dict()
+        actual_dict = moh.get_organization_as_list()
 
         print(actual_dict)
         self.maxDiff = None

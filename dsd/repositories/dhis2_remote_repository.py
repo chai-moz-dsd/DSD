@@ -1,6 +1,13 @@
+import logging
+
+from dsd.models import Attribute
+from dsd.models.moh import MoH
 from dsd.repositories.dhis2_oauth_token import *
+from dsd.repositories.request_template.add_attribute_template import AddAttributeRequestTemplate
 
 CONTENT_TYPE = {'Content-Type': 'application/json'}
+
+logger = logging.getLogger(__name__)
 
 
 def add_data_set_elements(request_body):
@@ -29,10 +36,24 @@ def __post_request(url, data):
         raise RemoteRequestException()
 
 
-def parse_attributes(attributes_list):
-    for attribute in attributes_list:
-        # validation
-        add_attribute(attribute)
+def post_attributes():
+    attributes = Attribute.objects.all()
+    for attribute in attributes:
+        request_body_dict = AddAttributeRequestTemplate().build(uid=attribute.uid,
+                                                                code=attribute.code,
+                                                                value_type=attribute.value_type,
+                                                                org_unit_attr=attribute.org_unit_attr,
+                                                                name=attribute.name)
+        response = add_attribute(json.dumps(request_body_dict))
+        logger.info("response status = %s" % response.status_code)
+
+
+def post_organization_units():
+    organization_units = MoH().get_organization_as_list()
+    for organization_unit in organization_units:
+        logger.info("response unit = %s" % organization_unit)
+        response = add_organization_unit(json.dumps(organization_unit))
+        logger.info("response status = %s" % response.status_code)
 
 
 def get_oauth_header():

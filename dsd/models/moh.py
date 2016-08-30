@@ -11,7 +11,7 @@ class MoH(object):
     def __init__(self):
         self.provinces = Province.objects.all()
 
-    def get_organization_as_dict(self):
+    def get_organization_as_list(self):
         return self.convert_moh()
 
     def convert_moh(self):
