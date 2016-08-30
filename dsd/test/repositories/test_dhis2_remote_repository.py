@@ -7,7 +7,6 @@ from mock import MagicMock, call, patch
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 
 from dsd.models.moh import MoH
-from dsd.repositories.dhis2_oauth_token import *
 from dsd.repositories.dhis2_remote_repository import *
 from dsd.repositories.request_template.add_attribute_template import AddAttributeRequestTemplate
 from dsd.services.data_set_service import build_data_set_element_request_body_as_json
@@ -17,7 +16,8 @@ from dsd.test.factories.facility_factory import FacilityFactory
 from dsd.test.factories.province_factory import ProvinceFactory
 from dsd.test.helpers.fake_date import FakeDate
 
-add_attribute_request_body = AddAttributeRequestTemplate().build(uid="MKoA22RCFfC",code='Sim number', valueType='NUMBER',
+add_attribute_request_body = AddAttributeRequestTemplate().build(uid="MKoA22RCFfC", code='Sim number',
+                                                                 valueType='NUMBER',
                                                                  orgUnitAttr=True,
                                                                  name='Sim number')
 

@@ -16,13 +16,13 @@ logger = logging.getLogger(__name__)
 
 class BesMiddlewareCoreTest(TestCase):
     def test_should_be_false_when_creation_data_after_last_sync_date(self):
-        bes_middleware_core = BesMiddlewareCoreRemote(creation_date=datetime.now())
+        bes_middleware_core = BesMiddlewareCoreRemote(last_update_date=datetime.now())
         specify_date = datetime.now() + timedelta(days=1)
 
         self.assertFalse(bes_middleware_core_service.should_be_synced(bes_middleware_core, specify_date))
 
     def test_should_be_true_when_creation_data_after_last_sync_date(self):
-        bes_middleware_core = BesMiddlewareCoreRemote(creation_date=datetime.now())
+        bes_middleware_core = BesMiddlewareCoreRemote(last_update_date=datetime.now())
         specify_date = datetime.now() - timedelta(days=1)
 
         self.assertTrue(bes_middleware_core_service.should_be_synced(bes_middleware_core, specify_date))

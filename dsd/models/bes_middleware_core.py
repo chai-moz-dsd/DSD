@@ -4,7 +4,6 @@ from django.db import models
 class BesMiddlewareCore(models.Model):
     class Meta:
         app_label = 'dsd'
-        db_table = 'BES_MIDDLEWARE_CORE'
 
     uri = models.CharField(max_length=80, unique=True, primary_key=True)
     creator_uri_user = models.CharField(max_length=80)

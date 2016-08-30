@@ -40,4 +40,4 @@ def save(sender_middleware_core):
 
 
 def should_be_synced(sender_middleware_core, last_sync_date):
-    return sender_middleware_core.creation_date > last_sync_date
+    return sender_middleware_core.last_update_date > last_sync_date

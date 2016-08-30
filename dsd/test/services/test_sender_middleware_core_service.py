@@ -16,13 +16,13 @@ logger = logging.getLogger(__name__)
 
 class SenderMiddlewareCoreTest(TestCase):
     def test_should_be_false_when_creation_data_after_last_sync_date(self):
-        sender_middleware_core = SenderMiddlewareCoreRemote(creation_date=datetime.now())
+        sender_middleware_core = SenderMiddlewareCoreRemote(last_update_date=datetime.now())
         specify_date = datetime.now() + timedelta(days=1)
 
         self.assertFalse(sender_middleware_core_service.should_be_synced(sender_middleware_core, specify_date))
 
     def test_should_be_true_when_creation_data_after_last_sync_date(self):
-        sender_middleware_core = SenderMiddlewareCoreRemote(creation_date=datetime.now())
+        sender_middleware_core = SenderMiddlewareCoreRemote(last_update_date=datetime.now())
         specify_date = datetime.now() - timedelta(days=1)
 
         self.assertTrue(sender_middleware_core_service.should_be_synced(sender_middleware_core, specify_date))

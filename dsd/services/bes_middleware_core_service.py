@@ -39,4 +39,4 @@ def save(bes_middleware_core):
 
 
 def should_be_synced(bes_middleware_core, last_sync_date):
-    return bes_middleware_core.creation_date > last_sync_date
+    return bes_middleware_core.last_update_date > last_sync_date

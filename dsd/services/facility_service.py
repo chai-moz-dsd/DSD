@@ -20,6 +20,8 @@ def sync():
 def is_valid_facility(facility):
     if not facility.facility_name:
         return False
+    if not facility.device_serial:
+        return False
     return True
 
 
