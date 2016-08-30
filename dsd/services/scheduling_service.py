@@ -1,8 +1,9 @@
 import logging
 
-from dsd.services.sync_district import sync_district
-from dsd.services.sync_facility import sync_facility
-from dsd.services.sync_province import sync_province
+from dsd.services.sync.sync_facility import sync_facility
+from dsd.services.sync.sync_province import sync_province
+
+from dsd.services.sync.sync_district import sync_district
 
 logger = logging.getLogger(__name__)
 
