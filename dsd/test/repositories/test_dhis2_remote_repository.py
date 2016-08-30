@@ -17,8 +17,8 @@ from dsd.test.factories.facility_factory import FacilityFactory
 from dsd.test.factories.province_factory import ProvinceFactory
 from dsd.test.helpers.fake_date import FakeDate
 
-add_attribute_request_body = AddAttributeRequestTemplate().build(code=1, valueType='NUMBER',
-                                                                 organisationUnitAttribute=True,
+add_attribute_request_body = AddAttributeRequestTemplate().build(uid="MKoA22RCFfC",code='Sim number', valueType='NUMBER',
+                                                                 orgUnitAttr=True,
                                                                  name='Sim number')
 
 

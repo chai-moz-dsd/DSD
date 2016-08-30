@@ -3,8 +3,9 @@ from dsd.repositories.request_template.dict_template import DictTemplate
 
 class AddAttributeRequestTemplate(DictTemplate):
     payload = {
+        'id' : '${uid}',
         'code': '${code}',
         'valueType': '${valueType}',
-        'organisationUnitAttribute': '${organisationUnitAttribute}',
+        'organisationUnitAttribute': '${orgUnitAttr}',
         'name': '${name}'
     }

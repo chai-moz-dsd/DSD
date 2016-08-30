@@ -88,12 +88,6 @@
     "valueType": "TEXT",
     "organisationUnitAttribute": true,
     "name": "device_number"
-  },
-  {
-    "code": "userCreation",
-    "valueType": "NUMBER",
-    "organisationUnitAttribute": true,
-    "name": "device_number"
   }
 ]
 

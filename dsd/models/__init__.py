@@ -5,6 +5,8 @@ from dsd.models.bes_middleware_core import BesMiddlewareCore
 from dsd.models.sender_middleware_core import SenderMiddlewareCore
 from dsd.models.data_set_element import DataSetElement
 from dsd.models.sync_record import SyncRecord
+from dsd.models.attribute import Attribute
+
 
 __all__ = [
     'Province',
@@ -14,4 +16,5 @@ __all__ = [
     'SenderMiddlewareCore',
     'DataSetElement',
     'SyncRecord',
+    'Attribute',
 ]

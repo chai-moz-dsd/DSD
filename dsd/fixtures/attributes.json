@@ -1,0 +1,167 @@
+[
+  {
+    "model": "dsd.attribute",
+    "pk": 1,
+    "fields": {
+      "uid": "wPuwpLLX1Gd",
+      "code": "province_capital_dist",
+      "valueType": "TEXT",
+      "orgUnitAttr": true,
+      "name": "province_capital_dist"
+    }
+  },
+  {
+    "model": "dsd.attribute",
+    "pk": 2,
+    "fields": {
+      "uid": "hZVWv6sIcSR",
+      "code": "sim_serial_opt",
+      "valueType": "TEXT",
+      "orgUnitAttr": true,
+      "name": "sim_serial_opt"
+    }
+  },
+  {
+    "model": "dsd.attribute",
+    "pk": 3,
+    "fields": {
+      "uid": "hOzWEm3MT0u",
+      "code": "device_serial_opt",
+      "valueType": "TEXT",
+      "orgUnitAttr": true,
+      "name": "device_serial_opt"
+    }
+  },
+  {
+    "model": "dsd.attribute",
+    "pk": 4,
+    "fields": {
+      "uid": "OyKR2g4eHOr",
+      "code": "phone_contact_opt",
+      "valueType": "TEXT",
+      "orgUnitAttr": true,
+      "name": "phone_contact_opt"
+    }
+  },
+  {
+    "model": "dsd.attribute",
+    "pk": 5,
+    "fields": {
+      "uid": "spyJiurH5ax",
+      "code": "state",
+      "valueType": "NUMBER",
+      "orgUnitAttr": true,
+      "name": "state"
+    }
+  },
+  {
+    "model": "dsd.attribute",
+    "pk": 6,
+    "fields": {
+      "uid": "TnUcnzIcllL",
+      "code": "code_us",
+      "valueType": "TEXT",
+      "orgUnitAttr": true,
+      "name": "code_us"
+    }
+  },
+  {
+    "model": "dsd.attribute",
+    "pk": 7,
+    "fields": {
+      "uid": "nP1UXtpMXxE",
+      "code": "mac_number",
+      "valueType": "TEXT",
+      "orgUnitAttr": true,
+      "name": "mac_number"
+    }
+  },
+  {
+    "model": "dsd.attribute",
+    "pk": 8,
+    "fields": {
+      "uid": "TzkNvhmYuKo",
+      "code": "fea_us",
+      "valueType": "TEXT",
+      "orgUnitAttr": true,
+      "name": "fea_us"
+    }
+  },
+  {
+    "model": "dsd.attribute",
+    "pk": 9,
+    "fields": {
+      "uid": "Sv6JXRJ9wVe",
+      "code": "device_serial",
+      "valueType": "TEXT",
+      "orgUnitAttr": true,
+      "name": "device_serial"
+    }
+  },
+  {
+    "model": "dsd.attribute",
+    "pk": 10,
+    "fields": {
+      "uid": "YssKBQ4E4Mh",
+      "code": "sorting_us",
+      "valueType": "TEXT",
+      "orgUnitAttr": true,
+      "name": "sorting_us"
+    }
+  },
+  {
+    "model": "dsd.attribute",
+    "pk": 11,
+    "fields": {
+      "uid": "WlfBODOi2NW",
+      "code": "sim_serial",
+      "valueType": "TEXT",
+      "orgUnitAttr": true,
+      "name": "sim_serial"
+    }
+  },
+  {
+    "model": "dsd.attribute",
+    "pk": 12,
+    "fields": {
+      "uid": "LBPEcehsQnq",
+      "code": "person_contact_opt",
+      "valueType": "TEXT",
+      "orgUnitAttr": true,
+      "name": "person_contact_opt"
+    }
+  },
+  {
+    "model": "dsd.attribute",
+    "pk": 13,
+    "fields": {
+      "uid": "A5NJOV9CQyR",
+      "code": "level_us",
+      "valueType": "TEXT",
+      "orgUnitAttr": true,
+      "name": "level_us"
+    }
+  },
+  {
+    "model": "dsd.attribute",
+    "pk": 14,
+    "fields": {
+      "uid": "MKoA22RCFfC",
+      "code": "sim_number",
+      "valueType": "TEXT",
+      "orgUnitAttr": true,
+      "name": "sim_number"
+    }
+  },
+  {
+    "model": "dsd.attribute",
+    "pk": 15,
+    "fields": {
+      "uid": "CYZM1npI6Uo",
+      "code": "device_number",
+      "valueType": "TEXT",
+      "orgUnitAttr": true,
+      "name": "device_number"
+    }
+  }
+]
