@@ -17,9 +17,7 @@ def sync_district():
     save_districts(all_valid_local_districts)
 
 
-def is_valid_district(district):
-    if not district.district_name:
-        return False
+def is_valid_district(bes_middleware_core):
     return True
 
 
