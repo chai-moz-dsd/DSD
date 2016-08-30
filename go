@@ -93,6 +93,7 @@ function reset_db {
 
 function seed {
     python manage.py loaddata dsd/fixtures/attributes.json --settings=chai.settings_dev
+    python manage.py loaddata dsd/fixtures/dataElement.json --settings=chai.settings_dev
 }
 
 main $@

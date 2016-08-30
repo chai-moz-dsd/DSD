@@ -2,491 +2,457 @@
   {
     "model": "dsd.element",
     "fields": {
-      "aggregationType":"SUM",
-      "code":"cases_diarrhea_04",
-      "id" : "4f8817e929c",
-      "domainType":"AGGREGATE",
-      "name":"cases_diarrhea_04",
-      "shortName":"cases_diarrhea_04",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "cases_diarrhea_04",
+      "id": "4f8817e929c",
+      "domain_type": "AGGREGATE",
+      "name": "cases_diarrhea_04",
+      "short_name": "cases_diarrhea_04",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
     "fields": {
-      "aggregationType":"SUM",
-      "code":"cases_nv_measles",
-      "id" : "4b717e3c8bc",
-      "domainType":"AGGREGATE",
-      "name":"cases_nv_measles",
-      "shortName":"cases_nv_measles",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "cases_nv_measles",
+      "id": "4b717e3c8bc",
+      "domain_type": "AGGREGATE",
+      "name": "cases_nv_measles",
+      "short_name": "cases_nv_measles",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
     "fields": {
-      "aggregationType":"SUM",
-      "code":"cases_anger",
-      "id" : "13f0a148d30",
-      "domainType":"AGGREGATE",
-      "name":"cases_anger",
-      "shortName":"cases_anger",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "cases_anger",
+      "id": "13f0a148d30",
+      "domain_type": "AGGREGATE",
+      "name": "cases_anger",
+      "short_name": "cases_anger",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
     "fields": {
-      "aggregationType":"SUM",
-      "code":"cases_meningitis_0_4",
-      "id" : "48c5d052be7",
-      "domainType":"AGGREGATE",
-      "name":"cases_meningitis_0_4",
-      "shortName":"cases_meningitis_0_4",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "cases_meningitis_0_4",
+      "id": "48c5d052be7",
+      "domain_type": "AGGREGATE",
+      "name": "cases_meningitis_0_4",
+      "short_name": "cases_meningitis_0_4",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
     "fields": {
-      "aggregationType":"SUM",
-      "code":"cases_cholera",
-      "id" : "f5f02ba0eaa",
-      "domainType":"AGGREGATE",
-      "name":"cases_cholera",
-      "shortName":"cases_cholera",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "cases_cholera",
+      "id": "f5f02ba0eaa",
+      "domain_type": "AGGREGATE",
+      "name": "cases_cholera",
+      "short_name": "cases_cholera",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"cases_tetanus",
-      "id" : "b0003784fd3",
-      "domainType":"AGGREGATE",
-      "name":"cases_tetanus",
-      "shortName":"cases_tetanus",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "cases_tetanus",
+      "id": "b0003784fd3",
+      "domain_type": "AGGREGATE",
+      "name": "cases_tetanus",
+      "short_name": "cases_tetanus",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"cases_diarrhea_5_14",
-      "id" : "cb8565365d9",
-      "domainType":"AGGREGATE",
-      "name":"cases_diarrhea_5_14",
-      "shortName":"cases_diarrhea_5_14",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "cases_diarrhea_5_14",
+      "id": "cb8565365d9",
+      "domain_type": "AGGREGATE",
+      "name": "cases_diarrhea_5_14",
+      "short_name": "cases_diarrhea_5_14",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"cases_malaria_5",
-      "id" : "e984798337b",
-      "domainType":"AGGREGATE",
-      "name":"cases_malaria_5",
-      "shortName":"cases_malaria_5",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "cases_malaria_5",
+      "id": "e984798337b",
+      "domain_type": "AGGREGATE",
+      "name": "cases_malaria_5",
+      "short_name": "cases_malaria_5",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"cases_measles_24",
-      "id" : "b440797c0e9",
-      "domainType":"AGGREGATE",
-      "name":"cases_measles_24",
-      "shortName":"cases_measles_24",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "cases_measles_24",
+      "id": "b440797c0e9",
+      "domain_type": "AGGREGATE",
+      "name": "cases_measles_24",
+      "short_name": "cases_measles_24",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"cases_measles_9",
-      "id" : "f4fe71ea1d4",
-      "domainType":"AGGREGATE",
-      "name":"cases_measles_9",
-      "shortName":"cases_measles_9",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "cases_measles_9",
+      "id": "f4fe71ea1d4",
+      "domain_type": "AGGREGATE",
+      "name": "cases_measles_9",
+      "short_name": "cases_measles_9",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"cases_pfa",
-      "id" : "398f55222ef",
-      "domainType":"AGGREGATE",
-      "name":"cases_pfa",
-      "shortName":"cases_pfa",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "cases_pfa",
+      "id": "398f55222ef",
+      "domain_type": "AGGREGATE",
+      "name": "cases_pfa",
+      "short_name": "cases_pfa",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"cases_meningitis_5",
-      "id" : "e8372925156",
-      "domainType":"AGGREGATE",
-      "name":"cases_meningitis_5",
-      "shortName":"cases_meningitis_5",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "cases_meningitis_5",
+      "id": "e8372925156",
+      "domain_type": "AGGREGATE",
+      "name": "cases_meningitis_5",
+      "short_name": "cases_meningitis_5",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"cases_dysentery",
-      "id" : "a2fad028f3b",
-      "domainType":"AGGREGATE",
-      "name":"cases_dysentery",
-      "shortName":"cases_dysentery",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "cases_dysentery",
+      "id": "a2fad028f3b",
+      "domain_type": "AGGREGATE",
+      "name": "cases_dysentery",
+      "short_name": "cases_dysentery",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"cases_measles_v9_23",
-      "id" : "dbd02920b5f",
-      "domainType":"AGGREGATE",
-      "name":"cases_measles_v9_23",
-      "shortName":"cases_measles_v9_23",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "cases_measles_v9_23",
+      "id": "dbd02920b5f",
+      "domain_type": "AGGREGATE",
+      "name": "cases_measles_v9_23",
+      "short_name": "cases_measles_v9_23",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"cases_diarrhea_15",
-      "id" : "b707a9a7315",
-      "domainType":"AGGREGATE",
-      "name":"cases_diarrhea_15",
-      "shortName":"cases_diarrhea_15",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "cases_diarrhea_15",
+      "id": "b707a9a7315",
+      "domain_type": "AGGREGATE",
+      "name": "cases_diarrhea_15",
+      "short_name": "cases_diarrhea_15",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"cases_malaria_0_4",
-      "id" : "7674dee5fa7",
-      "domainType":"AGGREGATE",
-      "name":"cases_malaria_0_4",
-      "shortName":"cases_malaria_0_4",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "cases_malaria_0_4",
+      "id": "7674dee5fa7",
+      "domain_type": "AGGREGATE",
+      "name": "cases_malaria_0_4",
+      "short_name": "cases_malaria_0_4",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"cases_plague",
-      "id" : "df184e587d3",
-      "domainType":"AGGREGATE",
-      "name":"cases_plague",
-      "shortName":"cases_plague",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "cases_plague",
+      "id": "df184e587d3",
+      "domain_type": "AGGREGATE",
+      "name": "cases_plague",
+      "short_name": "cases_plague",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"cases_clinic_malaria_0_4",
-      "id" : "233c5ad7895",
-      "domainType":"AGGREGATE",
-      "name":"cases_clinic_malaria_0_4",
-      "shortName":"cases_clinic_malaria_0_4",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "cases_clinic_malaria_0_4",
+      "id": "233c5ad7895",
+      "domain_type": "AGGREGATE",
+      "name": "cases_clinic_malaria_0_4",
+      "short_name": "cases_clinic_malaria_0_4",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"cases_clinic_malaria_5",
-      "id" : "64a0594f40c",
-      "domainType":"AGGREGATE",
-      "name":"cases_clinic_malaria_5",
-      "shortName":"cases_clinic_malaria_5",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "cases_clinic_malaria_5",
+      "id": "64a0594f40c",
+      "domain_type": "AGGREGATE",
+      "name": "cases_clinic_malaria_5",
+      "short_name": "cases_clinic_malaria_5",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"deaths_diarrhea_04",
-      "id" : "64a0594f40c",
-      "domainType":"AGGREGATE",
-      "name":"deaths_diarrhea_04",
-      "shortName":"deaths_diarrhea_04",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "deaths_diarrhea_04",
+      "id": "64a0594f40c",
+      "domain_type": "AGGREGATE",
+      "name": "deaths_diarrhea_04",
+      "short_name": "deaths_diarrhea_04",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"deaths_diarrhea_15",
-      "id" : "5032215af3f",
-      "domainType":"AGGREGATE",
-      "name":"deaths_diarrhea_15",
-      "shortName":"deaths_diarrhea_15",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "deaths_diarrhea_15",
+      "id": "5032215af3f",
+      "domain_type": "AGGREGATE",
+      "name": "deaths_diarrhea_15",
+      "short_name": "deaths_diarrhea_15",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"deaths_measles_nv",
-      "id" : "6c46e4aab87",
-      "domainType":"AGGREGATE",
-      "name":"deaths_measles_nv",
-      "shortName":"deaths_measles_nv",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "deaths_measles_nv",
+      "id": "6c46e4aab87",
+      "domain_type": "AGGREGATE",
+      "name": "deaths_measles_nv",
+      "short_name": "deaths_measles_nv",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"deaths_meningitis_5",
-      "id" : "61f6605ae3e",
-      "domainType":"AGGREGATE",
-      "name":"deaths_meningitis_5",
-      "shortName":"deaths_meningitis_5",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "deaths_meningitis_5",
+      "id": "61f6605ae3e",
+      "domain_type": "AGGREGATE",
+      "name": "deaths_meningitis_5",
+      "short_name": "deaths_meningitis_5",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"deaths_meningitis_04",
-      "id" : "b3f6d1dbc46",
-      "domainType":"AGGREGATE",
-      "name":"deaths_meningitis_04",
-      "shortName":"deaths_meningitis_04",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "deaths_meningitis_04",
+      "id": "b3f6d1dbc46",
+      "domain_type": "AGGREGATE",
+      "name": "deaths_meningitis_04",
+      "short_name": "deaths_meningitis_04",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"deaths_measles_24",
-      "id" : "50807732ed0",
-      "domainType":"AGGREGATE",
-      "name":"deaths_measles_24",
-      "shortName":"deaths_measles_24",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "deaths_measles_24",
+      "id": "50807732ed0",
+      "domain_type": "AGGREGATE",
+      "name": "deaths_measles_24",
+      "short_name": "deaths_measles_24",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"deaths_diarrhea_5_14",
-      "id" : "f0d2a7d5771",
-      "domainType":"AGGREGATE",
-      "name":"deaths_diarrhea_5_14",
-      "shortName":"deaths_diarrhea_5_14",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "deaths_diarrhea_5_14",
+      "id": "f0d2a7d5771",
+      "domain_type": "AGGREGATE",
+      "name": "deaths_diarrhea_5_14",
+      "short_name": "deaths_diarrhea_5_14",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"deaths_anger",
-      "id" : "668a1e7f656",
-      "domainType":"AGGREGATE",
-      "name":"deaths_anger",
-      "shortName":"deaths_anger",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "deaths_anger",
+      "id": "668a1e7f656",
+      "domain_type": "AGGREGATE",
+      "name": "deaths_anger",
+      "short_name": "deaths_anger",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"deaths_plague",
-      "id" : "b8465222b4b",
-      "domainType":"AGGREGATE",
-      "name":"deaths_plague",
-      "shortName":"deaths_plague",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "deaths_plague",
+      "id": "b8465222b4b",
+      "domain_type": "AGGREGATE",
+      "name": "deaths_plague",
+      "short_name": "deaths_plague",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"deaths_malaria_5",
-      "id" : "5c50cacab7d",
-      "domainType":"AGGREGATE",
-      "name":"deaths_malaria_5",
-      "shortName":"deaths_malaria_5",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "deaths_malaria_5",
+      "id": "5c50cacab7d",
+      "domain_type": "AGGREGATE",
+      "name": "deaths_malaria_5",
+      "short_name": "deaths_malaria_5",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"deaths_dysentery",
-      "id" : "29b618f4f82",
-      "domainType":"AGGREGATE",
-      "name":"deaths_dysentery",
-      "shortName":"deaths_dysentery",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "deaths_dysentery",
+      "id": "29b618f4f82",
+      "domain_type": "AGGREGATE",
+      "name": "deaths_dysentery",
+      "short_name": "deaths_dysentery",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"deaths_pfa",
-      "id" : "6154f88ccd9",
-      "domainType":"AGGREGATE",
-      "name":"deaths_pfa",
-      "shortName":"deaths_pfa",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "deaths_pfa",
+      "id": "6154f88ccd9",
+      "domain_type": "AGGREGATE",
+      "name": "deaths_pfa",
+      "short_name": "deaths_pfa",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"deaths_malaria_0_4",
-      "id" : "0095296d58a",
-      "domainType":"AGGREGATE",
-      "name":"deaths_malaria_0_4",
-      "shortName":"deaths_malaria_0_4",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "deaths_malaria_0_4",
+      "id": "0095296d58a",
+      "domain_type": "AGGREGATE",
+      "name": "deaths_malaria_0_4",
+      "short_name": "deaths_malaria_0_4",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"deaths_tetanus",
-      "id" : "3a13fc2e93d",
-      "domainType":"AGGREGATE",
-      "name":"deaths_tetanus",
-      "shortName":"deaths_tetanus",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "deaths_tetanus",
+      "id": "3a13fc2e93d",
+      "domain_type": "AGGREGATE",
+      "name": "deaths_tetanus",
+      "short_name": "deaths_tetanus",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"deaths_measles_v_9_23",
-      "id" : "fdd72e720b4",
-      "domainType":"AGGREGATE",
-      "name":"deaths_measles_v_9_23",
-      "shortName":"deaths_measles_v_9_23",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "deaths_measles_v_9_23",
+      "id": "fdd72e720b4",
+      "domain_type": "AGGREGATE",
+      "name": "deaths_measles_v_9_23",
+      "short_name": "deaths_measles_v_9_23",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"deaths_cholera",
-      "id" : "942f415f400",
-      "domainType":"AGGREGATE",
-      "name":"deaths_cholera",
-      "shortName":"deaths_cholera",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "deaths_cholera",
+      "id": "942f415f400",
+      "domain_type": "AGGREGATE",
+      "name": "deaths_cholera",
+      "short_name": "deaths_cholera",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"deaths_measles_9",
-      "id" : "97b12c3ceb6",
-      "domainType":"AGGREGATE",
-      "name":"deaths_measles_9",
-      "shortName":"deaths_measles_9",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "deaths_measles_9",
+      "id": "97b12c3ceb6",
+      "domain_type": "AGGREGATE",
+      "name": "deaths_measles_9",
+      "short_name": "deaths_measles_9",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"deaths_clinic_malaria_0_4",
-      "id" : "8d8586e7162",
-      "domainType":"AGGREGATE",
-      "name":"deaths_clinic_malaria_0_4",
-      "shortName":"deaths_clinic_malaria_0_4",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "deaths_clinic_malaria_0_4",
+      "id": "8d8586e7162",
+      "domain_type": "AGGREGATE",
+      "name": "deaths_clinic_malaria_0_4",
+      "short_name": "deaths_clinic_malaria_0_4",
+      "value_type": "INTEGER"
     }
-  },{
+  },
+  {
     "model": "dsd.element",
-     
     "fields": {
-      "aggregationType":"SUM",
-      "code":"deaths_clinic_malaria_5",
-      "id" : "ee3ed037e41",
-      "domainType":"AGGREGATE",
-      "name":"deaths_clinic_malaria_5",
-      "shortName":"deaths_clinic_malaria_5",
-      "valueType":"INTEGER",
-      "categoryCombo":{"id": "bjDvmb4bfuf"}
+      "aggregation_type": "SUM",
+      "code": "deaths_clinic_malaria_5",
+      "id": "ee3ed037e41",
+      "domain_type": "AGGREGATE",
+      "name": "deaths_clinic_malaria_5",
+      "short_name": "deaths_clinic_malaria_5",
+      "value_type": "INTEGER"
     }
   }
 ]
