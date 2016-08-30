@@ -7,9 +7,11 @@ from mock import MagicMock, call, patch
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 
 from dsd.models import BesMiddlewareCore
+from dsd.models.moh import MoH
 from dsd.repositories.dhis2_remote_repository import *
 from dsd.repositories.request_template.add_attribute_template import AddAttributeRequestTemplate
 from dsd.repositories.request_template.add_element_template import AddElementRequestTemplate
+from dsd.scheduler import post_elements, post_organization_units
 from dsd.services.bes_middleware_core_service import build_post_data_set_request_body_as_dict
 from dsd.test.factories.district_factory import DistrictFactory
 from dsd.test.factories.element_factory import ElementFactory
@@ -151,7 +153,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
         mock_get_access_token.return_value = uuid.uuid4()
         HEADER_DHIS2 = get_oauth_header()
 
-        add_data_set(request_body)
+        post_data_set(request_body)
 
         requests.post.assert_called_once_with(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_ADD_DATA_SET),
                                               headers=HEADER_DHIS2,

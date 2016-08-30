@@ -5,10 +5,11 @@ from datetime import datetime, timedelta, timezone
 from django.test import TestCase
 from mock import patch
 
+from dsd.config import dhis2_config
 from dsd.models import BesMiddlewareCore
 from dsd.models.remote.bes_middleware_core import BesMiddlewareCore as BesMiddlewareCoreRemote
 from dsd.services import bes_middleware_core_service
-from dsd.services.bes_middleware_core_service import is_valid
+from dsd.services.bes_middleware_core_service import is_valid, build_data_set_request_body_as_dict
 from dsd.test.factories.bes_middleware_core_factory import BesMiddlewareCoreFactory
 from dsd.test.factories.element_factory import ElementFactory
 from dsd.test.factories.facility_factory import FacilityFactory
@@ -95,3 +96,22 @@ class BesMiddlewareCoreTest(TestCase):
         self.assertEqual(result.get('dataValues')[0].get('value'), 5)
         self.assertEqual(result.get('dataValues')[1].get('dataElement'), id_test2)
         self.assertEqual(result.get('dataValues')[1].get('value'), 2)
+
+    def test_should_build_data_set_request_body_as_dict(self):
+        facility1 = FacilityFactory()
+        facility2 = FacilityFactory()
+
+        element1 = ElementFactory(id=generate_id())
+        element2 = ElementFactory(id=generate_id())
+
+        request_body_dict = build_data_set_request_body_as_dict()
+
+        self.assertEqual(len(request_body_dict.get('dataElements')), 2)
+        self.assertEqual(request_body_dict.get('dataElements')[0].get('id'), element1.id)
+        self.assertEqual(request_body_dict.get('dataElements')[1].get('id'), element2.id)
+        self.assertEqual(request_body_dict.get('name'), dhis2_config.DATA_SET_NAME)
+        self.assertEqual(request_body_dict.get('shortName'), dhis2_config.DATA_SET_NAME)
+
+        self.assertEqual(len(request_body_dict.get('organisationUnits')), 2)
+        self.assertEqual(request_body_dict.get('organisationUnits')[0].get('id'), facility1.uid)
+        self.assertEqual(request_body_dict.get('organisationUnits')[1].get('id'), facility2.uid)

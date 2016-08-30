@@ -22,3 +22,5 @@ DHIS2_URLS = {
 
 CATEGORY_COMBO_ID = '84jf8wld02d'
 DATA_SET_ID = '84ndl9jeldu'
+DATA_SET_NAME = 'chai_disease'
+DATA_SET_PERIOD_TYPES = 'Weekly'

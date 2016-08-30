@@ -63,9 +63,33 @@ def build_post_data_set_request_body_as_dict(bes_middleware_core):
 
     now = datetime.now()
     return {
-        "dataSet": dhis2_config.DATA_SET_ID,
-        "completeData": str(now),
-        "period": str(now.strftime('%Y%m')),
-        "orgUnit": Facility.objects.get(device_serial=bes_middleware_core.device_id).uid,
-        "dataValues": data_values
+        'dataSet': dhis2_config.DATA_SET_ID,
+        'completeData': str(now),
+        'period': str(now.strftime('%Y%m')),
+        'orgUnit': Facility.objects.get(device_serial=bes_middleware_core.device_id).uid,
+        'dataValues': data_values
+    }
+
+
+def build_data_set_request_body_as_dict():
+    facilities = Facility.objects.all()
+    elements = Element.objects.all()
+    facility_ids_list = []
+    element_ids_list = []
+    for facility in facilities:
+        facility_ids_list.append({'id': facility.uid})
+    for element in elements:
+        element_ids_list.append({'id': element.id})
+    return {
+        'dataElements': element_ids_list,
+        'expiryDays': 0,
+        'fieldCombinationRequired': False,
+        'indicators': [],
+        'mobile': False,
+        'name': dhis2_config.DATA_SET_NAME,
+        'openFuturePeriods': 0,
+        'organisationUnits': facility_ids_list,
+        'periodType': dhis2_config.DATA_SET_PERIOD_TYPES,
+        'shortName': dhis2_config.DATA_SET_NAME,
+        'timelyDays': 15
     }
