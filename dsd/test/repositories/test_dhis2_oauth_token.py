@@ -16,7 +16,7 @@ class DHIS2OauthTokenTest(TestCase):
         BODY = {'grant_type': 'password', 'username': 'admin', 'password': 'district'}
         mock_post.return_value.text = json.dumps({REFRESH_TOKEN:str(uuid.uuid4())})
         set_refresh_token()
-        requests.post.assert_called_once_with(url=settings.DHIS2_URLS.get(settings.OAUTH2_TOKEN),
+        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_URLS.get(dhis2_config.OAUTH2_TOKEN),
                                               headers=HEADER_OAUTH,
                                               auth= (OAUTH2_UID, OAUTH2_SECRET),
                                               verify=settings.DHIS2_SSL_VERIFY,

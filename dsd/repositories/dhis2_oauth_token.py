@@ -1,7 +1,9 @@
 import requests
 import json
-from django.conf import settings
 from django.core.cache import cache
+
+from chai import settings
+from dsd.config import dhis2_config
 from dsd.exceptions.remote_request_exception import RemoteRequestException
 
 HEADER_OAUTH = {'Accept': 'application/json'}
@@ -23,14 +25,14 @@ def get_access_token():
         set_refresh_token()
     refresh_token = cache.get(REFRESH_TOKEN)
     BODY = {'grant_type': REFRESH_TOKEN, REFRESH_TOKEN: refresh_token}
-    json_data = __post_request(settings.DHIS2_URLS.get(settings.OAUTH2_TOKEN), BODY, (OAUTH2_UID, OAUTH2_SECRET))
+    json_data = __post_request(dhis2_config.DHIS2_URLS.get(dhis2_config.OAUTH2_TOKEN), BODY, (OAUTH2_UID, OAUTH2_SECRET))
     cache.set(ACCESS_TOKEN, json_data[ACCESS_TOKEN], EXPIRES_TIME)
     return cache.get(ACCESS_TOKEN)
 
 
 def set_refresh_token():
     BODY = {'grant_type': 'password', 'username': USERNAME, 'password': PASSWORD}
-    json_data = __post_request(settings.DHIS2_URLS.get(settings.OAUTH2_TOKEN), BODY, (OAUTH2_UID, OAUTH2_SECRET))
+    json_data = __post_request(dhis2_config.DHIS2_URLS.get(dhis2_config.OAUTH2_TOKEN), BODY, (OAUTH2_UID, OAUTH2_SECRET))
     cache.set(REFRESH_TOKEN, json_data[REFRESH_TOKEN], EXPIRES_TIME)
 
 

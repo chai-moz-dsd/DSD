@@ -234,23 +234,6 @@ CRONJOBS = (
     ('* */1 * * *', 'dsd.scheduler.start'),
 )
 
-# DHIS2 configuration
 DHIS2_SSL_VERIFY = False
-DHIS2_BASE_URL = 'http://52.32.36.132:8080/'
-
-KEY_ADD_ATTRIBUTE_TO_SCHEMAS = 'add_attribute_to_schemas'
-KEY_ADD_ATTRIBUTE = 'add_attribute'
-KEY_ADD_ELEMENT = 'add_element'
-KEY_ADD_ORGANIZATION_UNIT = 'add_organization_unit'
-KEY_ADD_DATA_SET_ELEMENTS = 'add_data_set_elements'
-OAUTH2_TOKEN = 'oauth2_token'
-DHIS2_URLS = {
-    KEY_ADD_ATTRIBUTE_TO_SCHEMAS: "%sapi/24/schemas/attribute" % DHIS2_BASE_URL,
-    KEY_ADD_ATTRIBUTE: "%sapi/24/attributes" % DHIS2_BASE_URL,
-    KEY_ADD_ORGANIZATION_UNIT: '%sapi/24/organisationUnits' % DHIS2_BASE_URL,
-    KEY_ADD_DATA_SET_ELEMENTS: '%sapi/24/dataValueSets' % DHIS2_BASE_URL,
-    KEY_ADD_ELEMENT: '%sapi/24/dataElements' % DHIS2_BASE_URL,
-    OAUTH2_TOKEN: "%suaa/oauth/token" % DHIS2_BASE_URL,
-}
 
 

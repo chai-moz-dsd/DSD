@@ -1,6 +1,5 @@
 import logging
 
-from dsd.config import dhis2_config
 from dsd.models import Attribute
 from dsd.models import Element
 from dsd.models.moh import MoH
@@ -13,24 +12,20 @@ CONTENT_TYPE = {'Content-Type': 'application/json'}
 logger = logging.getLogger(__name__)
 
 
-def add_data_set_elements_value(request_body):
-    return __post_request(url=settings.DHIS2_URLS.get(settings.KEY_ADD_DATA_SET_ELEMENTS), data=request_body)
+def add_data_set_elements(request_body):
+    return __post_request(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_ADD_DATA_SET_ELEMENTS), data=request_body)
 
 
 def add_organization_unit(request_body):
-    return __post_request(url=settings.DHIS2_URLS.get(settings.KEY_ADD_ORGANIZATION_UNIT), data=request_body)
+    return __post_request(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_ADD_ORGANIZATION_UNIT), data=request_body)
 
 
 def add_attribute(request_body):
-    return __post_request(url=settings.DHIS2_URLS.get(settings.KEY_ADD_ATTRIBUTE), data=request_body)
+    return __post_request(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_ADD_ATTRIBUTE), data=request_body)
 
 
 def add_element(request_body):
-    return __post_request(url=settings.DHIS2_URLS.get(settings.KEY_ADD_ELEMENT), data=request_body)
-
-
-def add_attribute_to_schemas(request_body):
-    return __post_request(url=settings.DHIS2_URLS.get(settings.KEY_ADD_ATTRIBUTE_TO_SCHEMAS), data=request_body)
+    return __post_request(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_ADD_ELEMENT), data=request_body)
 
 
 def __post_request(url, data):
