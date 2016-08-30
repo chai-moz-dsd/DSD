@@ -6,6 +6,7 @@ from dsd.models.sender_middleware_core import SenderMiddlewareCore
 from dsd.models.data_set_element import DataSetElement
 from dsd.models.sync_record import SyncRecord
 from dsd.models.attribute import Attribute
+from dsd.models.element import Element
 
 
 __all__ = [
@@ -17,4 +18,5 @@ __all__ = [
     'DataSetElement',
     'SyncRecord',
     'Attribute',
+    'Element',
 ]

@@ -8,6 +8,7 @@ from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 
 from dsd.repositories.dhis2_remote_repository import *
 from dsd.repositories.request_template.add_attribute_template import AddAttributeRequestTemplate
+from dsd.repositories.request_template.add_element_template import AddElementRequestTemplate
 from dsd.services.data_set_service import build_data_set_element_request_body_as_json
 from dsd.test.factories.attribute_factory import AttributeFactory
 from dsd.test.factories.data_set_element_factory import DataSetElementFactory
@@ -151,3 +152,4 @@ class DHIS2RemoteRepositoryTest(TestCase):
                                               headers=HEADER_DHIS2,
                                               verify=settings.DHIS2_SSL_VERIFY,
                                               data=json.dumps(request_body_dict))
+
