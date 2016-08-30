@@ -9,9 +9,8 @@ class ElementFactory(factory.DjangoModelFactory):
         model = Element
 
     id = generate_id()
-    name = factory.Iterator(['province_capital_dist', 'device_serial_opt', 'code_us', 'device_serial', 'sim_serial'])
-    short_name = factory.Iterator(
-        ['province_capital_dist', 'device_serial_opt', 'code_us', 'device_serial', 'sim_serial'])
+    name = factory.Iterator(['deaths_diarrhea_04', 'cases_tetanus', 'note_meningitis'])
+    short_name = factory.Iterator(['deaths_diarrhea_04', 'cases_tetanus', 'note_meningitis'])
     code = name
     aggregation_type = factory.Iterator(['PLUS', 'SUM'])
     domain_type = factory.Iterator(['AGGREGATE', 'NUMBER'])

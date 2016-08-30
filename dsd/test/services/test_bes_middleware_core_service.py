@@ -10,6 +10,9 @@ from dsd.models.remote.bes_middleware_core import BesMiddlewareCore as BesMiddle
 from dsd.services import bes_middleware_core_service
 from dsd.services.bes_middleware_core_service import is_valid
 from dsd.test.factories.bes_middleware_core_factory import BesMiddlewareCoreFactory
+from dsd.test.factories.element_factory import ElementFactory
+from dsd.test.factories.facility_factory import FacilityFactory
+from dsd.util.id_generator import generate_id
 
 logger = logging.getLogger(__name__)
 
@@ -47,3 +50,16 @@ class BesMiddlewareCoreTest(TestCase):
         bes_middleware_core_service.sync()
         self.assertEqual(BesMiddlewareCore.objects.count(), 5)
         self.assertEqual(BesMiddlewareCore.objects.get(uri=uuid1).uri, uuid1)
+
+    def should_build_add_element_value_as_dict(self):
+        id_test = generate_id()
+        device_serial = '353288063681856'
+        name = 'cases_nv_measles'
+        ElementFactory(name=name, id=id_test)
+        FacilityFactory(device_serial=device_serial)
+        bes_middleware_core = BesMiddlewareCore(cases_nv_measles=5, device_id=device_serial)
+        result = bes_middleware_core_service.build_post_data_set_request_body_as_dict(bes_middleware_core)
+        self.assertEqual(result.get('orgUnit'), device_serial)
+        self.assertEqual(result.get('name'), name)
+        self.assertEqual(result.get('dataValues').get('value'), 5)
+        self.assertEqual(result.get('dataValues').get('dataElement'), id_test)

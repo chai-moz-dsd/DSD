@@ -10,9 +10,9 @@ from dsd.repositories.dhis2_remote_repository import *
 from dsd.repositories.request_template.add_attribute_template import AddAttributeRequestTemplate
 from dsd.repositories.request_template.add_element_template import AddElementRequestTemplate
 from dsd.services.data_set_service import build_data_set_element_request_body_as_json
-from dsd.test.factories.attribute_factory import AttributeFactory
 from dsd.test.factories.data_set_element_factory import DataSetElementFactory
 from dsd.test.factories.district_factory import DistrictFactory
+from dsd.test.factories.element_factory import ElementFactory
 from dsd.test.factories.facility_factory import FacilityFactory
 from dsd.test.factories.province_factory import ProvinceFactory
 from dsd.test.helpers.fake_date import FakeDate
@@ -134,22 +134,23 @@ class DHIS2RemoteRepositoryTest(TestCase):
     @override_settings(DHIS2_SSL_VERIFY=False)
     @patch('dsd.repositories.dhis2_remote_repository.get_access_token')
     @patch('requests.post')
-    def test_should_post_attributes(self, mock_post, mock_get_access_token):
-        attribute = AttributeFactory()
+    def test_should_post_elements(self, mock_post, mock_get_access_token):
+        element = ElementFactory()
 
-        request_body_dict = AddAttributeRequestTemplate().build(uid=attribute.uid,
-                                                                code=attribute.code,
-                                                                value_type=attribute.value_type,
-                                                                org_unit_attr=attribute.org_unit_attr,
-                                                                name=attribute.name)
+        request_body_dict = AddElementRequestTemplate().build(id=element.id,
+                                                              code=element.code,
+                                                              value_type=element.value_type,
+                                                              short_name=element.short_name,
+                                                              domain_type=element.domain_type,
+                                                              category_combo=dhis2_config.CATEGORY_COMBO_ID,
+                                                              name=element.name)
         mock_post.return_value = MagicMock(status_code=HTTP_201_CREATED)
         mock_get_access_token.return_value = uuid.uuid4()
         HEADER_DHIS2 = get_oauth_header()
 
-        post_attributes()
+        post_elements()
 
-        requests.post.assert_called_once_with(url=settings.DHIS2_URLS.get(settings.KEY_ADD_ATTRIBUTE),
+        requests.post.assert_called_once_with(url=settings.DHIS2_URLS.get(settings.KEY_ADD_ELEMENT),
                                               headers=HEADER_DHIS2,
                                               verify=settings.DHIS2_SSL_VERIFY,
                                               data=json.dumps(request_body_dict))
-

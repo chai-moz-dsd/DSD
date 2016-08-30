@@ -1,6 +1,11 @@
+import json
 import logging
+from datetime import datetime
 
+from dsd.config import dhis2_config
 from dsd.models import BesMiddlewareCore
+from dsd.models import Element
+from dsd.models import Facility
 from dsd.models.remote.bes_middleware_core import BesMiddlewareCore as BesMiddlewareCoreRemote
 
 logger = logging.getLogger(__name__)
@@ -40,3 +45,22 @@ def save(bes_middleware_core):
 
 def should_be_synced(bes_middleware_core, last_sync_date):
     return bes_middleware_core.last_update_date > last_sync_date
+
+
+def build_post_data_set_request_body_as_dict(bes_middleware_core):
+    elements = Element.objects.all()
+    data_values = []
+    for element in elements:
+        data_values.append({
+            'dataElement': element.id,
+            'value': getattr(bes_middleware_core, element.name)
+        })
+
+    now = datetime.now()
+    return json.dumps({
+        "dataSet": dhis2_config.DATA_SET_ID,
+        "completeData": now,
+        "period": now.complete_data.strftime('%Y%m'),
+        "orgUnit": Facility.objects.filter(device_serial=bes_middleware_core.device_id).first().uid,
+        "dataValues": data_values
+    })

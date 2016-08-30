@@ -1,9 +1,12 @@
 import logging
 
+from dsd.config import dhis2_config
 from dsd.models import Attribute
+from dsd.models import Element
 from dsd.models.moh import MoH
 from dsd.repositories.dhis2_oauth_token import *
 from dsd.repositories.request_template.add_attribute_template import AddAttributeRequestTemplate
+from dsd.repositories.request_template.add_element_template import AddElementRequestTemplate
 
 CONTENT_TYPE = {'Content-Type': 'application/json'}
 
@@ -22,6 +25,10 @@ def add_attribute(request_body):
     return __post_request(url=settings.DHIS2_URLS.get(settings.KEY_ADD_ATTRIBUTE), data=request_body)
 
 
+def add_element(request_body):
+    return __post_request(url=settings.DHIS2_URLS.get(settings.KEY_ADD_ELEMENT), data=request_body)
+
+
 def add_attribute_to_schemas(request_body):
     return __post_request(url=settings.DHIS2_URLS.get(settings.KEY_ADD_ATTRIBUTE_TO_SCHEMAS), data=request_body)
 
@@ -34,6 +41,21 @@ def __post_request(url, data):
                              verify=settings.DHIS2_SSL_VERIFY)
     except ConnectionError:
         raise RemoteRequestException()
+
+
+def post_elements():
+    category_combo_id = dhis2_config.CATEGORY_COMBO_ID
+    elements = Element.objects.all()
+    for element in elements:
+        request_body_dict = AddElementRequestTemplate().build(id=element.id,
+                                                              code=element.code,
+                                                              value_type=element.value_type,
+                                                              short_name=element.short_name,
+                                                              domain_type=element.domain_type,
+                                                              category_combo=category_combo_id,
+                                                              name=element.name)
+        response = add_element(json.dumps(request_body_dict))
+        logger.info("response status = %s" % response.status_code)
 
 
 def post_attributes():
