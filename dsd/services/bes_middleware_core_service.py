@@ -1,4 +1,3 @@
-import json
 import logging
 from datetime import datetime
 
@@ -57,10 +56,10 @@ def build_post_data_set_request_body_as_dict(bes_middleware_core):
         })
 
     now = datetime.now()
-    return json.dumps({
+    return {
         "dataSet": dhis2_config.DATA_SET_ID,
-        "completeData": now,
-        "period": now.complete_data.strftime('%Y%m'),
-        "orgUnit": Facility.objects.filter(device_serial=bes_middleware_core.device_id).first().uid,
+        "completeData": str(now),
+        "period": str(now.strftime('%Y%m')),
+        "orgUnit": Facility.objects.get(device_serial=bes_middleware_core.device_id).uid,
         "dataValues": data_values
-    })
+    }

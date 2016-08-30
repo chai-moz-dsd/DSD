@@ -51,15 +51,21 @@ class BesMiddlewareCoreTest(TestCase):
         self.assertEqual(BesMiddlewareCore.objects.count(), 5)
         self.assertEqual(BesMiddlewareCore.objects.get(uri=uuid1).uri, uuid1)
 
-    def should_build_add_element_value_as_dict(self):
+    def test_should_build_add_element_value_as_dict(self):
         id_test = generate_id()
+        id_test2 = generate_id()
         device_serial = '353288063681856'
+        uid = '8dd73ldj0ld'
         name = 'cases_nv_measles'
+        name2 = 'cases_anger'
         ElementFactory(name=name, id=id_test)
-        FacilityFactory(device_serial=device_serial)
-        bes_middleware_core = BesMiddlewareCore(cases_nv_measles=5, device_id=device_serial)
+        ElementFactory(name=name2, id=id_test2)
+        FacilityFactory(device_serial=device_serial, uid=uid)
+        bes_middleware_core = BesMiddlewareCore(cases_anger=2, cases_nv_measles=5, device_id=device_serial)
         result = bes_middleware_core_service.build_post_data_set_request_body_as_dict(bes_middleware_core)
-        self.assertEqual(result.get('orgUnit'), device_serial)
-        self.assertEqual(result.get('name'), name)
-        self.assertEqual(result.get('dataValues').get('value'), 5)
-        self.assertEqual(result.get('dataValues').get('dataElement'), id_test)
+        self.assertEqual(result.get('orgUnit'), uid)
+        self.assertEqual(len(result.get('dataValues')), 2)
+        self.assertEqual(result.get('dataValues')[0].get('dataElement'), id_test)
+        self.assertEqual(result.get('dataValues')[0].get('value'), 5)
+        self.assertEqual(result.get('dataValues')[1].get('dataElement'), id_test2)
+        self.assertEqual(result.get('dataValues')[1].get('value'), 2)

@@ -6,16 +6,17 @@ from django.test import override_settings
 from mock import MagicMock, call, patch
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 
+from dsd.models import BesMiddlewareCore
 from dsd.repositories.dhis2_remote_repository import *
 from dsd.repositories.request_template.add_attribute_template import AddAttributeRequestTemplate
 from dsd.repositories.request_template.add_element_template import AddElementRequestTemplate
-from dsd.services.data_set_service import build_data_set_element_request_body_as_json
-from dsd.test.factories.data_set_element_factory import DataSetElementFactory
+from dsd.services.bes_middleware_core_service import build_post_data_set_request_body_as_dict
 from dsd.test.factories.district_factory import DistrictFactory
 from dsd.test.factories.element_factory import ElementFactory
 from dsd.test.factories.facility_factory import FacilityFactory
 from dsd.test.factories.province_factory import ProvinceFactory
 from dsd.test.helpers.fake_date import FakeDate
+from dsd.util.id_generator import generate_id
 
 add_attribute_request_body = AddAttributeRequestTemplate().build(uid="MKoA22RCFfC", code='Sim number',
                                                                  value_type='NUMBER',
@@ -120,16 +121,26 @@ class DHIS2RemoteRepositoryTest(TestCase):
     @patch('requests.post')
     def test_should_post_data_set_elements(self, mock_post, mock_get_access_token):
         mock_post.return_value = MagicMock(status_code=HTTP_201_CREATED)
-        data_set_element_list = [DataSetElementFactory(), DataSetElementFactory(), DataSetElementFactory()]
-        request_body = build_data_set_element_request_body_as_json(data_set_element_list)
+        id_test = generate_id()
+        id_test2 = generate_id()
+        device_serial = '353288063681856'
+        uid = '8dd73ldj0ld'
+        name = 'cases_nv_measles'
+        name2 = 'cases_anger'
+        ElementFactory(name=name, id=id_test)
+        ElementFactory(name=name2, id=id_test2)
+        FacilityFactory(device_serial=device_serial, uid=uid)
+        bes_middleware_core = BesMiddlewareCore(cases_anger=2, cases_nv_measles=5, device_id=device_serial)
+
+        request_body_dict = build_post_data_set_request_body_as_dict(bes_middleware_core)
         mock_get_access_token.return_value = uuid.uuid4()
-        response = add_data_set_elements(request_body=request_body)
+        response = add_data_set_elements_value(request_body=json.dumps(request_body_dict))
         HEADER_DHIS2 = get_oauth_header()
         self.assertEqual(response.status_code, HTTP_201_CREATED)
         requests.post.assert_called_once_with(url=settings.DHIS2_URLS.get(settings.KEY_ADD_DATA_SET_ELEMENTS),
                                               headers=HEADER_DHIS2,
                                               verify=settings.DHIS2_SSL_VERIFY,
-                                              data=request_body)
+                                              data=json.dumps(request_body_dict))
 
     @override_settings(DHIS2_SSL_VERIFY=False)
     @patch('dsd.repositories.dhis2_remote_repository.get_access_token')
