@@ -1,7 +1,5 @@
 from dsd.repositories.dhis2_oauth_token import *
 
-from dsd.exceptions.remote_request_exception import RemoteRequestException
-
 CONTENT_TYPE = {'Content-Type': 'application/json'}
 
 
@@ -35,6 +33,7 @@ def parse_attributes(attributes_list):
     for attribute in attributes_list:
         # validation
         add_attribute(attribute)
+
 
 def get_oauth_header():
     return {'Authorization': 'bearer %s' % get_access_token(), 'Content-Type': 'application/json'}

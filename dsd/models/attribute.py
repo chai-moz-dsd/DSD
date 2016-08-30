@@ -9,8 +9,5 @@ class Attribute(models.Model):
     uid = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     code = models.CharField(max_length=255)
-    valueType = models.CharField(max_length=255)
-    orgUnitAttr = models.BooleanField(default=True)
-
-    def get_attributes_as_dict(self):
-        return self.convert_attributes()
+    value_type = models.CharField(max_length=255)
+    org_unit_attr = models.BooleanField(default=True)

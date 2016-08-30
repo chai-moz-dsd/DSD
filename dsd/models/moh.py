@@ -32,13 +32,12 @@ class MoH(object):
 
         return moh
 
-    @staticmethod
-    def convert_districts(moh, province):
+    def convert_districts(self, moh, province):
         for district in province.district_set.all():
             district_dict = convert_district_to_dict(district, province.uid)
             res = MoH.compact_dict(district_dict)
             moh.append(res)
-            MoH.convert_facilities(moh, district)
+            self.convert_facilities(moh, district)
 
     @staticmethod
     def convert_facilities(moh, district):

@@ -5,8 +5,8 @@
     "fields": {
       "uid": "wPuwpLLX1Gd",
       "code": "province_capital_dist",
-      "valueType": "TEXT",
-      "orgUnitAttr": true,
+      "value_type": "TEXT",
+      "org_unit_attr": true,
       "name": "province_capital_dist"
     }
   },
@@ -16,8 +16,8 @@
     "fields": {
       "uid": "hZVWv6sIcSR",
       "code": "sim_serial_opt",
-      "valueType": "TEXT",
-      "orgUnitAttr": true,
+      "value_type": "TEXT",
+      "org_unit_attr": true,
       "name": "sim_serial_opt"
     }
   },
@@ -27,8 +27,8 @@
     "fields": {
       "uid": "hOzWEm3MT0u",
       "code": "device_serial_opt",
-      "valueType": "TEXT",
-      "orgUnitAttr": true,
+      "value_type": "TEXT",
+      "org_unit_attr": true,
       "name": "device_serial_opt"
     }
   },
@@ -38,8 +38,8 @@
     "fields": {
       "uid": "OyKR2g4eHOr",
       "code": "phone_contact_opt",
-      "valueType": "TEXT",
-      "orgUnitAttr": true,
+      "value_type": "TEXT",
+      "org_unit_attr": true,
       "name": "phone_contact_opt"
     }
   },
@@ -49,8 +49,8 @@
     "fields": {
       "uid": "spyJiurH5ax",
       "code": "state",
-      "valueType": "NUMBER",
-      "orgUnitAttr": true,
+      "value_type": "NUMBER",
+      "org_unit_attr": true,
       "name": "state"
     }
   },
@@ -60,8 +60,8 @@
     "fields": {
       "uid": "TnUcnzIcllL",
       "code": "code_us",
-      "valueType": "TEXT",
-      "orgUnitAttr": true,
+      "value_type": "TEXT",
+      "org_unit_attr": true,
       "name": "code_us"
     }
   },
@@ -71,8 +71,8 @@
     "fields": {
       "uid": "nP1UXtpMXxE",
       "code": "mac_number",
-      "valueType": "TEXT",
-      "orgUnitAttr": true,
+      "value_type": "TEXT",
+      "org_unit_attr": true,
       "name": "mac_number"
     }
   },
@@ -82,8 +82,8 @@
     "fields": {
       "uid": "TzkNvhmYuKo",
       "code": "fea_us",
-      "valueType": "TEXT",
-      "orgUnitAttr": true,
+      "value_type": "TEXT",
+      "org_unit_attr": true,
       "name": "fea_us"
     }
   },
@@ -93,8 +93,8 @@
     "fields": {
       "uid": "Sv6JXRJ9wVe",
       "code": "device_serial",
-      "valueType": "TEXT",
-      "orgUnitAttr": true,
+      "value_type": "TEXT",
+      "org_unit_attr": true,
       "name": "device_serial"
     }
   },
@@ -104,8 +104,8 @@
     "fields": {
       "uid": "YssKBQ4E4Mh",
       "code": "sorting_us",
-      "valueType": "TEXT",
-      "orgUnitAttr": true,
+      "value_type": "TEXT",
+      "org_unit_attr": true,
       "name": "sorting_us"
     }
   },
@@ -115,8 +115,8 @@
     "fields": {
       "uid": "WlfBODOi2NW",
       "code": "sim_serial",
-      "valueType": "TEXT",
-      "orgUnitAttr": true,
+      "value_type": "TEXT",
+      "org_unit_attr": true,
       "name": "sim_serial"
     }
   },
@@ -126,8 +126,8 @@
     "fields": {
       "uid": "LBPEcehsQnq",
       "code": "person_contact_opt",
-      "valueType": "TEXT",
-      "orgUnitAttr": true,
+      "value_type": "TEXT",
+      "org_unit_attr": true,
       "name": "person_contact_opt"
     }
   },
@@ -137,8 +137,8 @@
     "fields": {
       "uid": "A5NJOV9CQyR",
       "code": "level_us",
-      "valueType": "TEXT",
-      "orgUnitAttr": true,
+      "value_type": "TEXT",
+      "org_unit_attr": true,
       "name": "level_us"
     }
   },
@@ -148,8 +148,8 @@
     "fields": {
       "uid": "MKoA22RCFfC",
       "code": "sim_number",
-      "valueType": "TEXT",
-      "orgUnitAttr": true,
+      "value_type": "TEXT",
+      "org_unit_attr": true,
       "name": "sim_number"
     }
   },
@@ -159,8 +159,8 @@
     "fields": {
       "uid": "CYZM1npI6Uo",
       "code": "device_number",
-      "valueType": "TEXT",
-      "orgUnitAttr": true,
+      "value_type": "TEXT",
+      "org_unit_attr": true,
       "name": "device_number"
     }
   }

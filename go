@@ -17,6 +17,9 @@ function main {
     "ft" )
       run_functional_test;;
 
+    "seed" )
+      seed;;
+
     "rs" )
       if [ "$2" = "--prod" ]; then
         run_server --prod
@@ -86,6 +89,10 @@ function reset_db {
     python manage.py makemigrations --settings=chai.settings_dev
     python manage.py migrate --settings=chai.settings_dev
   fi
+}
+
+function seed {
+    python manage.py loaddata dsd/fixtures/attributes.json --settings=chai.settings_dev
 }
 
 main $@
