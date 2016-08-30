@@ -9,13 +9,13 @@ class AddAttributeRequestTemplateTest(TestCase):
     def test_should_build_simple_template(self):
         self.template.payload = {
             'code': '${code}',
-            'valueType': '${value_type}',
-            'organisationUnitAttribute': '${org_unit_attr}',
+            'valueType': '${valueType}',
+            'organisationUnitAttribute': '${organisationUnitAttribute}',
             'name': '${name}'
         }
 
         self.assertDictEqual(
-            self.template.build(code='123', value_type='NUMBER', org_unit_attr='attribute', name='test'), {
+            self.template.build(code='123', valueType='NUMBER', organisationUnitAttribute='attribute', name='test'), {
                 'code': '123',
                 'valueType': 'NUMBER',
                 'organisationUnitAttribute': 'attribute',
