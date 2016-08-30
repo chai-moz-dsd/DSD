@@ -38,6 +38,10 @@ def __post_request(url, data):
         raise RemoteRequestException()
 
 
+def add_data_set(request_body):
+    return __post_request(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_ADD_DATA_SET), data=request_body)
+
+
 def post_elements():
     category_combo_id = dhis2_config.CATEGORY_COMBO_ID
     elements = Element.objects.all()
