@@ -85,8 +85,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'dsd',
-        'USER': 'dsd',
-        'HOST': 'dsd-db',
+        'USER': os.getenv('DSD_DB_USERNAME', 'invalid_username'),
+        'HOST': os.getenv('DSD_DB_HOST', 'invalid_host'),
         'PORT': '5432',
         'OPTIONS': {
             'isolation_level': psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE,
@@ -95,9 +95,9 @@ DATABASES = {
     'chai': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'mBES',
-        'USER': 'chai',
+        'USER': os.getenv('CHAI_DB_USERNAME', 'invalid_username'),
         'PASSWORD': os.getenv('CHAI_DB_PASSWORD', 'invalid_password'),
-        'HOST': '52.42.224.43',
+        'HOST': os.getenv('CHAI_DB_HOST', 'invalid_host'),
         'PORT': '5432',
         'OPTIONS': {
             'isolation_level': psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE,
