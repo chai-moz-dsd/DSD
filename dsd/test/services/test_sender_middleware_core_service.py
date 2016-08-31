@@ -1,6 +1,6 @@
 import logging
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from django.test import TestCase
 from mock import patch
@@ -44,6 +44,31 @@ class SenderMiddlewareCoreTest(TestCase):
             SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
                                        last_update_date=datetime.now()),
         ]
-        sender_middleware_core_service.sync()
+        sender_middleware_core_service.sync(None)
         self.assertEqual(SenderMiddlewareCore.objects.count(), 5)
         self.assertEqual(SenderMiddlewareCore.objects.get(uri=uuid1).uri, uuid1)
+
+    @patch('dsd.models.remote.sender_middleware_core.SenderMiddlewareCore.objects.filter')
+    @patch('dsd.models.remote.sender_middleware_core.SenderMiddlewareCore.objects.all')
+    def test_should_sync_all_remote_sender_middleware_core(self, mock_all, mock_filter):
+        mock_all.return_value = [
+            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
+                                       last_update_date=datetime(2016, 8, 31, 1, 30, 0, 0, timezone.utc)),
+            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
+                                       last_update_date=datetime(2016, 8, 31, 2, 0, 0, 0, timezone.utc)),
+            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
+                                       last_update_date=datetime(2016, 8, 31, 2, 30, 0, 0, timezone.utc)),
+            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
+                                       last_update_date=datetime(2016, 8, 31, 3, 0, 0, 0, timezone.utc)),
+            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
+                                       last_update_date=datetime(2016, 8, 31, 3, 30, 0, 0, timezone.utc)),
+        ]
+
+        mock_filter.return_value = [
+            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
+                                       last_update_date=datetime(2016, 8, 31, 3, 0, 0, 0, timezone.utc)),
+            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
+                                       last_update_date=datetime(2016, 8, 31, 3, 30, 0, 0, timezone.utc)),
+        ]
+        sender_middleware_core_service.sync(datetime(2016, 8, 31, 2, 30, 0, 0, timezone.utc))
+        self.assertEqual(SenderMiddlewareCore.objects.count(), 2)

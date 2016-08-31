@@ -1,6 +1,6 @@
 import logging
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from django.test import TestCase
 from mock import patch
@@ -47,9 +47,35 @@ class BesMiddlewareCoreTest(TestCase):
             BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
                                     last_update_date=datetime.now()),
         ]
-        bes_middleware_core_service.sync()
+        bes_middleware_core_service.sync(None)
         self.assertEqual(BesMiddlewareCore.objects.count(), 5)
         self.assertEqual(BesMiddlewareCore.objects.get(uri=uuid1).uri, uuid1)
+
+    @patch('dsd.models.remote.bes_middleware_core.BesMiddlewareCore.objects.filter')
+    @patch('dsd.models.remote.bes_middleware_core.BesMiddlewareCore.objects.all')
+    def test_should_only_sync_bes_middleware_core_from_last_successful_time(self, mock_all, mock_filter):
+        mock_all.return_value = [
+            BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
+                                    last_update_date=datetime(2016, 8, 31, 1, 30, 0, 0, timezone.utc)),
+            BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
+                                    last_update_date=datetime(2016, 8, 31, 2, 0, 0, 0, timezone.utc)),
+            BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
+                                    last_update_date=datetime(2016, 8, 31, 2, 30, 0, 0, timezone.utc)),
+            BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
+                                    last_update_date=datetime(2016, 8, 31, 3, 0, 0, 0, timezone.utc)),
+            BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
+                                    last_update_date=datetime(2016, 8, 31, 3, 30, 0, 0, timezone.utc)),
+        ]
+
+        mock_filter.return_value = [
+            BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
+                                    last_update_date=datetime(2016, 8, 31, 3, 0, 0, 0, timezone.utc)),
+            BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
+                                    last_update_date=datetime(2016, 8, 31, 3, 30, 0, 0, timezone.utc)),
+        ]
+
+        bes_middleware_core_service.sync(datetime(2016, 8, 31, 2, 30, 0, 0, timezone.utc))
+        self.assertEqual(BesMiddlewareCore.objects.count(), 2)
 
     def test_should_build_add_element_value_as_dict(self):
         id_test = generate_id()
