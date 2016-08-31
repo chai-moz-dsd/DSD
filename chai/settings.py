@@ -230,8 +230,9 @@ LOGGING = {
 LOGGING_CONFIG = None
 logging.config.dictConfig(LOGGING)
 
+# run at every hour
 CRONJOBS = (
-    ('* */1 * * *', 'dsd.scheduler.start'),
+    ('0 * * * *', 'dsd.scheduler.start'),
 )
 
 DHIS2_SSL_VERIFY = False
