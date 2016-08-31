@@ -9,14 +9,8 @@ from dsd.util import id_generator
 logger = logging.getLogger(__name__)
 
 
-def sync(sync_time):
-    if not sync_time:
-        all_remote_provinces = ProvinceRemote.objects.all()
-        logger.debug('sync all provinces from %s' % sync_time)
-    else:
-        all_remote_provinces = ProvinceRemote.objects.filter(created__gte=sync_time)
-        logger.debug('sync provinces from %s' % sync_time)
-
+def sync():
+    all_remote_provinces = ProvinceRemote.objects.all()
     all_local_provinces = get_all_local_provinces(all_remote_provinces)
     all_valid_local_provinces = filter(is_valid_province, all_local_provinces)
 

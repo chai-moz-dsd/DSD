@@ -10,9 +10,9 @@ logger = logging.getLogger(__name__)
 def sync(sync_time):
     if not sync_time:
         all_remote_sender_middleware_cores = SenderMiddlewareCoreRemote.objects.all()
-        logger.debug('sync all sender_middleware_cores from %s' % sync_time)
+        logger.debug('sync all sender_middleware_cores at %s' % sync_time)
     else:
-        all_remote_sender_middleware_cores = SenderMiddlewareCoreRemote.objects.filter(created__gte=sync_time)
+        all_remote_sender_middleware_cores = SenderMiddlewareCoreRemote.objects.filter(last_update_date__gte=sync_time)
         logger.debug('sync sender_middleware_cores from %s' % sync_time)
 
     all_local_sender_middleware_cores = get_all_from_local(all_remote_sender_middleware_cores)

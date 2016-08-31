@@ -15,7 +15,7 @@ def start():
         logger.info('Sync start...')
         sync_time = SyncRecord.get_last_successful_sync_time()
 
-        sync_metadata(sync_time)
+        sync_metadata()
         sync_data(sync_time)
     except Exception as e:
         logger.error('Sync error: %s!' % e)
@@ -25,15 +25,12 @@ def start():
         SyncRecord.get_successful_instance().save()
 
 
-def sync_metadata(sync_time):
-    province_service.sync(sync_time)
-    district_service.sync(sync_time)
-    facility_service.sync(sync_time)
+def sync_metadata():
+    province_service.sync()
+    district_service.sync()
+    facility_service.sync()
 
 
 def sync_data(sync_time):
     bes_middleware_core_service.sync(sync_time)
     sender_middleware_core_service.sync(sync_time)
-
-
-

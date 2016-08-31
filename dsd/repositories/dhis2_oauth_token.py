@@ -14,7 +14,7 @@ OAUTH2_SECRET = '1e6db50c-0fee-11e5-98d0-3c15c2c6caf6'
 ACCESS_TOKEN = 'access_token'
 REFRESH_TOKEN = 'refresh_token'
 
-# EXPIRES_TIME shoud smaller than 43200 seconds
+# EXPIRES_TIME should be smaller than 43200 seconds
 EXPIRES_TIME = 36000
 
 
@@ -24,15 +24,15 @@ def get_access_token():
     if cache.get(REFRESH_TOKEN) is None:
         set_refresh_token()
     refresh_token = cache.get(REFRESH_TOKEN)
-    BODY = {'grant_type': REFRESH_TOKEN, REFRESH_TOKEN: refresh_token}
-    json_data = __post_request(dhis2_config.DHIS2_URLS.get(dhis2_config.OAUTH2_TOKEN), BODY, (OAUTH2_UID, OAUTH2_SECRET))
+    body = {'grant_type': REFRESH_TOKEN, REFRESH_TOKEN: refresh_token}
+    json_data = __post_request(dhis2_config.DHIS2_URLS.get(dhis2_config.OAUTH2_TOKEN), body, (OAUTH2_UID, OAUTH2_SECRET))
     cache.set(ACCESS_TOKEN, json_data[ACCESS_TOKEN], EXPIRES_TIME)
     return cache.get(ACCESS_TOKEN)
 
 
 def set_refresh_token():
-    BODY = {'grant_type': 'password', 'username': USERNAME, 'password': PASSWORD}
-    json_data = __post_request(dhis2_config.DHIS2_URLS.get(dhis2_config.OAUTH2_TOKEN), BODY, (OAUTH2_UID, OAUTH2_SECRET))
+    body = {'grant_type': 'password', 'username': USERNAME, 'password': PASSWORD}
+    json_data = __post_request(dhis2_config.DHIS2_URLS.get(dhis2_config.OAUTH2_TOKEN), body, (OAUTH2_UID, OAUTH2_SECRET))
     cache.set(REFRESH_TOKEN, json_data[REFRESH_TOKEN], EXPIRES_TIME)
 
 
