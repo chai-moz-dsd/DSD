@@ -9,4 +9,5 @@ class SyncRecordFactory(factory.DjangoModelFactory):
     class Meta:
         model = SyncRecord
 
-    last_sync_time = datetime.now()
+    created = datetime.now()
+    status = 'Success'

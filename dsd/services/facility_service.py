@@ -9,8 +9,14 @@ from dsd.util import id_generator
 logger = logging.getLogger(__name__)
 
 
-def sync():
-    all_remote_facilities = FacilityRemote.objects.all()
+def sync(sync_time):
+    if not sync_time:
+        all_remote_facilities = FacilityRemote.objects.all()
+        logger.debug('sync all facilities from %s' % sync_time)
+    else:
+        all_remote_facilities = FacilityRemote.objects.filter(created__gte=sync_time)
+        logger.debug('sync facilities from %s' % sync_time)
+
     all_local_facilities = get_all_local_facilities(all_remote_facilities)
     all_valid_local_facilities = filter(is_valid_facility, all_local_facilities)
 

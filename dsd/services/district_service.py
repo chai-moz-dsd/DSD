@@ -9,8 +9,14 @@ from dsd.util import id_generator
 logger = logging.getLogger(__name__)
 
 
-def sync():
-    all_remote_districts = DistrictRemote.objects.all()
+def sync(sync_time):
+    if not sync_time:
+        all_remote_districts = DistrictRemote.objects.all()
+        logger.debug('sync all districts from %s' % sync_time)
+    else:
+        all_remote_districts = DistrictRemote.objects.filter(created__gte=sync_time)
+        logger.debug('sync districts from %s' % sync_time)
+
     all_local_districts = get_all_local_districts(all_remote_districts)
     all_valid_local_districts = filter(is_valid_district, all_local_districts)
 
