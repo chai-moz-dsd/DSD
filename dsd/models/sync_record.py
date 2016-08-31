@@ -21,5 +21,8 @@ class SyncRecord(TimeStampedModel):
         if not SyncRecord.objects.count():
             return None
 
+        if not SyncRecord.objects.filter(status='Success'):
+            return None
+
         return SyncRecord.objects.filter(status='Success').order_by('-created').first().created
 

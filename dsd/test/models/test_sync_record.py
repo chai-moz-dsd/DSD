@@ -32,3 +32,9 @@ class SyncRecordTest(TestCase):
         time = SyncRecord.get_last_successful_sync_time()
 
         self.assertIsNone(time)
+
+    def test_should_get_last_successful_time_if_there_is_no_successful_record(self):
+        SyncRecordFactory(status='Failure')
+        time = SyncRecord.get_last_successful_sync_time()
+
+        self.assertIsNone(time)
