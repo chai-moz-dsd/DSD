@@ -4,6 +4,7 @@
 echo "setup db"
 source ~/.virtualenvs/dsd/bin/activate
 python manage.py migrate
+python manage.py createcachetable
 python manage.py loaddata dsd/fixtures/attributes.json
 python manage.py loaddata dsd/fixtures/dataElement.json
 
@@ -16,7 +17,6 @@ while true; do
         break
     fi;
 done
-
 
 echo "run cron job"
 python manage.py crontab add
