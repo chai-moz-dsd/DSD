@@ -23,7 +23,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
     @patch('requests.post', side_effect=ConnectionError())
     def test_should_raise_remote_request_exception_when_add_organization_unit_connection_error(self, _):
         with self.assertRaises(RemoteRequestException):
-            add_organization_unit(request_body=add_attribute_request_body)
+            post_organization_unit(request_body=add_attribute_request_body)
 
     @override_settings(DHIS2_SSL_VERIFY=False)
     @patch('dsd.repositories.dhis2_remote_repository.get_access_token')
@@ -31,7 +31,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
     def test_should_post_single_attribute(self, mock_post, mock_get_access_token):
         mock_post.return_value = MagicMock(status_code=HTTP_200_OK)
         mock_get_access_token.return_value = uuid.uuid4()
-        response = add_attribute(request_body=add_attribute_request_body)
+        response = post_attribute(request_body=add_attribute_request_body)
         HEADER_DHIS2 = get_oauth_header()
         self.assertEqual(response.status_code, HTTP_200_OK)
         requests.post.assert_called_once_with(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_ADD_ATTRIBUTE),
@@ -57,7 +57,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
 
         request_body_dict = build_post_data_set_request_body_as_dict(bes_middleware_core)
         mock_get_access_token.return_value = uuid.uuid4()
-        response = add_data_set_elements_value(request_body=json.dumps(request_body_dict))
+        response = post_data_set_elements_value(request_body=json.dumps(request_body_dict))
         HEADER_DHIS2 = get_oauth_header()
         self.assertEqual(response.status_code, HTTP_201_CREATED)
         requests.post.assert_called_once_with(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_ADD_DATA_SET_ELEMENTS),

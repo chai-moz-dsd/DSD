@@ -87,19 +87,20 @@ class DHIS2RemoteRepositoryTest(TestCase):
     @patch('dsd.repositories.dhis2_remote_repository.get_access_token')
     @patch('requests.post')
     def test_should_post_date_sets(self, mock_post, mock_get_access_token):
-        request_body = {"dataElements": [{id: "sTktPCnAYpw"}],
-                        "expiryDays": 0,
-                        "fieldCombinationRequired": False,
-                        "indicators": [],
-                        "mobile": False,
-                        "name": "",
-                        "openFuturePeriods": 0,
-                        "organisationUnits": [{"id": "b5d194d5a7d"}, {"id": "8ad2dca6fe8"}, {"id": "6844c842399"},
-                                              {"id": "a7a2ae57e12"}],
-                        "periodType": "Weekly",
-                        "shortName": "test set",
-                        "timelyDays": 15,
-                        }
+        request_body = {
+            "dataElements": [{id: "sTktPCnAYpw"}],
+            "expiryDays": 0,
+            "fieldCombinationRequired": False,
+            "indicators": [],
+            "mobile": False,
+            "name": "",
+            "openFuturePeriods": 0,
+            "organisationUnits": [{"id": "b5d194d5a7d"}, {"id": "8ad2dca6fe8"}, {"id": "6844c842399"},
+                                  {"id": "a7a2ae57e12"}],
+            "periodType": "Weekly",
+            "shortName": "test set",
+            "timelyDays": 15,
+        }
         mock_post.return_value = MagicMock(status_code=HTTP_201_CREATED)
         mock_get_access_token.return_value = uuid.uuid4()
         HEADER_DHIS2 = get_oauth_header()
