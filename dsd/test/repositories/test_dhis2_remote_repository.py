@@ -7,19 +7,18 @@ from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 
 from dsd.models import BesMiddlewareCore
 from dsd.repositories.dhis2_remote_repository import *
-from dsd.repositories.request_template.add_attribute_template import AddAttributeRequestTemplate
+from dsd.services.attribute_service import convert_attribute_to_dict
 from dsd.services.bes_middleware_core_service import build_post_data_set_request_body_as_dict
+from dsd.test.factories.attribute_factory import AttributeFactory
 from dsd.test.factories.element_factory import ElementFactory
 from dsd.test.factories.facility_factory import FacilityFactory
 from dsd.util.id_generator import generate_id
 
-add_attribute_request_body = AddAttributeRequestTemplate().build(uid="MKoA22RCFfC", code='Sim number',
-                                                                 value_type='NUMBER',
-                                                                 org_unit_attr=True,
-                                                                 name='Sim number')
-
+attribute = AttributeFactory(name="Province Capital Dist", value_type="TEXT")
+add_attribute_request_body = convert_attribute_to_dict(attribute)
 
 class DHIS2RemoteRepositoryTest(TestCase):
+
     @override_settings(DHIS2_SSL_VERIFY=False)
     @patch('requests.post', side_effect=ConnectionError())
     def test_should_raise_remote_request_exception_when_add_organization_unit_connection_error(self, _):

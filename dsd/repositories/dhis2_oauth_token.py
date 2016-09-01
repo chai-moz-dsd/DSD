@@ -6,6 +6,8 @@ from chai import settings
 from dsd.config import dhis2_config
 from dsd.exceptions.remote_request_exception import RemoteRequestException
 
+
+# TODO - Put these in ini config
 HEADER_OAUTH = {'Accept': 'application/json'}
 USERNAME = 'admin'
 PASSWORD = 'district'
@@ -25,23 +27,38 @@ def get_access_token():
         set_refresh_token()
     refresh_token = cache.get(REFRESH_TOKEN)
     body = {'grant_type': REFRESH_TOKEN, REFRESH_TOKEN: refresh_token}
-    json_data = __post_request(dhis2_config.DHIS2_URLS.get(dhis2_config.OAUTH2_TOKEN), body, (OAUTH2_UID, OAUTH2_SECRET))
+    json_data = __post_request(dhis2_config.DHIS2_URLS.get(dhis2_config.OAUTH2_TOKEN), body,
+                               (OAUTH2_UID, OAUTH2_SECRET),HEADER_OAUTH)
     cache.set(ACCESS_TOKEN, json_data[ACCESS_TOKEN], EXPIRES_TIME)
     return cache.get(ACCESS_TOKEN)
 
 
 def set_refresh_token():
     body = {'grant_type': 'password', 'username': USERNAME, 'password': PASSWORD}
-    json_data = __post_request(dhis2_config.DHIS2_URLS.get(dhis2_config.OAUTH2_TOKEN), body, (OAUTH2_UID, OAUTH2_SECRET))
+    json_data = __post_request(dhis2_config.DHIS2_URLS.get(dhis2_config.OAUTH2_TOKEN), body,
+                               (OAUTH2_UID, OAUTH2_SECRET),HEADER_OAUTH)
     cache.set(REFRESH_TOKEN, json_data[REFRESH_TOKEN], EXPIRES_TIME)
 
 
-def __post_request(url, data, auth):
+def create_oauth():
+    body = {
+        'name': 'DSD Client',
+        'cid': OAUTH2_UID,
+        'secret': OAUTH2_SECRET,
+        'grantTypes': ['password', 'refresh_token', 'authorization_code']
+    }
+    HEADER_OAUTH_CREATE = {'Content-Type': 'application/json'}
+    __post_request(dhis2_config.DHIS2_URLS.get(dhis2_config.OAUTH2_CREATE), json.dumps(body), (USERNAME, PASSWORD),HEADER_OAUTH_CREATE)
+    set_refresh_token()
+    get_access_token()
+
+
+def __post_request(url, data, auth,header):
     try:
         response = requests.post(url=url,
                                  data=data,
                                  auth=auth,
-                                 headers=HEADER_OAUTH,
+                                 headers=header,
                                  verify=settings.DHIS2_SSL_VERIFY)
         json_data = json.loads(response.text)
         return json_data

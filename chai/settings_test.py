@@ -3,7 +3,7 @@ from chai.settings import *
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dsd_test',
+        'NAME': 'dsd',
         'USER': 'postgres',
         'HOST': 'localhost',
         'PORT': '5432',

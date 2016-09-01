@@ -7,8 +7,8 @@ from dsd.models import Element
 from dsd.models.moh import MoH
 from dsd.repositories import dhis2_remote_repository
 from dsd.repositories.dhis2_remote_repository import add_attribute, add_element, add_organization_unit
-from dsd.repositories.request_template.add_attribute_template import AddAttributeRequestTemplate
 from dsd.repositories.request_template.add_element_template import AddElementRequestTemplate
+from dsd.services.attribute_service import convert_attribute_to_dict
 from dsd.services.bes_middleware_core_service import build_data_set_request_body_as_dict
 
 logger = logging.getLogger(__name__)
@@ -17,11 +17,8 @@ logger = logging.getLogger(__name__)
 def post_attributes():
     attributes = Attribute.objects.all()
     for attribute in attributes:
-        request_body_dict = AddAttributeRequestTemplate().build(uid=attribute.uid,
-                                                                code=attribute.code,
-                                                                value_type=attribute.value_type,
-                                                                org_unit_attr=attribute.org_unit_attr,
-                                                                name=attribute.name)
+        request_body_dict = convert_attribute_to_dict(attribute)
+        logger.info(request_body_dict)
         response = add_attribute(json.dumps(request_body_dict))
         logger.info("response status = %s" % response.status_code)
 

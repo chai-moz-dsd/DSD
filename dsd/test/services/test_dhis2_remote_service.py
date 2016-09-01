@@ -8,19 +8,18 @@ from rest_framework.status import HTTP_201_CREATED
 
 from dsd.models.moh import MoH
 from dsd.repositories.dhis2_remote_repository import *
-from dsd.repositories.request_template.add_attribute_template import AddAttributeRequestTemplate
 from dsd.repositories.request_template.add_element_template import AddElementRequestTemplate
+from dsd.services.attribute_service import convert_attribute_to_dict
 from dsd.services.dhis2_remote_service import post_organization_units, post_elements
+from dsd.test.factories.attribute_factory import AttributeFactory
 from dsd.test.factories.district_factory import DistrictFactory
 from dsd.test.factories.element_factory import ElementFactory
 from dsd.test.factories.facility_factory import FacilityFactory
 from dsd.test.factories.province_factory import ProvinceFactory
 from dsd.test.helpers.fake_date import FakeDate
 
-add_attribute_request_body = AddAttributeRequestTemplate().build(uid="MKoA22RCFfC", code='Sim number',
-                                                                 value_type='NUMBER',
-                                                                 org_unit_attr=True,
-                                                                 name='Sim number')
+add_attribute_request_body = convert_attribute_to_dict(
+    AttributeFactory(name="Province Capital Dist", value_type="TEXT"))
 
 
 class DHIS2RemoteRepositoryTest(TestCase):

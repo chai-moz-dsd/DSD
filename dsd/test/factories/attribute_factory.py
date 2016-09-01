@@ -12,4 +12,4 @@ class AttributeFactory(factory.DjangoModelFactory):
     name = factory.Iterator(['province_capital_dist', 'device_serial_opt', 'code_us', 'device_serial', 'sim_serial'])
     code = name
     value_type = factory.Iterator(['TEXT', 'NUMBER'])
-    org_unit_attr = True
+    attr_type = "organisationUnit"

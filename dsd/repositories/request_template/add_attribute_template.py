@@ -6,6 +6,6 @@ class AddAttributeRequestTemplate(DictTemplate):
         'id': '${uid}',
         'code': '${code}',
         'valueType': '${value_type}',
-        'organisationUnitAttribute': '${org_unit_attr}',
+        'attr_type': True,
         'name': '${name}'
     }

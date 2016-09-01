@@ -6,8 +6,8 @@
       "uid": "wPuwpLLX1Gd",
       "code": "province_capital_dist",
       "value_type": "TEXT",
-      "org_unit_attr": true,
-      "name": "province_capital_dist"
+      "attr_type": "organisationUnit",
+      "name": "Province Capital Dist"
     }
   },
   {
@@ -17,8 +17,8 @@
       "uid": "hZVWv6sIcSR",
       "code": "sim_serial_opt",
       "value_type": "TEXT",
-      "org_unit_attr": true,
-      "name": "sim_serial_opt"
+      "attr_type": "organisationUnit",
+      "name": "Sim Serial Opt"
     }
   },
   {
@@ -28,8 +28,8 @@
       "uid": "hOzWEm3MT0u",
       "code": "device_serial_opt",
       "value_type": "TEXT",
-      "org_unit_attr": true,
-      "name": "device_serial_opt"
+      "attr_type": "organisationUnit",
+      "name": "Device Serial Opt"
     }
   },
   {
@@ -39,8 +39,8 @@
       "uid": "OyKR2g4eHOr",
       "code": "phone_contact_opt",
       "value_type": "TEXT",
-      "org_unit_attr": true,
-      "name": "phone_contact_opt"
+      "attr_type": "organisationUnit",
+      "name": "Phone Contact Opt"
     }
   },
   {
@@ -50,8 +50,8 @@
       "uid": "spyJiurH5ax",
       "code": "state",
       "value_type": "NUMBER",
-      "org_unit_attr": true,
-      "name": "state"
+      "attr_type": "organisationUnit",
+      "name": "State"
     }
   },
   {
@@ -61,8 +61,8 @@
       "uid": "TnUcnzIcllL",
       "code": "code_us",
       "value_type": "TEXT",
-      "org_unit_attr": true,
-      "name": "code_us"
+      "attr_type": "organisationUnit",
+      "name": "Code us"
     }
   },
   {
@@ -72,8 +72,8 @@
       "uid": "nP1UXtpMXxE",
       "code": "mac_number",
       "value_type": "TEXT",
-      "org_unit_attr": true,
-      "name": "mac_number"
+      "attr_type": "organisationUnit",
+      "name": "MAC Number"
     }
   },
   {
@@ -83,8 +83,8 @@
       "uid": "TzkNvhmYuKo",
       "code": "fea_us",
       "value_type": "TEXT",
-      "org_unit_attr": true,
-      "name": "fea_us"
+      "attr_type": "organisationUnit",
+      "name": "Fea us"
     }
   },
   {
@@ -94,8 +94,8 @@
       "uid": "Sv6JXRJ9wVe",
       "code": "device_serial",
       "value_type": "TEXT",
-      "org_unit_attr": true,
-      "name": "device_serial"
+      "attr_type": "organisationUnit",
+      "name": "Device Serial"
     }
   },
   {
@@ -105,8 +105,8 @@
       "uid": "YssKBQ4E4Mh",
       "code": "sorting_us",
       "value_type": "TEXT",
-      "org_unit_attr": true,
-      "name": "sorting_us"
+      "attr_type": "organisationUnit",
+      "name": "Sorting us"
     }
   },
   {
@@ -116,8 +116,8 @@
       "uid": "WlfBODOi2NW",
       "code": "sim_serial",
       "value_type": "TEXT",
-      "org_unit_attr": true,
-      "name": "sim_serial"
+      "attr_type": "organisationUnit",
+      "name": "Sim Serial"
     }
   },
   {
@@ -127,8 +127,8 @@
       "uid": "LBPEcehsQnq",
       "code": "person_contact_opt",
       "value_type": "TEXT",
-      "org_unit_attr": true,
-      "name": "person_contact_opt"
+      "attr_type": "organisationUnit",
+      "name": "Person Contact Opt"
     }
   },
   {
@@ -138,8 +138,8 @@
       "uid": "A5NJOV9CQyR",
       "code": "level_us",
       "value_type": "TEXT",
-      "org_unit_attr": true,
-      "name": "level_us"
+      "attr_type": "organisationUnit",
+      "name": "Level us"
     }
   },
   {
@@ -149,18 +149,19 @@
       "uid": "MKoA22RCFfC",
       "code": "sim_number",
       "value_type": "TEXT",
-      "org_unit_attr": true,
-      "name": "sim_number"
+      "attr_type": "organisationUnit",
+      "name": "Sim Number"
     }
-  },{
+  },
+  {
     "model": "dsd.attribute",
     "pk": 15,
     "fields": {
       "uid": "Jf8hMzLNjdO",
       "code": "sim_number_opt",
       "value_type": "TEXT",
-      "org_unit_attr": true,
-      "name": "sim_number_opt"
+      "attr_type": "organisationUnit",
+      "name": "Sim Number Opt"
     }
   },
   {
@@ -170,8 +171,52 @@
       "uid": "CYZM1npI6Uo",
       "code": "device_number",
       "value_type": "TEXT",
-      "org_unit_attr": true,
-      "name": "device_number"
+      "attr_type": "organisationUnit",
+      "name": "Device Number"
+    }
+  },
+  {
+    "model": "dsd.attribute",
+    "pk": 17,
+    "fields": {
+      "uid": "rfwSPrLa87r",
+      "code": "notes",
+      "value_type": "TEXT",
+      "attr_type": "user",
+      "name": "Notes"
+    }
+  },
+  {
+    "model": "dsd.attribute",
+    "pk": 18,
+    "fields": {
+      "uid": "WYmSEEEYEMc",
+      "code": "organization_name",
+      "value_type": "TEXT",
+      "attr_type": "user",
+      "name": "Organization Name"
+    }
+  },
+  {
+    "model": "dsd.attribute",
+    "pk": 19,
+    "fields": {
+      "uid": "rbKTkvRvYLU",
+      "code": "organization_type",
+      "value_type": "TEXT",
+      "attr_type": "user",
+      "name": "Organization Type"
+    }
+  },
+  {
+    "model": "dsd.attribute",
+    "pk": 20,
+    "fields": {
+      "uid": "wdzFeWVOhhc",
+      "code": "work_phone",
+      "value_type": "TEXT",
+      "attr_type": "user",
+      "name": "Work Phone"
     }
   }
 ]
