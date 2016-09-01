@@ -23,6 +23,10 @@ def add_element(request_body):
     return __post_request(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_ADD_ELEMENT), data=request_body)
 
 
+def post_data_set(request_body):
+    return __post_request(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_ADD_DATA_SET), data=request_body)
+
+
 def __post_request(url, data):
     try:
         return requests.post(url=url,
@@ -31,10 +35,6 @@ def __post_request(url, data):
                              verify=settings.DHIS2_SSL_VERIFY)
     except ConnectionError:
         raise RemoteRequestException()
-
-
-def post_data_set(request_body):
-    return __post_request(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_ADD_DATA_SET), data=request_body)
 
 
 def get_oauth_header():

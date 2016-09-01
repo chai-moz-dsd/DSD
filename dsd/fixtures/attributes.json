@@ -152,10 +152,20 @@
       "org_unit_attr": true,
       "name": "sim_number"
     }
+  },{
+    "model": "dsd.attribute",
+    "pk": 15,
+    "fields": {
+      "uid": "Jf8hMzLNjdO",
+      "code": "sim_number_opt",
+      "value_type": "TEXT",
+      "org_unit_attr": true,
+      "name": "sim_number_opt"
+    }
   },
   {
     "model": "dsd.attribute",
-    "pk": 15,
+    "pk": 16,
     "fields": {
       "uid": "CYZM1npI6Uo",
       "code": "device_number",
