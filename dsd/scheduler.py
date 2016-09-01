@@ -17,12 +17,12 @@ def start():
 
         sync_metadata()
         sync_data(sync_time)
+
+        logger.info('Sync success!')
+        SyncRecord.get_successful_instance().save()
     except Exception as e:
         logger.error('Sync error: %s!' % e)
         SyncRecord.get_fail_instance().save()
-    finally:
-        logger.info('Sync success!')
-        SyncRecord.get_successful_instance().save()
 
 
 def sync_metadata():
