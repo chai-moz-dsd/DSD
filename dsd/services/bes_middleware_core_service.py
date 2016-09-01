@@ -52,7 +52,7 @@ def should_be_synced(bes_middleware_core, last_sync_date):
     return bes_middleware_core.last_update_date > last_sync_date
 
 
-def build_post_data_set_request_body_as_dict(bes_middleware_core):
+def build_data_element_values_request_body_as_dict(bes_middleware_core):
     elements = Element.objects.all()
     data_values = []
     for element in elements:

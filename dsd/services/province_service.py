@@ -1,7 +1,5 @@
 import logging
 
-from django.core.exceptions import ObjectDoesNotExist
-
 from dsd.models import Province
 from dsd.models.remote.province import Province as ProvinceRemote
 from dsd.util import id_generator

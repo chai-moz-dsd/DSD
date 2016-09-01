@@ -10,7 +10,8 @@ from dsd.repositories.dhis2_remote_repository import post_attribute
 from dsd.repositories.dhis2_remote_repository import post_element, post_organization_unit
 from dsd.repositories.request_template.add_element_template import AddElementRequestTemplate
 from dsd.services.attribute_service import convert_attribute_to_dict
-from dsd.services.bes_middleware_core_service import build_data_set_request_body_as_dict
+from dsd.services.bes_middleware_core_service import build_data_set_request_body_as_dict, \
+    build_data_element_values_request_body_as_dict
 
 logger = logging.getLogger(__name__)
 
@@ -50,3 +51,7 @@ def post_elements():
 
 def post_data_set():
     dhis2_remote_repository.post_data_set(json.dumps(build_data_set_request_body_as_dict()))
+
+
+def post_data_element_values():
+    dhis2_remote_repository.post_data_elements_value(json.dumps(build_data_element_values_request_body_as_dict()))

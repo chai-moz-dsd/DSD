@@ -7,7 +7,7 @@ CONTENT_TYPE = {'Content-Type': 'application/json'}
 logger = logging.getLogger(__name__)
 
 
-def post_data_set_elements_value(request_body):
+def post_data_elements_value(request_body):
     return __post_request(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_ADD_DATA_SET_ELEMENTS), data=request_body)
 
 
