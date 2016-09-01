@@ -84,11 +84,11 @@ class BesMiddlewareCoreTest(TestCase):
         device_serial = '353288063681856'
         uid = '8dd73ldj0ld'
         name = 'cases_nv_measles'
-        name2 = 'cases_anger'
+        name2 = 'cases_rabies'
         ElementFactory(name=name, id=id_test)
         ElementFactory(name=name2, id=id_test2)
         FacilityFactory(device_serial=device_serial, uid=uid)
-        bes_middleware_core = BesMiddlewareCore(cases_anger=2, cases_nv_measles=5, device_id=device_serial)
+        bes_middleware_core = BesMiddlewareCore(cases_rabies=2, cases_nv_measles=5, device_id=device_serial)
         result = bes_middleware_core_service.build_post_data_set_request_body_as_dict(bes_middleware_core)
         self.assertEqual(result.get('orgUnit'), uid)
         self.assertEqual(len(result.get('dataValues')), 2)

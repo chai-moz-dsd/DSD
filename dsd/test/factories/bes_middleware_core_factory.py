@@ -36,11 +36,11 @@ class BesMiddlewareCoreFactory(factory.DjangoModelFactory):
     metadata_note = None
     note_diarrhea = None
     cases_nv_measles = 0
-    cases_anger = 0
+    cases_rabies = 0
     note_malaria = None
     device_id = factory.Iterator([356670060315512, 356670060310919, 356670060314465, 356670060310976])
     deaths_measles_24 = 0
-    note_anger = None
+    note_rabies = None
     deaths_diarrhea_5_14 = 0
     skippable_open_field = factory.Iterator(
         ['Schistossomiase 03,tinha 05, conjutivite 09 queimadura 01, traumatismo 01 asma 02 , hta 01.', None,
@@ -53,7 +53,7 @@ class BesMiddlewareCoreFactory(factory.DjangoModelFactory):
     note_meningitis = None
     phone_number = None
     bes_number = factory.Iterator([22, 23, 24])
-    deaths_anger = 0
+    deaths_rabies = 0
     start_test_output = None
     skip_open_field = factory.Iterator(['yes', 'no'])
     note_pfa = None

@@ -27,11 +27,11 @@
     "model": "dsd.element",
     "fields": {
       "aggregation_type": "SUM",
-      "code": "cases_anger",
+      "code": "cases_rabies",
       "id": "13f0a148d30",
       "domain_type": "AGGREGATE",
-      "name": "cases_anger",
-      "short_name": "cases_anger",
+      "name": "cases_rabies",
+      "short_name": "cases_rabies",
       "value_type": "INTEGER"
     }
   },
@@ -315,11 +315,11 @@
     "model": "dsd.element",
     "fields": {
       "aggregation_type": "SUM",
-      "code": "deaths_anger",
+      "code": "deaths_rabies",
       "id": "668a1e7f656",
       "domain_type": "AGGREGATE",
-      "name": "deaths_anger",
-      "short_name": "deaths_anger",
+      "name": "deaths_rabies",
+      "short_name": "deaths_rabies",
       "value_type": "INTEGER"
     }
   },

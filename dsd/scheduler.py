@@ -2,11 +2,11 @@ import logging
 
 from dsd.models import SyncRecord
 from dsd.services import bes_middleware_core_service
+from dsd.services import dhis2_remote_service
 from dsd.services import district_service
 from dsd.services import facility_service
 from dsd.services import province_service
 from dsd.services import sender_middleware_core_service
-from dsd.services.dhis2_remote_service import post_data_set
 
 logger = logging.getLogger(__name__)
 
@@ -19,13 +19,16 @@ def start():
         sync_metadata()
         sync_data(sync_time)
 
+        dhis2_remote_service.post_attributes()
+        dhis2_remote_service.post_organization_units()
+        dhis2_remote_service.post_elements()
+        dhis2_remote_service.post_data_set()
+
         logger.info('Sync success!')
         SyncRecord.get_successful_instance().save()
     except Exception as e:
         logger.error('Sync error: %s!' % e)
         SyncRecord.get_fail_instance().save()
-
-    post_data_set()
 
 
 def sync_metadata():

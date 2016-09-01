@@ -55,6 +55,6 @@ def convert_facility_to_dict(facility, parent_id):
                           'attribute': {'id': "hOzWEm3MT0u", 'name': "device_serial_opt"}},
                      ],
                      'parent': {'id': parent_id}}
-    if (facility.latitude and facility.longitude):
-        facility_dict['coordinates'] =  "[\"%s\", \"%s\"]" % (facility.latitude, facility.longitude)
+    if facility.latitude and facility.longitude:
+        facility_dict['coordinates'] = "[\"%s\", \"%s\"]" % (facility.latitude, facility.longitude)
     return facility_dict

@@ -1,9 +1,10 @@
 from django.db import models
+from model_utils.models import TimeStampedModel
 
 from dsd.models import Province
 
 
-class District(models.Model):
+class District(TimeStampedModel):
     class Meta:
         app_label = 'dsd'
         db_table = 'districts'
