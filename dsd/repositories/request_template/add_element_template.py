@@ -9,5 +9,6 @@ class AddElementRequestTemplate(DictTemplate):
         'name': '${name}',
         'shortName': '${short_name}',
         'domainType': '${domain_type}',
+        'aggregationType': '${aggregation_type}',
         'categoryCombo': {'id': '${category_combo}'}
     }

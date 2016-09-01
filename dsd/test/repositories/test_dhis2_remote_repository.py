@@ -120,6 +120,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
                                                               short_name=element.short_name,
                                                               domain_type=element.domain_type,
                                                               category_combo=dhis2_config.CATEGORY_COMBO_ID,
+                                                              aggregation_type=element.aggregation_type,
                                                               name=element.name)
         mock_post.return_value = MagicMock(status_code=HTTP_201_CREATED)
         mock_get_access_token.return_value = uuid.uuid4()

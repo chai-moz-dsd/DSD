@@ -78,10 +78,12 @@ def post_elements():
                                                               short_name=element.short_name,
                                                               domain_type=element.domain_type,
                                                               category_combo=category_combo_id,
+                                                              aggregation_type=element.aggregation_type,
                                                               name=element.name)
         response = add_element(json.dumps(request_body_dict))
-        logger.info("response status = %s" % response.status_code)
+        logger.info("response status = %s" % response)
 
 
 def post_data_set():
+    print(build_data_set_request_body_as_dict())
     dhis2_remote_repository.post_data_set(json.dumps(build_data_set_request_body_as_dict()))
