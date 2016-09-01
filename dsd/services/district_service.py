@@ -1,7 +1,5 @@
 import logging
 
-from django.core.exceptions import ObjectDoesNotExist
-
 from dsd.models import District
 from dsd.models.remote.district import District as DistrictRemote
 from dsd.util import id_generator
@@ -36,11 +34,22 @@ def get_all_local_districts(all_remote_districts):
 
 def save_districts(districts):
     for district in districts:
-        try:
+        filter_result = District.objects.filter(district_name=district.district_name)
+        if not filter_result.count():
+            district.save()
+            return
+
+        if is_updated(district):
             existing_district = District.objects.get(district_name=district.district_name)
             district.id = existing_district.id
             district.uid = existing_district.uid
-        except ObjectDoesNotExist:
-            pass
-        finally:
             district.save()
+
+
+def is_updated(district_remote):
+    district = District.objects.get(district_name=district_remote.district_name)
+    return district_remote.district_name != district.district_name or \
+           district_remote.description != district.description or \
+           district_remote.data_creation != district.data_creation or \
+           district_remote.user_creation != district.user_creation or \
+           district_remote.state != district.state
