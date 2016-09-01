@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class DistrictServiceTest(TestCase):
-    def test_should_be_false_when_remote_district_updated(self):
+    def test_should_be_false_when_remote_district_not_updated(self):
         data_creation = datetime.today().date()
         district_remote = DistrictRemote(district_name='NIASSA', description='description',
                                          data_creation=data_creation, user_creation=1, state=1)

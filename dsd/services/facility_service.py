@@ -46,3 +46,26 @@ def save_facilities(facilities):
             pass
         finally:
             facility.save()
+
+
+def is_updated(facility_remote):
+    facility = Facility.objects.get(facility_name=facility_remote.facility_name)
+    return facility_remote.facility_name != facility.facility_name or \
+           facility_remote.latitude != facility.latitude or \
+           facility_remote.longitude != facility.longitude or \
+           facility_remote.code_us != facility.code_us or \
+           facility_remote.sorting_us != facility.sorting_us or \
+           facility_remote.level_us != facility.level_us or \
+           facility_remote.fea_us != facility.fea_us or \
+           facility_remote.province_capital_dist != facility.province_capital_dist or \
+           facility_remote.device_serial != facility.device_serial or \
+           facility_remote.sim_number != facility.sim_number or \
+           facility_remote.sim_serial != facility.sim_serial or \
+           facility_remote.device_number != facility.device_number or \
+           facility_remote.state != facility.state or \
+           facility_remote.person_contact_opt != facility.person_contact_opt or \
+           facility_remote.phone_contact_opt != facility.phone_contact_opt or \
+           facility_remote.sim_number_opt != facility.sim_number_opt or \
+           facility_remote.sim_serial_opt != facility.sim_serial_opt or \
+           facility_remote.mac_number != facility.mac_number or \
+           facility_remote.device_serial_opt != facility.device_serial_opt

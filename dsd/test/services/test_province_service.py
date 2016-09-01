@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class ProvinceServiceTest(TestCase):
-    def test_should_be_false_when_remote_province_updated(self):
+    def test_should_be_false_when_remote_province_not_updated(self):
         data_creation = datetime.today().date()
         province_remote = ProvinceRemote(province_name='NIASSA', description='description',
                                          data_creation=data_creation, user_creation=1, state=1)
