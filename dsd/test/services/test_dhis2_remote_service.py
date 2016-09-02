@@ -50,7 +50,7 @@ class DHIS2RemoteServiceTest(TestCase):
 
         post_organization_units()
 
-        requests.post.assert_has_calls([call(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_ADD_ORGANIZATION_UNIT),
+        requests.post.assert_has_calls([call(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_POST_ORGANIZATION_UNIT),
                                              headers=get_oauth_header(),
                                              verify=settings.DHIS2_SSL_VERIFY,
                                              data=json.dumps(organization_unit_list[0])
@@ -76,7 +76,7 @@ class DHIS2RemoteServiceTest(TestCase):
 
         post_elements()
 
-        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_ADD_ELEMENT),
+        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_POST_ELEMENT),
                                               headers=HEADER_DHIS2,
                                               verify=settings.DHIS2_SSL_VERIFY,
                                               data=json.dumps(request_body_dict))
