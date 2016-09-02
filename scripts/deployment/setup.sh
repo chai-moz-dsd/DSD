@@ -6,7 +6,7 @@ source ~/.virtualenvs/dsd/bin/activate
 python manage.py migrate
 python manage.py createcachetable
 python manage.py loaddata dsd/fixtures/attributes.json
-python manage.py loaddata dsd/fixtures/dataElement.json
+python manage.py loaddata dsd/fixtures/data_elements.json
 
 echo "post organisation units and attributes to dhis2"
 while true; do

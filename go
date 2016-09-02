@@ -84,6 +84,8 @@ function reset_db {
     python manage.py makemigrations --settings=chai.settings_test
     python manage.py migrate --settings=chai.settings_test
   else
+    echo "+++ Stop sessions to dsd..."
+    echo "select pg_terminate_backend(pid) from pg_stat_activity where datname='dsd';" | psql -h localhost -U postgres
     echo "+++ Resetting database dsd..."
     echo "drop database dsd; create database dsd;" | psql -h localhost -U postgres
     python manage.py makemigrations --settings=chai.settings_dev
@@ -93,7 +95,10 @@ function reset_db {
 
 function seed {
     python manage.py loaddata dsd/fixtures/attributes.json --settings=chai.settings_dev
-    python manage.py loaddata dsd/fixtures/dataElement.json --settings=chai.settings_dev
+    python manage.py loaddata dsd/fixtures/data_elements.json --settings=chai.settings_dev
+    python manage.py loaddata dsd/fixtures/category_options.json --settings=chai.settings_dev
+    python manage.py loaddata dsd/fixtures/categories.json --settings=chai.settings_dev
+    python manage.py loaddata dsd/fixtures/category_combinations.json --settings=chai.settings_dev
 }
 
 main $@
