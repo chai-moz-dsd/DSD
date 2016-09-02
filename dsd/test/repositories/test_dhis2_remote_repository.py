@@ -20,7 +20,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
         mock_get_access_token.return_value = uuid.uuid4()
         HEADER_DHIS2 = get_oauth_header()
 
-        post_category_combination(self.empty_request_body)
+        post_category_combinations(self.empty_request_body)
 
         requests.post.assert_called_once_with(
             url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_POST_CATEGORY_COMBINATIONS),

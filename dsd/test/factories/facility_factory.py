@@ -3,6 +3,7 @@ import factory
 from dsd.models import Facility
 from dsd.test.factories.district_factory import DistrictFactory
 from dsd.test.factories.province_factory import ProvinceFactory
+from dsd.util.id_generator import generate_id
 
 
 class FacilityFactory(factory.DjangoModelFactory):
@@ -11,6 +12,7 @@ class FacilityFactory(factory.DjangoModelFactory):
 
     facility_name = factory.Iterator(['CENTRO DE SAUDE DE CHINETE', 'POSTO DE SAUDE DE KATAPUA',
                                       'HOSPITAL DISTRITAL DE MACOMIA', 'DESCONHECIDO'])
+    uid = generate_id()
     latitude = ''
     longitude = ''
     code_us = '797'

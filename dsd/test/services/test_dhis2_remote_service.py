@@ -8,10 +8,17 @@ from rest_framework.status import HTTP_201_CREATED
 
 from dsd.models.moh import MoH
 from dsd.models.remote.bes_middleware_core import BesMiddlewareCore
+from dsd.repositories import dhis2_remote_repository
 from dsd.repositories.dhis2_remote_repository import *
 from dsd.repositories.request_template.add_element_template import AddElementRequestTemplate
+from dsd.services import dhis2_remote_service
 from dsd.services.dhis2_remote_service import post_organization_units, post_elements, \
-    build_data_set_request_body_as_dict, build_data_element_values_request_body_as_dict
+    build_data_set_request_body_as_dict, build_data_element_values_request_body_as_dict, \
+    build_category_options_request_body_as_dict, build_categories_request_body_as_dict, \
+    build_category_combinations_request_body_as_dict
+from dsd.test.factories.category_combination_factory import CategoryCombinationFactory
+from dsd.test.factories.category_factory import CategoryFactory
+from dsd.test.factories.category_option_factory import CategoryOptionFactory
 from dsd.test.factories.district_factory import DistrictFactory
 from dsd.test.factories.element_factory import ElementFactory
 from dsd.test.factories.facility_factory import FacilityFactory
@@ -21,6 +28,9 @@ from dsd.util.id_generator import generate_id
 
 
 class DHIS2RemoteServiceTest(TestCase):
+    def setUp(self):
+        self.empty_request_body = json.dumps({})
+
     @patch('datetime.date', FakeDate)
     @patch('dsd.util.id_generator.generate_id')
     @patch('dsd.repositories.dhis2_remote_repository.get_access_token')
@@ -81,7 +91,51 @@ class DHIS2RemoteServiceTest(TestCase):
                                               verify=settings.DHIS2_SSL_VERIFY,
                                               data=json.dumps(request_body_dict))
 
-    def test_should_build_add_element_value_as_dict(self):
+    @override_settings(DHIS2_SSL_VERIFY=False)
+    @patch('dsd.services.dhis2_remote_service.build_category_options_request_body_as_dict')
+    @patch('dsd.repositories.dhis2_remote_repository.post_category_options')
+    def test_should_post_category_options(self, mock_post_category_options,
+                                          mock_build_category_options_request_body_as_dict):
+        category_option = CategoryOptionFactory()
+        mock_post_category_options.return_value = MagicMock(status_code=HTTP_201_CREATED)
+        mock_build_category_options_request_body_as_dict.return_value = self.empty_request_body
+
+        dhis2_remote_service.post_category_options()
+
+        mock_build_category_options_request_body_as_dict.assert_called_once_with(category_option)
+        dhis2_remote_repository.post_category_options.assert_called_once_with(self.empty_request_body)
+
+    @override_settings(DHIS2_SSL_VERIFY=False)
+    @patch('dsd.services.dhis2_remote_service.build_categories_request_body_as_dict')
+    @patch('dsd.repositories.dhis2_remote_repository.post_categories')
+    def test_should_post_category_options(self, mock_post_categories,
+                                          mock_build_categories_request_body_as_dict):
+        category = CategoryFactory()
+
+        mock_post_categories.return_value = MagicMock(status_code=HTTP_201_CREATED)
+        mock_build_categories_request_body_as_dict.return_value = self.empty_request_body
+
+        dhis2_remote_service.post_categories()
+
+        mock_build_categories_request_body_as_dict.assert_called_once_with(category)
+        dhis2_remote_repository.post_categories.assert_called_once_with(self.empty_request_body)
+
+    @override_settings(DHIS2_SSL_VERIFY=False)
+    @patch('dsd.services.dhis2_remote_service.build_category_combinations_request_body_as_dict')
+    @patch('dsd.repositories.dhis2_remote_repository.post_category_combinations')
+    def test_should_post_category_combinations(self, mock_post_category_combinations,
+                                          mock_build_category_combinations_request_body_as_dict):
+        category_combination = CategoryCombinationFactory()
+
+        mock_post_category_combinations.return_value = MagicMock(status_code=HTTP_201_CREATED)
+        mock_build_category_combinations_request_body_as_dict.return_value = self.empty_request_body
+
+        dhis2_remote_service.post_category_combinations()
+
+        mock_build_category_combinations_request_body_as_dict.assert_called_once_with(category_combination)
+        dhis2_remote_repository.post_category_combinations.assert_called_once_with(self.empty_request_body)
+
+    def test_should_build_post_element_value_as_dict(self):
         id_test = generate_id()
         id_test2 = generate_id()
         device_serial = '353288063681856'
@@ -118,3 +172,65 @@ class DHIS2RemoteServiceTest(TestCase):
         self.assertEqual(len(request_body_dict.get('organisationUnits')), 2)
         self.assertEqual(request_body_dict.get('organisationUnits')[0].get('id'), facility1.uid)
         self.assertEqual(request_body_dict.get('organisationUnits')[1].get('id'), facility2.uid)
+
+    def test_should_build_category_options_request_body_as_dict(self):
+        option_id = generate_id()
+        option_name = '5 anos'
+
+        facility1 = FacilityFactory(uid=generate_id(), facility_name='CENTRO DE SAUDE DE CHINETE')
+        facility2 = FacilityFactory(uid=generate_id(), facility_name='HOSPITAL DISTRITAL DE MACOMIA')
+
+        request_body_dict = build_category_options_request_body_as_dict(
+            CategoryOptionFactory(id=option_id, name=option_name))
+
+        self.assertEqual(request_body_dict.get('id'), option_id)
+        self.assertEqual(request_body_dict.get('name'), option_name)
+        self.assertEqual(len(request_body_dict.get('organisationUnits')), 2)
+        self.assertEqual(request_body_dict.get('organisationUnits')[0].get('id'), facility1.uid)
+        self.assertEqual(request_body_dict.get('organisationUnits')[1].get('id'), facility2.uid)
+
+    def test_should_build_categories_request_body_as_dict(self):
+        category_id = generate_id()
+        category_name = 'patient statistics'
+
+        option_id1 = generate_id()
+        option_id2 = generate_id()
+        option_name1 = '5 anos'
+        option_name2 = '5-14 anos'
+        category_options1 = CategoryOptionFactory(id=option_id1, name=option_name1)
+        category_options2 = CategoryOptionFactory(id=option_id2, name=option_name2)
+
+        request_body_dict = build_categories_request_body_as_dict(
+            CategoryFactory(id=category_id, name=category_name,
+                            category_options=(category_options1, category_options2)))
+
+        self.assertEqual(request_body_dict.get('id'), category_id)
+        self.assertEqual(request_body_dict.get('name'), category_name)
+        self.assertEqual(len(request_body_dict.get('categoryOptions')), 2)
+        self.assertEqual(request_body_dict.get('categoryOptions')[0].get('id'), category_options1.id)
+        self.assertEqual(request_body_dict.get('categoryOptions')[1].get('id'), category_options2.id)
+
+    def test_should_build_category_combinations_request_body_as_dict(self):
+        category_name = 'patient statistics'
+
+        option_id1 = generate_id()
+        option_id2 = generate_id()
+        option_name1 = '5 anos'
+        option_name2 = '5-14 anos'
+        category_options1 = CategoryOptionFactory(id=option_id1, name=option_name1)
+        category_options2 = CategoryOptionFactory(id=option_id2, name=option_name2)
+
+        category1 = CategoryFactory(id=generate_id(), name=category_name,
+                                    category_options=(category_options1, category_options2))
+        category2 = CategoryFactory(id=generate_id(), name=category_name, category_options=(category_options1,))
+
+        combination_id = generate_id()
+        combination_name = 'meningte stat'
+        request_body_dict = build_category_combinations_request_body_as_dict(
+            CategoryCombinationFactory(id=combination_id, name=combination_name, categories=(category1, category2)))
+
+        self.assertEqual(request_body_dict.get('id'), combination_id)
+        self.assertEqual(request_body_dict.get('name'), combination_name)
+        self.assertEqual(len(request_body_dict.get('categories')), 2)
+        self.assertEqual(request_body_dict.get('categories')[0].get('id'), category1.id)
+        self.assertEqual(request_body_dict.get('categories')[1].get('id'), category2.id)

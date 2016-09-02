@@ -11,7 +11,7 @@ def post_category_options(request_body):
     return __post_request(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_POST_CATEGORY_OPTIONS), data=request_body)
 
 
-def post_category_combination(request_body):
+def post_category_combinations(request_body):
     return __post_request(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_POST_CATEGORY_COMBINATIONS),
                           data=request_body)
 
