@@ -23,10 +23,8 @@ class CategoryTest(TestCase):
         range_malaria_name = "Age Range malaria"
         patient_statistics_name = "patient statistics"
 
-        range_malaria = CategoryFactory.create(id=generate_id(), name=range_malaria_name,
-                                               category_options=(anos5, anos5_14))
-        patient_statistics = CategoryFactory(id=generate_id(), name=patient_statistics_name,
-                                             category_options=(casos,))
+        range_malaria = CategoryFactory(id=generate_id(), name=range_malaria_name, category_options=(anos5, anos5_14))
+        patient_statistics = CategoryFactory(id=generate_id(), name=patient_statistics_name, category_options=(casos,))
 
         actual_category = Category.objects.filter(name=range_malaria_name)
         self.assertEqual(actual_category.count(), 1)

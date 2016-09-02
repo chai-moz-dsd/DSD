@@ -9,6 +9,7 @@ from dsd.models.attribute import Attribute
 from dsd.models.element import Element
 from dsd.models.category_option import CategoryOption
 from dsd.models.category import Category
+from dsd.models.category_combination import CategoryCombination
 
 
 __all__ = [
@@ -23,4 +24,5 @@ __all__ = [
     'Element',
     'CategoryOption',
     'Category',
+    'CategoryCombination',
 ]
