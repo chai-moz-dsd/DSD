@@ -29,7 +29,7 @@ from dsd.util.id_generator import generate_id
 
 class DHIS2RemoteServiceTest(TestCase):
     def setUp(self):
-        self.empty_request_body = json.dumps({})
+        self.empty_request_body_dict = {}
 
     @patch('datetime.date', FakeDate)
     @patch('dsd.util.id_generator.generate_id')
@@ -98,12 +98,12 @@ class DHIS2RemoteServiceTest(TestCase):
                                           mock_build_category_options_request_body_as_dict):
         category_option = CategoryOptionFactory()
         mock_post_category_options.return_value = MagicMock(status_code=HTTP_201_CREATED)
-        mock_build_category_options_request_body_as_dict.return_value = self.empty_request_body
+        mock_build_category_options_request_body_as_dict.return_value = self.empty_request_body_dict
 
         dhis2_remote_service.post_category_options()
 
         mock_build_category_options_request_body_as_dict.assert_called_once_with(category_option)
-        dhis2_remote_repository.post_category_options.assert_called_once_with(self.empty_request_body)
+        dhis2_remote_repository.post_category_options.assert_called_once_with(json.dumps(self.empty_request_body_dict))
 
     @override_settings(DHIS2_SSL_VERIFY=False)
     @patch('dsd.services.dhis2_remote_service.build_categories_request_body_as_dict')
@@ -113,12 +113,12 @@ class DHIS2RemoteServiceTest(TestCase):
         category = CategoryFactory()
 
         mock_post_categories.return_value = MagicMock(status_code=HTTP_201_CREATED)
-        mock_build_categories_request_body_as_dict.return_value = self.empty_request_body
+        mock_build_categories_request_body_as_dict.return_value = self.empty_request_body_dict
 
         dhis2_remote_service.post_categories()
 
         mock_build_categories_request_body_as_dict.assert_called_once_with(category)
-        dhis2_remote_repository.post_categories.assert_called_once_with(self.empty_request_body)
+        dhis2_remote_repository.post_categories.assert_called_once_with(json.dumps(self.empty_request_body_dict))
 
     @override_settings(DHIS2_SSL_VERIFY=False)
     @patch('dsd.services.dhis2_remote_service.build_category_combinations_request_body_as_dict')
@@ -128,12 +128,12 @@ class DHIS2RemoteServiceTest(TestCase):
         category_combination = CategoryCombinationFactory()
 
         mock_post_category_combinations.return_value = MagicMock(status_code=HTTP_201_CREATED)
-        mock_build_category_combinations_request_body_as_dict.return_value = self.empty_request_body
+        mock_build_category_combinations_request_body_as_dict.return_value = self.empty_request_body_dict
 
         dhis2_remote_service.post_category_combinations()
 
         mock_build_category_combinations_request_body_as_dict.assert_called_once_with(category_combination)
-        dhis2_remote_repository.post_category_combinations.assert_called_once_with(self.empty_request_body)
+        dhis2_remote_repository.post_category_combinations.assert_called_once_with(json.dumps(self.empty_request_body_dict))
 
     def test_should_build_post_element_value_as_dict(self):
         id_test = generate_id()

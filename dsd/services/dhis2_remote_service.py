@@ -68,19 +68,19 @@ def post_data_element_values():
 def post_category_options():
     for category_option in CategoryOption.objects.all():
         request_body_dict = build_category_options_request_body_as_dict(category_option)
-        dhis2_remote_repository.post_category_options(request_body_dict)
+        dhis2_remote_repository.post_category_options(json.dumps(request_body_dict))
 
 
 def post_categories():
     for category in Category.objects.all():
         request_body_dict = build_categories_request_body_as_dict(category)
-        dhis2_remote_repository.post_categories(request_body_dict)
+        dhis2_remote_repository.post_categories(json.dumps(request_body_dict))
 
 
 def post_category_combinations():
     for category_combination in CategoryCombination.objects.all():
         request_body_dict = build_category_combinations_request_body_as_dict(category_combination)
-        dhis2_remote_repository.post_category_combinations(request_body_dict)
+        dhis2_remote_repository.post_category_combinations(json.dumps(request_body_dict))
 
 
 def build_data_element_values_request_body_as_dict(bes_middleware_core):
