@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 def sync():
     all_remote_districts = DistrictRemote.objects.all()
     all_local_districts = get_all_local_districts(all_remote_districts)
-    all_valid_local_districts = filter(is_valid_district, all_local_districts)
+    all_valid_local_districts = list(filter(is_valid_district, all_local_districts))
 
     save_districts(all_valid_local_districts)
 
@@ -37,11 +37,12 @@ def save_districts(districts):
         filter_result = District.objects.filter(district_name=district.district_name)
         if not filter_result.count():
             district.save()
-            return
+            continue
 
         if is_updated(district):
             existing_district = District.objects.get(district_name=district.district_name)
             district.id = existing_district.id
+            district.province = existing_district.province
             district.uid = existing_district.uid
             district.save()
 

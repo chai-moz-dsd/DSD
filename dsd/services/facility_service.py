@@ -1,7 +1,5 @@
 import logging
 
-from django.core.exceptions import ObjectDoesNotExist
-
 from dsd.models import Facility
 from dsd.models.remote.facility import Facility as FacilityRemote
 from dsd.util import id_generator
@@ -12,7 +10,7 @@ logger = logging.getLogger(__name__)
 def sync():
     all_remote_facilities = FacilityRemote.objects.all()
     all_local_facilities = get_all_local_facilities(all_remote_facilities)
-    all_valid_local_facilities = filter(is_valid_facility, all_local_facilities)
+    all_valid_local_facilities = list(filter(is_valid_facility, all_local_facilities))
 
     save_facilities(all_valid_local_facilities)
 
@@ -38,13 +36,17 @@ def get_all_local_facilities(all_remote_facilities):
 
 def save_facilities(facilities):
     for facility in facilities:
-        try:
-            existing_facility = Facility.objects.get(facility_name=facility.facility_name)
+        filter_result = Facility.objects.filter(facility_name=facility.facility_name)
+        if not filter_result.count():
+            facility.save()
+            continue
+
+        if is_updated(facility):
+            existing_facility = Facility.objects.get(district_name=facility.facility_name)
             facility.id = existing_facility.id
+            facility.province = existing_facility.province
+            facility.district = existing_facility.district
             facility.uid = existing_facility.uid
-        except ObjectDoesNotExist:
-            pass
-        finally:
             facility.save()
 
 

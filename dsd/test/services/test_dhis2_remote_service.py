@@ -124,7 +124,7 @@ class DHIS2RemoteServiceTest(TestCase):
     @patch('dsd.services.dhis2_remote_service.build_category_combinations_request_body_as_dict')
     @patch('dsd.repositories.dhis2_remote_repository.post_category_combinations')
     def test_should_post_category_combinations(self, mock_post_category_combinations,
-                                          mock_build_category_combinations_request_body_as_dict):
+                                               mock_build_category_combinations_request_body_as_dict):
         category_combination = CategoryCombinationFactory()
 
         mock_post_category_combinations.return_value = MagicMock(status_code=HTTP_201_CREATED)
