@@ -77,7 +77,7 @@ class DHIS2RemoteServiceTest(TestCase):
                                                               value_type=element.value_type,
                                                               short_name=element.short_name,
                                                               domain_type=element.domain_type,
-                                                              category_combo=dhis2_config.CATEGORY_COMBO_ID,
+                                                              category_combo=element.category_combo.id,
                                                               aggregation_type=element.aggregation_type,
                                                               name=element.name)
         mock_post.return_value = MagicMock(status_code=HTTP_201_CREATED)
@@ -133,7 +133,8 @@ class DHIS2RemoteServiceTest(TestCase):
         dhis2_remote_service.post_category_combinations()
 
         mock_build_category_combinations_request_body_as_dict.assert_called_once_with(category_combination)
-        dhis2_remote_repository.post_category_combinations.assert_called_once_with(json.dumps(self.empty_request_body_dict))
+        dhis2_remote_repository.post_category_combinations.assert_called_once_with(
+            json.dumps(self.empty_request_body_dict))
 
     def test_should_build_post_element_value_as_dict(self):
         id_test = generate_id()
@@ -142,8 +143,8 @@ class DHIS2RemoteServiceTest(TestCase):
         uid = '8dd73ldj0ld'
         name = 'cases_nv_measles'
         name2 = 'cases_rabies'
-        ElementFactory(name=name, id=id_test)
-        ElementFactory(name=name2, id=id_test2)
+        ElementFactory(name=name, id=id_test, category_combo=CategoryCombinationFactory(id=generate_id()))
+        ElementFactory(name=name2, id=id_test2, category_combo=CategoryCombinationFactory(id=generate_id()))
         FacilityFactory(device_serial=device_serial, uid=uid)
         bes_middleware_core = BesMiddlewareCore(cases_rabies=2, cases_nv_measles=5, device_id=device_serial)
         result = build_data_element_values_request_body_as_dict(bes_middleware_core)
@@ -158,8 +159,8 @@ class DHIS2RemoteServiceTest(TestCase):
         facility1 = FacilityFactory()
         facility2 = FacilityFactory()
 
-        element1 = ElementFactory(id=generate_id())
-        element2 = ElementFactory(id=generate_id())
+        element1 = ElementFactory(id=generate_id(), category_combo=CategoryCombinationFactory(id=generate_id()))
+        element2 = ElementFactory(id=generate_id(), category_combo=CategoryCombinationFactory(id=generate_id()))
 
         request_body_dict = build_data_set_request_body_as_dict()
 

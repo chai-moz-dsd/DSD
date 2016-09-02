@@ -1,6 +1,7 @@
 import factory
 
 from dsd.models.element import Element
+from dsd.test.factories.category_combination_factory import CategoryCombinationFactory
 from dsd.util.id_generator import generate_id
 
 
@@ -15,3 +16,4 @@ class ElementFactory(factory.DjangoModelFactory):
     aggregation_type = factory.Iterator(['PLUS', 'SUM'])
     domain_type = factory.Iterator(['AGGREGATE', 'NUMBER'])
     value_type = factory.Iterator(['STRING', 'INTEGER'])
+    category_combo = factory.SubFactory(CategoryCombinationFactory)

@@ -30,7 +30,6 @@ def post_attributes():
 
 
 def post_elements():
-    category_combo_id = dhis2_config.CATEGORY_COMBO_ID
     elements = Element.objects.all()
     for element in elements:
         request_body_dict = AddElementRequestTemplate().build(id=element.id,
@@ -38,7 +37,7 @@ def post_elements():
                                                               value_type=element.value_type,
                                                               short_name=element.short_name,
                                                               domain_type=element.domain_type,
-                                                              category_combo=category_combo_id,
+                                                              category_combo=element.category_combo.id,
                                                               aggregation_type=element.aggregation_type,
                                                               name=element.name)
         response = post_element(json.dumps(request_body_dict))
