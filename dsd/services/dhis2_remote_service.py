@@ -1,5 +1,6 @@
 import json
 import logging
+from datetime import datetime
 
 from dsd.config import dhis2_config
 from dsd.models import Attribute
@@ -7,13 +8,11 @@ from dsd.models import BesMiddlewareCore
 from dsd.models import Element
 from dsd.models import SyncRecord
 from dsd.models.moh import MoH
+from dsd.models.remote.facility import Facility
 from dsd.repositories import dhis2_remote_repository
 from dsd.repositories.dhis2_remote_repository import post_attribute
 from dsd.repositories.dhis2_remote_repository import post_element, post_organization_unit
 from dsd.repositories.request_template.add_element_template import AddElementRequestTemplate
-from dsd.services.attribute_service import convert_attribute_to_dict
-from dsd.services.bes_middleware_core_service import build_data_set_request_body_as_dict, \
-    build_data_element_values_request_body_as_dict
 
 logger = logging.getLogger(__name__)
 
@@ -61,3 +60,57 @@ def post_data_element_values():
         if bes_middleware_cores.last_update_date > SyncRecord.get_last_successful_sync_time():
             dhis2_remote_repository.post_data_elements_value(
                 json.dumps(build_data_element_values_request_body_as_dict(bes_middleware_core)))
+
+
+def build_data_element_values_request_body_as_dict(bes_middleware_core):
+    elements = Element.objects.all()
+    data_values = []
+    for element in elements:
+        data_values.append({
+            'dataElement': element.id,
+            'value': getattr(bes_middleware_core, element.name)
+        })
+
+    now = datetime.now()
+    return {
+        'dataSet': dhis2_config.DATA_SET_ID,
+        'completeData': str(now),
+        'period': str(now.strftime('%Y%m')),
+        'orgUnit': Facility.objects.get(device_serial=bes_middleware_core.device_id).uid,
+        'dataValues': data_values
+    }
+
+
+def build_data_set_request_body_as_dict():
+    facilities = Facility.objects.all()
+    elements = Element.objects.all()
+    facility_ids_list = []
+    element_ids_list = []
+    for facility in facilities:
+        facility_ids_list.append({'id': facility.uid})
+    for element in elements:
+        element_ids_list.append({'id': element.id})
+    return {
+        'dataElements': element_ids_list,
+        'expiryDays': 0,
+        'fieldCombinationRequired': False,
+        'indicators': [],
+        'mobile': False,
+        'name': dhis2_config.DATA_SET_NAME,
+        'openFuturePeriods': 0,
+        'organisationUnits': facility_ids_list,
+        'periodType': dhis2_config.DATA_SET_PERIOD_TYPES,
+        'shortName': dhis2_config.DATA_SET_NAME,
+        'timelyDays': 15
+    }
+
+
+def convert_attribute_to_dict(attribute):
+    attr_type = attribute.attr_type + "Attribute"
+    return {
+        'id': attribute.uid,
+        'code': attribute.code,
+        'valueType': attribute.value_type,
+        attr_type: True,
+        'name': attribute.name
+    }

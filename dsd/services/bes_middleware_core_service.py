@@ -1,10 +1,6 @@
 import logging
-from datetime import datetime
 
-from dsd.config import dhis2_config
 from dsd.models import BesMiddlewareCore
-from dsd.models import Element
-from dsd.models import Facility
 from dsd.models.remote.bes_middleware_core import BesMiddlewareCore as BesMiddlewareCoreRemote
 
 logger = logging.getLogger(__name__)
@@ -50,46 +46,3 @@ def save(bes_middleware_core):
 
 def should_be_synced(bes_middleware_core, last_sync_date):
     return bes_middleware_core.last_update_date > last_sync_date
-
-
-def build_data_element_values_request_body_as_dict(bes_middleware_core):
-    elements = Element.objects.all()
-    data_values = []
-    for element in elements:
-        data_values.append({
-            'dataElement': element.id,
-            'value': getattr(bes_middleware_core, element.name)
-        })
-
-    now = datetime.now()
-    return {
-        'dataSet': dhis2_config.DATA_SET_ID,
-        'completeData': str(now),
-        'period': str(now.strftime('%Y%m')),
-        'orgUnit': Facility.objects.get(device_serial=bes_middleware_core.device_id).uid,
-        'dataValues': data_values
-    }
-
-
-def build_data_set_request_body_as_dict():
-    facilities = Facility.objects.all()
-    elements = Element.objects.all()
-    facility_ids_list = []
-    element_ids_list = []
-    for facility in facilities:
-        facility_ids_list.append({'id': facility.uid})
-    for element in elements:
-        element_ids_list.append({'id': element.id})
-    return {
-        'dataElements': element_ids_list,
-        'expiryDays': 0,
-        'fieldCombinationRequired': False,
-        'indicators': [],
-        'mobile': False,
-        'name': dhis2_config.DATA_SET_NAME,
-        'openFuturePeriods': 0,
-        'organisationUnits': facility_ids_list,
-        'periodType': dhis2_config.DATA_SET_PERIOD_TYPES,
-        'shortName': dhis2_config.DATA_SET_NAME,
-        'timelyDays': 15
-    }

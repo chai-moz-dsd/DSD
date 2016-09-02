@@ -37,5 +37,5 @@ def sync_metadata():
 
 
 def sync_data(sync_time):
-    bes_middleware_core_service.sync(sync_time)
+    bes_middleware_core_service.syenc(sync_time)
     sender_middleware_core_service.sync(sync_time)
