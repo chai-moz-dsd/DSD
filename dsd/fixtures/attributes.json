@@ -191,10 +191,10 @@
     "pk": 18,
     "fields": {
       "uid": "WYmSEEEYEMc",
-      "code": "organization_name",
+      "code": "organisation_name",
       "value_type": "TEXT",
       "attr_type": "user",
-      "name": "Organization Name"
+      "name": "Organisation Name"
     }
   },
   {
@@ -202,10 +202,10 @@
     "pk": 19,
     "fields": {
       "uid": "rbKTkvRvYLU",
-      "code": "organization_type",
+      "code": "organisation_type",
       "value_type": "TEXT",
       "attr_type": "user",
-      "name": "Organization Type"
+      "name": "Organisation Type"
     }
   },
   {
