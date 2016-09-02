@@ -8,7 +8,7 @@ from dsd.models import BesMiddlewareCore
 from dsd.models import Element
 from dsd.models import SyncRecord
 from dsd.models.moh import MoH
-from dsd.models.remote.facility import Facility
+from dsd.models import Facility
 from dsd.repositories import dhis2_remote_repository
 from dsd.repositories.dhis2_remote_repository import post_attribute
 from dsd.repositories.dhis2_remote_repository import post_element, post_organization_unit

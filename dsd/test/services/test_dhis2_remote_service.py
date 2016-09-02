@@ -20,13 +20,13 @@ from dsd.test.helpers.fake_date import FakeDate
 from dsd.util.id_generator import generate_id
 
 
-class DHIS2RemoteRepositoryTest(TestCase):
+class DHIS2RemoteServiceTest(TestCase):
     @patch('datetime.date', FakeDate)
     @patch('dsd.util.id_generator.generate_id')
     @patch('dsd.repositories.dhis2_remote_repository.get_access_token')
     @patch('requests.post')
     @override_settings(DHIS2_SSL_VERIFY=False)
-    def should_post_organization_units(self, mock_post, mock_get_access_token, mock_generate_id):
+    def test_should_post_organization_units(self, mock_post, mock_get_access_token, mock_generate_id):
         mock_generate_id.side_effect = ['00000000000', '11111111111', '22222222222', '33333333333', '44444444444',
                                         '55555555555', '66666666666']
 
@@ -53,7 +53,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
         requests.post.assert_has_calls([call(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_ADD_ORGANIZATION_UNIT),
                                              headers=get_oauth_header(),
                                              verify=settings.DHIS2_SSL_VERIFY,
-                                             data=organization_unit_list
+                                             data=json.dumps(organization_unit_list[0])
                                              )])
 
     @override_settings(DHIS2_SSL_VERIFY=False)
@@ -81,7 +81,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
                                               verify=settings.DHIS2_SSL_VERIFY,
                                               data=json.dumps(request_body_dict))
 
-    def should_build_add_element_value_as_dict(self):
+    def test_should_build_add_element_value_as_dict(self):
         id_test = generate_id()
         id_test2 = generate_id()
         device_serial = '353288063681856'
@@ -100,7 +100,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
         self.assertEqual(result.get('dataValues')[1].get('dataElement'), id_test2)
         self.assertEqual(result.get('dataValues')[1].get('value'), 2)
 
-    def should_build_data_set_request_body_as_dict(self):
+    def test_should_build_data_set_request_body_as_dict(self):
         facility1 = FacilityFactory()
         facility2 = FacilityFactory()
 
