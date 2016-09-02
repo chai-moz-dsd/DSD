@@ -19,8 +19,9 @@ def start():
         sync_metadata()
         sync_data(sync_time)
 
-        dhis2_remote_service.post_organization_units()
         dhis2_remote_service.post_data_set()
+        dhis2_remote_service.post_organization_units()
+        dhis2_remote_service.post_data_element_values()
 
         logger.info('Sync success!')
         SyncRecord.get_successful_instance().save()
