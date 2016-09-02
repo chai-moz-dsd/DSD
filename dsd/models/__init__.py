@@ -7,6 +7,8 @@ from dsd.models.data_set_element import DataSetElement
 from dsd.models.sync_record import SyncRecord
 from dsd.models.attribute import Attribute
 from dsd.models.element import Element
+from dsd.models.category_option import CategoryOption
+from dsd.models.category import Category
 
 
 __all__ = [
@@ -19,4 +21,6 @@ __all__ = [
     'SyncRecord',
     'Attribute',
     'Element',
+    'CategoryOption',
+    'Category',
 ]
