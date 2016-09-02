@@ -5,7 +5,6 @@ from model_utils.models import TimeStampedModel
 class Province(TimeStampedModel):
     class Meta:
         app_label = 'dsd'
-        db_table = 'provinces'
 
     uid = models.CharField(max_length=255)
     province_name = models.CharField(max_length=255, unique=True, null=True)

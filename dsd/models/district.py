@@ -7,7 +7,6 @@ from dsd.models import Province
 class District(TimeStampedModel):
     class Meta:
         app_label = 'dsd'
-        db_table = 'districts'
 
     uid = models.CharField(max_length=255)
     district_name = models.CharField(max_length=255, unique=True)

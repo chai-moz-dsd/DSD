@@ -8,7 +8,6 @@ from dsd.models import Province
 class Facility(TimeStampedModel):
     class Meta:
         app_label = 'dsd'
-        db_table = 'facilities'
 
     uid = models.CharField(max_length=255)
     facility_name = models.CharField(max_length=255, unique=True)
