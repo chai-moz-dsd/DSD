@@ -1,0 +1,382 @@
+[
+  {
+    "model": "dsd.cocrelation",
+    "pk": 1,
+    "fields": {
+      "name_in_bes": "cases_diarrhea_04",
+      "element_id": "4f8817e929c",
+      "cc_id": "edbe5f8b3e2",
+      "name_of_coc": "0-4 anos, C"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 2,
+    "fields": {
+      "name_in_bes": "deaths_diarrhea_04",
+      "element_id": "4f8817e929c",
+      "cc_id": "edbe5f8b3e2",
+      "name_of_coc": "0-4 anos, O"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 3,
+    "fields": {
+      "name_in_bes": "cases_diarrhea_5_14",
+      "element_id": "4f8817e929c",
+      "cc_id": "edbe5f8b3e2",
+      "name_of_coc": "5-14 anos, C"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 4,
+    "fields": {
+      "name_in_bes": "deaths_diarrhea_5_14",
+      "element_id": "4f8817e929c",
+      "cc_id": "edbe5f8b3e2",
+      "name_of_coc": "5-14 anos, O"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 5,
+    "fields": {
+      "name_in_bes": "cases_diarrhea_15",
+      "element_id": "4f8817e929c",
+      "cc_id": "edbe5f8b3e2",
+      "name_of_coc": "15 anos+, C"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 6,
+    "fields": {
+      "name_in_bes": "deaths_diarrhea_15",
+      "element_id": "4f8817e929c",
+      "cc_id": "edbe5f8b3e2",
+      "name_of_coc": "15 anos+, O"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 7,
+    "fields": {
+      "name_in_bes": "cases_measles_9",
+      "element_id": "2f47c3c71d0",
+      "cc_id": "8c8f0381f3a",
+      "name_of_coc": "Menos de 9 meses, C"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 8,
+    "fields": {
+      "name_in_bes": "deaths_measles_9",
+      "element_id": "2f47c3c71d0",
+      "cc_id": "8c8f0381f3a",
+      "name_of_coc": "Menos de 9 meses, O"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 9,
+    "fields": {
+      "name_in_bes": "cases_nv_measles",
+      "element_id": "2f47c3c71d0",
+      "cc_id": "8c8f0381f3a",
+      "name_of_coc": "9-23 meses(Não Vacinados), C"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 10,
+    "fields": {
+      "name_in_bes": "deaths_measles_nv",
+      "element_id": "2f47c3c71d0",
+      "cc_id": "8c8f0381f3a",
+      "name_of_coc": "9-23 meses(Não Vacinados), O"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 11,
+    "fields": {
+      "name_in_bes": "cases_measles_v9_23",
+      "element_id": "2f47c3c71d0",
+      "cc_id": "8c8f0381f3a",
+      "name_of_coc": "9-23 meses(Vacinados), C"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 12,
+    "fields": {
+      "name_in_bes": "deaths_measles_v_9_23",
+      "element_id": "2f47c3c71d0",
+      "cc_id": "8c8f0381f3a",
+      "name_of_coc": "9-23 meses(Vacinados), O"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 13,
+    "fields": {
+      "name_in_bes": "cases_measles_24",
+      "element_id": "2f47c3c71d0",
+      "cc_id": "8c8f0381f3a",
+      "name_of_coc": "24 meses e mais, C"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 14,
+    "fields": {
+      "name_in_bes": "deaths_measles_24",
+      "element_id": "2f47c3c71d0",
+      "cc_id": "8c8f0381f3a",
+      "name_of_coc": "24 meses e mais, O"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 15,
+    "fields": {
+      "name_in_bes": "cases_meningitis_0_4",
+      "element_id": "29fe3ae729c",
+      "cc_id": "1a78c97efb2",
+      "name_of_coc": "0-4 anos, C"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 16,
+    "fields": {
+      "name_in_bes": "deaths_meningitis_04",
+      "element_id": "29fe3ae729c",
+      "cc_id": "1a78c97efb2",
+      "name_of_coc": "0-4 anos, O"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 17,
+    "fields": {
+      "name_in_bes": "cases_meningitis_5",
+      "element_id": "29fe3ae729c",
+      "cc_id": "1a78c97efb2",
+      "name_of_coc": "5 anos+, C"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 18,
+    "fields": {
+      "name_in_bes": "deaths_meningitis_5",
+      "element_id": "29fe3ae729c",
+      "cc_id": "1a78c97efb2",
+      "name_of_coc": "5 anos+, O"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 19,
+    "fields": {
+      "name_in_bes": "cases_pfa",
+      "element_id": "ee4aa11fd69",
+      "cc_id": "07e1c5853e5",
+      "name_of_coc": "C"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 20,
+    "fields": {
+      "name_in_bes": "deaths_pfa",
+      "element_id": "ee4aa11fd69",
+      "cc_id": "07e1c5853e5",
+      "name_of_coc": "O"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 21,
+    "fields": {
+      "name_in_bes": "cases_rabies",
+      "element_id": "5a8c710e735",
+      "cc_id": "0df011cada4",
+      "name_of_coc": "C"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 22,
+    "fields": {
+      "name_in_bes": "deaths_rabies",
+      "element_id": "5a8c710e735",
+      "cc_id": "0df011cada4",
+      "name_of_coc": "O"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 23,
+    "fields": {
+      "name_in_bes": "cases_cholera",
+      "element_id": "0f040c9a7ab",
+      "cc_id": "330c6839b0c",
+      "name_of_coc": "C"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 24,
+    "fields": {
+      "name_in_bes": "deaths_cholera",
+      "element_id": "0f040c9a7ab",
+      "cc_id": "330c6839b0c",
+      "name_of_coc": "O"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 25,
+    "fields": {
+      "name_in_bes": "cases_tetanus",
+      "element_id": "085cd6ce5d8",
+      "cc_id": "5d729451101",
+      "name_of_coc": "C"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 26,
+    "fields": {
+      "name_in_bes": "cases_tetanus",
+      "element_id": "085cd6ce5d8",
+      "cc_id": "5d729451101",
+      "name_of_coc": "O"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 27,
+    "fields": {
+      "name_in_bes": "cases_plague",
+      "element_id": "4550ca50708",
+      "cc_id": "17320d025c9",
+      "name_of_coc": "C"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 28,
+    "fields": {
+      "name_in_bes": "deaths_plague",
+      "element_id": "4550ca50708",
+      "cc_id": "17320d025c9",
+      "name_of_coc": "O"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 29,
+    "fields": {
+      "name_in_bes": "cases_dysentery",
+      "element_id": "2a97d9c69c5",
+      "cc_id": "14c2f1112ef",
+      "name_of_coc": "C"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 30,
+    "fields": {
+      "name_in_bes": "deaths_dysentery",
+      "element_id": "2a97d9c69c5",
+      "cc_id": "14c2f1112ef",
+      "name_of_coc": "O"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 31,
+    "fields": {
+      "name_in_bes": "cases_malaria_0_4",
+      "element_id": "9a48b98506d",
+      "cc_id": "aa776715a56",
+      "name_of_coc": "0-4 anos, C"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 32,
+    "fields": {
+      "name_in_bes": "deaths_malaria_0_4",
+      "element_id": "9a48b98506d",
+      "cc_id": "aa776715a56",
+      "name_of_coc": "0-4 anos, O"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 33,
+    "fields": {
+      "name_in_bes": "cases_malaria_5",
+      "element_id": "9a48b98506d",
+      "cc_id": "aa776715a56",
+      "name_of_coc": "5 anos+, C"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 34,
+    "fields": {
+      "name_in_bes": "deaths_malaria_5",
+      "element_id": "9a48b98506d",
+      "cc_id": "aa776715a56",
+      "name_of_coc": "5 anos+, O"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 35,
+    "fields": {
+      "name_in_bes": "cases_clinic_malaria_0_4",
+      "element_id": "356d98c351d",
+      "cc_id": "76a86d030e8",
+      "name_of_coc": "0-4 anos, C"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 36,
+    "fields": {
+      "name_in_bes": "deaths_clinic_malaria_0_4",
+      "element_id": "356d98c351d",
+      "cc_id": "76a86d030e8",
+      "name_of_coc": "0-4 anos, O"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 37,
+    "fields": {
+      "name_in_bes": "cases_clinic_malaria_5",
+      "element_id": "356d98c351d",
+      "cc_id": "76a86d030e8",
+      "name_of_coc": "5 anos+, C"
+    }
+  },
+  {
+    "model": "dsd.cocrelation",
+    "pk": 38,
+    "fields": {
+      "name_in_bes": "deaths_clinic_malaria_5",
+      "element_id": "356d98c351d",
+      "cc_id": "76a86d030e8",
+      "name_of_coc": "5 anos+, O"
+    }
+  }
+]
