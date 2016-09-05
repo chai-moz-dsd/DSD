@@ -208,8 +208,10 @@ class DHIS2RemoteServiceTest(TestCase):
         self.assertEqual(request_body_dict.get('id'), category_id)
         self.assertEqual(request_body_dict.get('name'), category_name)
         self.assertEqual(len(request_body_dict.get('categoryOptions')), 2)
-        self.assertEqual(request_body_dict.get('categoryOptions')[0].get('id'), category_options1.id)
-        self.assertEqual(request_body_dict.get('categoryOptions')[1].get('id'), category_options2.id)
+        ids = [request_body_dict.get('categoryOptions')[0].get('id'),
+               request_body_dict.get('categoryOptions')[1].get('id')]
+        self.assertTrue(category_options1.id in ids)
+        self.assertTrue(category_options2.id in ids)
 
     def test_should_build_category_combinations_request_body_as_dict(self):
         category_name = 'patient statistics'
@@ -233,5 +235,6 @@ class DHIS2RemoteServiceTest(TestCase):
         self.assertEqual(request_body_dict.get('id'), combination_id)
         self.assertEqual(request_body_dict.get('name'), combination_name)
         self.assertEqual(len(request_body_dict.get('categories')), 2)
-        self.assertEqual(request_body_dict.get('categories')[0].get('id'), category1.id)
-        self.assertEqual(request_body_dict.get('categories')[1].get('id'), category2.id)
+        ids = [request_body_dict.get('categories')[0].get('id'), request_body_dict.get('categories')[1].get('id')]
+        self.assertTrue(category1.id in ids)
+        self.assertTrue(category2.id in ids)
