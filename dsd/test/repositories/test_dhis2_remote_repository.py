@@ -23,7 +23,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
         post_category_combinations(self.empty_request_body)
 
         requests.post.assert_called_once_with(
-            url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_POST_CATEGORY_COMBINATIONS),
+            url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_CATEGORY_COMBINATIONS),
             headers=HEADER_DHIS2,
             verify=settings.DHIS2_SSL_VERIFY,
             data=self.empty_request_body)
@@ -38,7 +38,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
 
         post_categories(self.empty_request_body)
 
-        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_POST_CATEGORIES),
+        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_CATEGORIES),
                                               headers=HEADER_DHIS2,
                                               verify=settings.DHIS2_SSL_VERIFY,
                                               data=self.empty_request_body)
@@ -53,7 +53,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
 
         post_category_options(self.empty_request_body)
 
-        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_POST_CATEGORY_OPTIONS),
+        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_CATEGORY_OPTIONS),
                                               headers=HEADER_DHIS2,
                                               verify=settings.DHIS2_SSL_VERIFY,
                                               data=self.empty_request_body)
@@ -68,7 +68,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
 
         post_data_set(self.empty_request_body)
 
-        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_POST_DATA_SET),
+        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_DATA_SET),
                                               headers=HEADER_DHIS2,
                                               verify=settings.DHIS2_SSL_VERIFY,
                                               data=self.empty_request_body)
@@ -88,7 +88,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
         response = post_attribute(request_body=self.empty_request_body)
         HEADER_DHIS2 = get_oauth_header()
         self.assertEqual(response.status_code, HTTP_200_OK)
-        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_POST_ATTRIBUTE),
+        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_ATTRIBUTE),
                                               headers=HEADER_DHIS2,
                                               verify=settings.DHIS2_SSL_VERIFY,
                                               data=self.empty_request_body)
@@ -108,7 +108,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
         response = post_data_elements_value(request_body=self.empty_request_body)
         HEADER_DHIS2 = get_oauth_header()
         self.assertEqual(response.status_code, HTTP_201_CREATED)
-        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_POST_DATA_SET_ELEMENTS),
+        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_DATA_SET_ELEMENTS),
                                               headers=HEADER_DHIS2,
                                               verify=settings.DHIS2_SSL_VERIFY,
                                               data=self.empty_request_body)
@@ -127,7 +127,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
         mock_get_access_token.return_value = uuid.uuid4()
         HEADER_DHIS2 = get_oauth_header()
         post_data_set(self.empty_request_body)
-        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_URLS.get(dhis2_config.KEY_POST_DATA_SET),
+        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_DATA_SET),
                                               headers=HEADER_DHIS2,
                                               verify=settings.DHIS2_SSL_VERIFY,
                                               data=self.empty_request_body)

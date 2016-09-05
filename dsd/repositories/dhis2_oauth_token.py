@@ -29,14 +29,14 @@ def get_access_token():
 def set_access_token():
     refresh_token = cache.get(REFRESH_TOKEN)
     body = {'grant_type': REFRESH_TOKEN, REFRESH_TOKEN: refresh_token}
-    json_data = __post_request(dhis2_config.DHIS2_URLS.get(dhis2_config.OAUTH2_TOKEN), body,
+    json_data = __post_request(dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.OAUTH2_TOKEN), body,
                                (OAUTH2_UID, OAUTH2_SECRET), HEADER_OAUTH)
     cache.set(ACCESS_TOKEN, json_data[ACCESS_TOKEN], EXPIRES_TIME)
 
 
 def set_refresh_token():
     body = {'grant_type': 'password', 'username': USERNAME, 'password': PASSWORD}
-    json_data = __post_request(dhis2_config.DHIS2_URLS.get(dhis2_config.OAUTH2_TOKEN), body,
+    json_data = __post_request(dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.OAUTH2_TOKEN), body,
                                (OAUTH2_UID, OAUTH2_SECRET), HEADER_OAUTH)
     cache.set(REFRESH_TOKEN, json_data[REFRESH_TOKEN], EXPIRES_TIME)
 
@@ -49,7 +49,7 @@ def create_oauth():
         'grantTypes': ['password', 'refresh_token', 'authorization_code']
     }
     HEADER_OAUTH_CREATE = {'Content-Type': 'application/json'}
-    __post_request(dhis2_config.DHIS2_URLS.get(dhis2_config.OAUTH2_CREATE), json.dumps(body), (USERNAME, PASSWORD),
+    __post_request(dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.OAUTH2_CREATE), json.dumps(body), (USERNAME, PASSWORD),
                    HEADER_OAUTH_CREATE)
     set_refresh_token()
     set_access_token()

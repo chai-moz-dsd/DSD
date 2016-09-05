@@ -15,7 +15,7 @@ KEY_POST_CATEGORY_COMBINATIONS = '_post_category_combinations'
 OAUTH2_TOKEN = 'oauth2_token'
 OAUTH2_CREATE = 'oauth2_create'
 
-DHIS2_URLS = {
+DHIS2_STATIC_URLS = {
     KEY_POST_ATTRIBUTE: "%sapi/%s/attributes" % (DHIS2_BASE_URL, VERSION),
     KEY_POST_ORGANIZATION_UNIT: '%sapi/%s/organisationUnits' % (DHIS2_BASE_URL, VERSION),
     KEY_POST_DATA_SET_ELEMENTS: '%sapi/%s/dataValueSets' % (DHIS2_BASE_URL, VERSION),
@@ -35,3 +35,6 @@ DATA_SET_PERIOD_TYPES = 'Weekly'
 
 CATEGORY_DATA_DIMENSION = True
 CATEGORY_DATA_DIMENSION_TYPE = 'DISAGGREGATION'
+
+def key_get_cocid(category_comb_id):
+    return '%sapi/%s/categoryCombos/%s?fields=categoryOptionCombos[id,name]'%(DHIS2_BASE_URL, VERSION, category_comb_id)

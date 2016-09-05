@@ -2,7 +2,6 @@ import logging
 
 from dsd.models import SyncRecord
 from dsd.services import bes_middleware_core_service
-from dsd.services import dhis2_remote_service
 from dsd.services import district_service
 from dsd.services import facility_service
 from dsd.services import province_service
@@ -18,10 +17,6 @@ def start():
 
         sync_metadata()
         sync_data(sync_time)
-
-        dhis2_remote_service.post_data_set()
-        dhis2_remote_service.post_organization_units()
-        dhis2_remote_service.post_data_element_values()
 
         logger.info('Sync success!')
         SyncRecord.get_successful_instance().save()

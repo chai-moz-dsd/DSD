@@ -20,7 +20,7 @@ class DHIS2OauthTokenTest(TestCase):
         mock_set.return_value = True
         body = {'grant_type': 'password', 'username': 'username', 'password': 'password'}
         set_refresh_token()
-        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_URLS.get(dhis2_config.OAUTH2_TOKEN),
+        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.OAUTH2_TOKEN),
                                               headers=HEADER_OAUTH,
                                               auth=('uid', 'secret'),
                                               verify=settings.DHIS2_SSL_VERIFY,
@@ -38,7 +38,7 @@ class DHIS2OauthTokenTest(TestCase):
         body = {'grant_type': "refresh_token", "refresh_token": "929a3cec-16b5-47bc-87c7-e90e6fbc8207"}
         mock_post.return_value.text = json.dumps({ACCESS_TOKEN: str(uuid.uuid4())})
         set_access_token()
-        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_URLS.get(dhis2_config.OAUTH2_TOKEN),
+        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.OAUTH2_TOKEN),
                                               data=body,
                                               auth=('uid', 'secret'),
                                               headers=HEADER_OAUTH,
@@ -63,7 +63,7 @@ class DHIS2OauthTokenTest(TestCase):
         header = {'Content-Type': 'application/json'}
         mock_post.return_value.text = json.dumps({})
         create_oauth()
-        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_URLS.get(dhis2_config.OAUTH2_CREATE),
+        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.OAUTH2_CREATE),
                                               data= json.dumps(body),
                                               auth=('username', 'password'),
                                               headers=header,

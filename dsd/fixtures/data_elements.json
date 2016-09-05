@@ -40,6 +40,19 @@
   },
   {
     "model": "dsd.element",
+    "pk": "356d98c351d",
+    "fields": {
+      "aggregation_type": "SUM",
+      "code": "MALARIA_CLINICA",
+      "domain_type": "AGGREGATE",
+      "name": "MALARIA CLINICA",
+      "short_name": "MALARIA CLINICA",
+      "value_type": "INTEGER",
+      "category_combo": "76a86d030e8"
+    }
+  },
+  {
+    "model": "dsd.element",
     "pk": "ee4aa11fd69",
     "fields": {
       "aggregation_type": "SUM",

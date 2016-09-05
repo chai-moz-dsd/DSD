@@ -30,7 +30,6 @@ function main {
       fi;;
     "sh" )
       run_shell;;
-
     "schedule")
       schedule;;
 
@@ -75,7 +74,7 @@ function schedule {
 }
 
 function run_shell {
-  python manage.py shell --settings=chai.settings_dev
+  python manage.py shell_plus --settings=chai.settings_dev
 }
 function reset_db {
   if [ "$1" = "test" ]; then
@@ -99,6 +98,8 @@ function seed {
     python manage.py loaddata dsd/fixtures/categories.json --settings=chai.settings_dev
     python manage.py loaddata dsd/fixtures/category_combinations.json --settings=chai.settings_dev
     python manage.py loaddata dsd/fixtures/data_elements.json --settings=chai.settings_dev
+    python manage.py loaddata dsd/fixtures/coc_relations.json --settings=chai.settings_dev
+    python manage.py createcachetable --settings=chai.settings_dev dsd_cache
 }
 
 main $@

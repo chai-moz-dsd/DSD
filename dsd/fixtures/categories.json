@@ -25,6 +25,17 @@
   },
   {
     "model": "dsd.category",
+    "pk": "6ec63d04fce",
+    "fields": {
+      "name": "malaria clinica tempo intervalo",
+      "category_options": [
+        "5ab5e311f4d",
+        "79532d3b911"
+      ]
+    }
+  },
+  {
+    "model": "dsd.category",
     "pk": "d6850b46c58",
     "fields": {
       "name": "diarreia tempo intervalo",
@@ -39,7 +50,7 @@
     "model": "dsd.category",
     "pk": "f397a34ae8e",
     "fields": {
-      "name": "meninggite tempo intervalo",
+      "name": "meningite tempo intervalo",
       "category_options": [
         "5ab5e311f4d",
         "79532d3b911"
