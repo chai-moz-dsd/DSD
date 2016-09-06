@@ -19,6 +19,7 @@ from dsd.services.dhis2_remote_service import post_organization_units, post_elem
 from dsd.test.factories.category_combination_factory import CategoryCombinationFactory
 from dsd.test.factories.category_factory import CategoryFactory
 from dsd.test.factories.category_option_factory import CategoryOptionFactory
+from dsd.test.factories.coc_relation_factory import COCRelationFactory
 from dsd.test.factories.district_factory import DistrictFactory
 from dsd.test.factories.element_factory import ElementFactory
 from dsd.test.factories.facility_factory import FacilityFactory
@@ -60,11 +61,12 @@ class DHIS2RemoteServiceTest(TestCase):
 
         post_organization_units()
 
-        requests.post.assert_has_calls([call(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_ORGANIZATION_UNIT),
-                                             headers=get_oauth_header(),
-                                             verify=settings.DHIS2_SSL_VERIFY,
-                                             data=json.dumps(organization_unit_list[0])
-                                             )])
+        requests.post.assert_has_calls(
+            [call(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_ORGANIZATION_UNIT),
+                  headers=get_oauth_header(),
+                  verify=settings.DHIS2_SSL_VERIFY,
+                  data=json.dumps(organization_unit_list[0])
+                  )])
 
     @override_settings(DHIS2_SSL_VERIFY=False)
     @patch('dsd.repositories.dhis2_remote_repository.get_access_token')
@@ -137,20 +139,29 @@ class DHIS2RemoteServiceTest(TestCase):
             json.dumps(self.empty_request_body_dict))
 
     def test_should_build_post_element_value_as_dict(self):
-        id_test = generate_id()
+        id_test1 = generate_id()
         id_test2 = generate_id()
         device_serial = '353288063681856'
         uid = '8dd73ldj0ld'
-        name = 'cases_nv_measles'
+        name1 = 'cases_nv_measles'
         name2 = 'cases_rabies'
-        ElementFactory(name=name, id=id_test, category_combo=CategoryCombinationFactory(id=generate_id()))
-        ElementFactory(name=name2, id=id_test2, category_combo=CategoryCombinationFactory(id=generate_id()))
+        # patient_statistics_name = 'patient statistics'
+        # meningte_stat_name = 'meningte stat'
+        #
+        # casos = CategoryOptionFactory(id=generate_id(), name='C')
+        # patient_statistics = CategoryFactory(id=generate_id(), name=patient_statistics_name, category_options=(casos,))
+        element1 = ElementFactory(name=name1, id=id_test1, category_combo=CategoryCombinationFactory(id=generate_id()))
+        element2 = ElementFactory(name=name2, id=id_test2, category_combo=CategoryCombinationFactory(id=generate_id()))
         FacilityFactory(device_serial=device_serial, uid=uid)
         bes_middleware_core = BesMiddlewareCore(cases_rabies=2, cases_nv_measles=5, device_id=device_serial)
+        COCRelationFactory(name_in_bes='cases_nv_measles', element_id=element1.id,
+                           name_of_coc='9-23 meses(Não Vacinados), C', coc_id=generate_id())
+        COCRelationFactory(name_in_bes='cases_rabies', element_id=element2.id,
+                           name_of_coc='C', coc_id=generate_id())
         result = build_data_element_values_request_body_as_dict(bes_middleware_core)
         self.assertEqual(result.get('orgUnit'), uid)
         self.assertEqual(len(result.get('dataValues')), 2)
-        self.assertEqual(result.get('dataValues')[0].get('dataElement'), id_test)
+        self.assertEqual(result.get('dataValues')[0].get('dataElement'), id_test1)
         self.assertEqual(result.get('dataValues')[0].get('value'), 5)
         self.assertEqual(result.get('dataValues')[1].get('dataElement'), id_test2)
         self.assertEqual(result.get('dataValues')[1].get('value'), 2)

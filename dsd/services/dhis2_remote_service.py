@@ -9,8 +9,9 @@ from dsd.models import Category
 from dsd.models import CategoryCombination
 from dsd.models import CategoryOption
 from dsd.models import Element
+from dsd.models import COCRelation
 from dsd.models import Facility
-from dsd.models import SyncRecord
+# from dsd.models import SyncRecord
 from dsd.models.moh import MoH
 from dsd.repositories import dhis2_remote_repository
 from dsd.repositories.dhis2_remote_repository import post_attribute
@@ -59,7 +60,7 @@ def post_data_set():
 def post_data_element_values():
     bes_middleware_cores = BesMiddlewareCore.objects.all()
     for bes_middleware_core in bes_middleware_cores:
-        if bes_middleware_cores.last_update_date > SyncRecord.get_last_successful_sync_time():
+        if Facility.objects.filter(device_serial=bes_middleware_core.device_id).count():
             dhis2_remote_repository.post_data_elements_value(
                 json.dumps(build_data_element_values_request_body_as_dict(bes_middleware_core)))
 
@@ -83,12 +84,13 @@ def post_category_combinations():
 
 
 def build_data_element_values_request_body_as_dict(bes_middleware_core):
-    elements = Element.objects.all()
+    coc_relations = COCRelation.objects.all()
     data_values = []
-    for element in elements:
+    for coc_relation in coc_relations:
         data_values.append({
-            'dataElement': element.id,
-            'value': getattr(bes_middleware_core, element.name)
+            'dataElement': coc_relation.element_id,
+            'value': getattr(bes_middleware_core, coc_relation.name_in_bes),
+            'categoryOptionCombo': coc_relation.coc_id,
         })
 
     now = datetime.now()
