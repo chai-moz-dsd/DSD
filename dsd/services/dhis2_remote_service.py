@@ -1,6 +1,5 @@
 import json
 import logging
-from datetime import datetime
 
 from dsd.config import dhis2_config
 from dsd.models import Attribute
@@ -12,7 +11,7 @@ from dsd.models import Element
 from dsd.models import COCRelation
 from dsd.models import Facility
 # from dsd.models import SyncRecord
-from dsd.models.moh import MoH
+from dsd.models.moh import MoH, MOH_UID
 from dsd.repositories import dhis2_remote_repository
 from dsd.repositories.dhis2_remote_repository import post_attribute
 from dsd.repositories.dhis2_remote_repository import post_element, post_organization_unit
@@ -61,6 +60,7 @@ def post_data_element_values():
     bes_middleware_cores = BesMiddlewareCore.objects.all()
     for bes_middleware_core in bes_middleware_cores:
         if Facility.objects.filter(device_serial=bes_middleware_core.device_id).count():
+            print(build_data_element_values_request_body_as_dict(bes_middleware_core))
             dhis2_remote_repository.post_data_elements_value(
                 json.dumps(build_data_element_values_request_body_as_dict(bes_middleware_core)))
 
@@ -83,21 +83,34 @@ def post_category_combinations():
         dhis2_remote_repository.post_category_combinations(json.dumps(request_body_dict))
 
 
+def get_user_profile():
+    profile = dhis2_remote_repository.get_self_profile()
+    profile_json = json.loads(profile)
+    return profile_json['id'], profile_json['surname'], profile_json['firstName']
+
+# assign all org to default user
+def update_user():
+    user_id, surname, first_name = get_user_profile()
+    dhis2_remote_repository.update_user(json.dumps(user_update_body(surname, first_name)), user_id)
+
+
 def build_data_element_values_request_body_as_dict(bes_middleware_core):
     coc_relations = COCRelation.objects.all()
     data_values = []
     for coc_relation in coc_relations:
-        data_values.append({
-            'dataElement': coc_relation.element_id,
-            'value': getattr(bes_middleware_core, coc_relation.name_in_bes),
-            'categoryOptionCombo': coc_relation.coc_id,
-        })
+        if getattr(bes_middleware_core, coc_relation.name_in_bes) > 0:
+            data_values.append({
+                'dataElement': coc_relation.element_id,
+                'value': getattr(bes_middleware_core, coc_relation.name_in_bes),
+                'categoryOptionCombo': coc_relation.coc_id,
+            })
 
-    now = datetime.now()
+    submission_date = bes_middleware_core.submission_date
+    submission_week = "%sW%s" % (submission_date.isocalendar()[0], submission_date.isocalendar()[1])
     return {
         'dataSet': dhis2_config.DATA_SET_ID,
-        'completeData': str(now),
-        'period': str(now.strftime('%Y%m')),
+        'completeData': str(submission_date),
+        'period': str(submission_week),
         'orgUnit': Facility.objects.get(device_serial=bes_middleware_core.device_id).uid,
         'dataValues': data_values
     }
@@ -118,6 +131,7 @@ def build_data_set_request_body_as_dict():
         'fieldCombinationRequired': False,
         'indicators': [],
         'mobile': False,
+        'id': dhis2_config.DATA_SET_ID,
         'name': dhis2_config.DATA_SET_NAME,
         'openFuturePeriods': 0,
         'organisationUnits': facility_ids_list,
@@ -173,4 +187,14 @@ def build_category_combinations_request_body_as_dict(category_combination):
         'id': category_combination.id,
         'name': category_combination.name,
         'dataDimensionType': dhis2_config.CATEGORY_DATA_DIMENSION_TYPE
+    }
+
+
+def user_update_body(surname, first_name):
+    return {
+        'surname': surname,
+        'firstName': first_name,
+        'organisationUnits': [{
+            'id': MOH_UID
+        }]
     }

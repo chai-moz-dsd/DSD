@@ -8,7 +8,8 @@ logger = logging.getLogger(__name__)
 
 
 def post_category_options(request_body):
-    return __post_request(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_CATEGORY_OPTIONS), data=request_body)
+    return __post_request(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_CATEGORY_OPTIONS),
+                          data=request_body)
 
 
 def post_category_combinations(request_body):
@@ -21,11 +22,15 @@ def post_categories(request_body):
 
 
 def post_data_elements_value(request_body):
-    return __post_request(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_DATA_SET_ELEMENTS), data=request_body)
+    res = __post_request(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_DATA_SET_ELEMENTS),
+                          data=request_body)
+    print(res.text)
+    return
 
 
 def post_organization_unit(request_body):
-    return __post_request(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_ORGANIZATION_UNIT), data=request_body)
+    return __post_request(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_ORGANIZATION_UNIT),
+                          data=request_body)
 
 
 def post_attribute(request_body):
@@ -38,6 +43,21 @@ def post_element(request_body):
 
 def post_data_set(request_body):
     return __post_request(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_DATA_SET), data=request_body)
+
+
+def get_self_profile():
+    header = {'Authorization': 'bearer %s' % get_access_token()}
+    response = requests.get(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_SELF_PROFILE),
+                            headers=header,
+                            verify=settings.DHIS2_SSL_VERIFY)
+    return response.text
+
+
+def update_user(request_body, user_id):
+    return requests.put(url=dhis2_config.key_update_user(user_id),
+                        data=request_body,
+                        headers=get_oauth_header(),
+                        verify=settings.DHIS2_SSL_VERIFY)
 
 
 def __post_request(url, data):

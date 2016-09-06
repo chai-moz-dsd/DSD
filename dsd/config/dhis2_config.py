@@ -12,6 +12,7 @@ KEY_POST_DATA_SET = '_post_data_set'
 KEY_POST_CATEGORY_OPTIONS = '_post_category_options'
 KEY_POST_CATEGORIES = '_post_categories'
 KEY_POST_CATEGORY_COMBINATIONS = '_post_category_combinations'
+KEY_GET_SELF_PROFILE = '_get_self_profile'
 OAUTH2_TOKEN = 'oauth2_token'
 OAUTH2_CREATE = 'oauth2_create'
 
@@ -24,17 +25,23 @@ DHIS2_STATIC_URLS = {
     KEY_POST_CATEGORY_OPTIONS: '%sapi/%s/categoryOptions' % (DHIS2_BASE_URL, VERSION),
     KEY_POST_CATEGORIES: '%sapi/%s/categories' % (DHIS2_BASE_URL, VERSION),
     KEY_POST_CATEGORY_COMBINATIONS: '%sapi/%s/categoryCombos' % (DHIS2_BASE_URL, VERSION),
+    KEY_GET_SELF_PROFILE: '%sapi/%s/me' % (DHIS2_BASE_URL, VERSION),
     OAUTH2_TOKEN: "%suaa/oauth/token" % DHIS2_BASE_URL,
     OAUTH2_CREATE: "%sapi/oAuth2Clients" % DHIS2_BASE_URL,
 }
 
-CATEGORY_COMBO_ID = '84jf8wld02d'
-DATA_SET_ID = '84ndl9jeldu'
+DATA_SET_ID = 'TTLoO39Scy9'
 DATA_SET_NAME = 'chai_disease'
 DATA_SET_PERIOD_TYPES = 'Weekly'
 
 CATEGORY_DATA_DIMENSION = True
 CATEGORY_DATA_DIMENSION_TYPE = 'DISAGGREGATION'
 
+
 def key_get_cocid(category_comb_id):
-    return '%sapi/%s/categoryCombos/%s?fields=categoryOptionCombos[id,name]'%(DHIS2_BASE_URL, VERSION, category_comb_id)
+    return '%sapi/%s/categoryCombos/%s?fields=categoryOptionCombos[id,name]' % (
+        DHIS2_BASE_URL, VERSION, category_comb_id)
+
+
+def key_update_user(user_id):
+    return '%sapi/%s/users/%s' % (DHIS2_BASE_URL, VERSION, user_id)
