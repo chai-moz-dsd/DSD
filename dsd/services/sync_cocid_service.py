@@ -10,11 +10,7 @@ from dsd.repositories.dhis2_oauth_token import get_access_token
 
 
 def get_category_combo_ids():
-    category_combos = CategoryCombination.objects.all()
-    ids = []
-    for category_combo in category_combos:
-        ids.append(category_combo.id)
-    return ids
+    return [category_combo.id for category_combo in CategoryCombination.objects.all()]
 
 
 def get_category_option_combos(category_comb_id):

@@ -145,20 +145,18 @@ class DHIS2RemoteServiceTest(TestCase):
         uid = '8dd73ldj0ld'
         name1 = 'cases_nv_measles'
         name2 = 'cases_rabies'
-        # patient_statistics_name = 'patient statistics'
-        # meningte_stat_name = 'meningte stat'
-        #
-        # casos = CategoryOptionFactory(id=generate_id(), name='C')
-        # patient_statistics = CategoryFactory(id=generate_id(), name=patient_statistics_name, category_options=(casos,))
         element1 = ElementFactory(name=name1, id=id_test1, category_combo=CategoryCombinationFactory(id=generate_id()))
         element2 = ElementFactory(name=name2, id=id_test2, category_combo=CategoryCombinationFactory(id=generate_id()))
         FacilityFactory(device_serial=device_serial, uid=uid)
-        bes_middleware_core = BesMiddlewareCore(cases_rabies=2, cases_nv_measles=5, device_id=device_serial)
+        bes_middleware_core = BesMiddlewareCore(submission_date=datetime.datetime.today(), cases_rabies=2,
+                                                cases_nv_measles=5, device_id=device_serial)
         COCRelationFactory(name_in_bes='cases_nv_measles', element_id=element1.id,
                            name_of_coc='9-23 meses(Não Vacinados), C', coc_id=generate_id())
         COCRelationFactory(name_in_bes='cases_rabies', element_id=element2.id,
                            name_of_coc='C', coc_id=generate_id())
         result = build_data_element_values_request_body_as_dict(bes_middleware_core)
+        logger.info('*' * 100)
+        logger.info(result)
         self.assertEqual(result.get('orgUnit'), uid)
         self.assertEqual(len(result.get('dataValues')), 2)
         self.assertEqual(result.get('dataValues')[0].get('dataElement'), id_test1)

@@ -4,12 +4,13 @@ import logging
 from dsd.config import dhis2_config
 from dsd.models import Attribute
 from dsd.models import BesMiddlewareCore
+from dsd.models import COCRelation
 from dsd.models import Category
 from dsd.models import CategoryCombination
 from dsd.models import CategoryOption
 from dsd.models import Element
-from dsd.models import COCRelation
 from dsd.models import Facility
+
 # from dsd.models import SyncRecord
 from dsd.models.moh import MoH, MOH_UID
 from dsd.repositories import dhis2_remote_repository
@@ -60,7 +61,6 @@ def post_data_element_values():
     bes_middleware_cores = BesMiddlewareCore.objects.all()
     for bes_middleware_core in bes_middleware_cores:
         if Facility.objects.filter(device_serial=bes_middleware_core.device_id).count():
-            print(build_data_element_values_request_body_as_dict(bes_middleware_core))
             dhis2_remote_repository.post_data_elements_value(
                 json.dumps(build_data_element_values_request_body_as_dict(bes_middleware_core)))
 
@@ -86,10 +86,10 @@ def post_category_combinations():
 def get_user_profile():
     profile = dhis2_remote_repository.get_self_profile()
     profile_json = json.loads(profile)
-    return profile_json['id'], profile_json['surname'], profile_json['firstName']
+    return profile_json.get('id'), profile_json.get('surname'), profile_json.get('firstName')
 
-# assign all org to default user
-def update_user():
+
+def assign_all_org_to_user():
     user_id, surname, first_name = get_user_profile()
     dhis2_remote_repository.update_user(json.dumps(user_update_body(surname, first_name)), user_id)
 
@@ -142,7 +142,7 @@ def build_data_set_request_body_as_dict():
 
 
 def convert_attribute_to_dict(attribute):
-    attr_type = attribute.attr_type + 'Attribute'
+    attr_type = '%sAttribute' % attribute.attr_type
     return {
         'id': attribute.uid,
         'code': attribute.code,

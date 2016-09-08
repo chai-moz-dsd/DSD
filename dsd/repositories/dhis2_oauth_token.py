@@ -1,5 +1,6 @@
-import requests
 import json
+
+import requests
 from django.core.cache import cache
 
 from chai import settings
@@ -18,11 +19,14 @@ EXPIRES_TIME = 36000
 
 
 def get_access_token():
-    if cache.get(ACCESS_TOKEN) is not None:
+    if cache.get(ACCESS_TOKEN):
         return cache.get(ACCESS_TOKEN)
-    if cache.get(REFRESH_TOKEN) is None:
+
+    if not cache.get(REFRESH_TOKEN):
         set_refresh_token()
+
     set_access_token()
+
     return cache.get(ACCESS_TOKEN)
 
 
@@ -49,7 +53,8 @@ def create_oauth():
         'grantTypes': ['password', 'refresh_token', 'authorization_code']
     }
     HEADER_OAUTH_CREATE = {'Content-Type': 'application/json'}
-    __post_request(dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.OAUTH2_CREATE), json.dumps(body), (USERNAME, PASSWORD),
+    __post_request(dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.OAUTH2_CREATE), json.dumps(body),
+                   (USERNAME, PASSWORD),
                    HEADER_OAUTH_CREATE)
     set_refresh_token()
     set_access_token()

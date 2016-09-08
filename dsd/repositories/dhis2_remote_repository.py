@@ -22,10 +22,8 @@ def post_categories(request_body):
 
 
 def post_data_elements_value(request_body):
-    res = __post_request(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_DATA_SET_ELEMENTS),
+    return __post_request(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_DATA_SET_ELEMENTS),
                           data=request_body)
-    print(res.text)
-    return
 
 
 def post_organization_unit(request_body):

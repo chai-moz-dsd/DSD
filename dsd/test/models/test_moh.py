@@ -35,6 +35,5 @@ class MoHTest(TestCase):
         moh = MoH()
         actual_dict = moh.get_organization_as_list()
 
-        print(actual_dict)
         self.maxDiff = None
         self.assertEqual(actual_dict, self.expected_dict)
