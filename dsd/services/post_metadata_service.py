@@ -1,5 +1,5 @@
-import logging
 from dsd import scheduler
+from dsd.models import SyncRecord
 from dsd.repositories.dhis2_oauth_token import create_oauth
 from dsd.services.dhis2_remote_service import *
 from dsd.services.sync_cocid_service import set_coc_id
