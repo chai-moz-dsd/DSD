@@ -15,28 +15,28 @@
   },
   {
     "model": "dsd.categoryoption",
-    "pk": "00185f2b3eb",
+    "pk": "u0185f2b3eb",
     "fields": {
       "name": "9-23 meses(Vacinados)"
     }
   },
   {
     "model": "dsd.categoryoption",
-    "pk": "315859577e2",
+    "pk": "t15u59j77e2",
     "fields": {
       "name": "24 meses e mais"
     }
   },
   {
     "model": "dsd.categoryoption",
-    "pk": "5ab5e311f4d",
+    "pk": "Lab5e311f4d",
     "fields": {
       "name": "0-4 anos"
     }
   },
   {
     "model": "dsd.categoryoption",
-    "pk": "79532d3b911",
+    "pk": "p9532d3b911",
     "fields": {
       "name": "5 anos+"
     }
@@ -50,14 +50,14 @@
   },
   {
     "model": "dsd.categoryoption",
-    "pk": "9bbe4c65238",
+    "pk": "ebbe4c65238",
     "fields": {
       "name": "15 anos+"
     }
   },
   {
     "model": "dsd.categoryoption",
-    "pk": "3c8d41da389",
+    "pk": "rc8d41da389",
     "fields": {
       "name": "C"
     }

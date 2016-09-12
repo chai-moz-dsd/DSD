@@ -1,22 +1,22 @@
 [
   {
     "model": "dsd.categorycombination",
-    "pk": "8c8f0381f3a",
+    "pk": "dc8f0381f3a",
     "fields": {
       "name": "sapampo breakpoint",
       "categories": [
-        "8c4570d5a32",
-        "11b2d794df8"
+        "qc4570d5a32",
+        "y1b2d794df8"
       ]
     }
   },
   {
     "model": "dsd.categorycombination",
-    "pk": "5d729451101",
+    "pk": "td729451101",
     "fields": {
       "name": "tetano recem nascidos breakpoint",
       "categories": [
-        "11b2d794df8"
+        "y1b2d794df8"
       ]
     }
   },
@@ -26,39 +26,39 @@
     "fields": {
       "name": "malaria breakpoint",
       "categories": [
-        "540afc251b2",
-        "11b2d794df8"
+        "h40afc251b2",
+        "y1b2d794df8"
       ]
     }
   },
   {
     "model": "dsd.categorycombination",
-    "pk": "76a86d030e8",
+    "pk": "m6a86d030e8",
     "fields": {
       "name": "malaria clinica breakpoint",
       "categories": [
-        "6ec63d04fce",
-        "11b2d794df8"
+        "tec63d04fce",
+        "y1b2d794df8"
       ]
     }
   },
   {
     "model": "dsd.categorycombination",
-    "pk": "07e1c5853e5",
+    "pk": "l7e1c5853e5",
     "fields": {
       "name": "paralisia flacida aguda breakpoint",
       "categories": [
-        "11b2d794df8"
+        "y1b2d794df8"
       ]
     }
   },
   {
     "model": "dsd.categorycombination",
-    "pk": "0df011cada4",
+    "pk": "tdf011cada4",
     "fields": {
       "name": "raiva breakpoint",
       "categories": [
-        "11b2d794df8"
+        "y1b2d794df8"
       ]
     }
   },
@@ -69,48 +69,48 @@
       "name": "diarreia breakpoint",
       "categories": [
         "d6850b46c58",
-        "11b2d794df8"
+        "y1b2d794df8"
       ]
     }
   },
   {
     "model": "dsd.categorycombination",
-    "pk": "14c2f1112ef",
+    "pk": "u4c2f1112ef",
     "fields": {
       "name": "disenteria breakpoint",
       "categories": [
-        "11b2d794df8"
+        "y1b2d794df8"
       ]
     }
   },
   {
     "model": "dsd.categorycombination",
-    "pk": "330c6839b0c",
+    "pk": "o30c6839b0c",
     "fields": {
       "name": "colera breakpoint",
       "categories": [
-        "11b2d794df8"
+        "y1b2d794df8"
       ]
     }
   },
   {
     "model": "dsd.categorycombination",
-    "pk": "17320d025c9",
+    "pk": "p73e0d025c9",
     "fields": {
       "name": "paste breakpoint",
       "categories": [
-        "11b2d794df8"
+        "y1b2d794df8"
       ]
     }
   },
   {
     "model": "dsd.categorycombination",
-    "pk": "1a78c97efb2",
+    "pk": "ta78c97efb2",
     "fields": {
       "name": "meningite breakpoint",
       "categories": [
         "f397a34ae8e",
-        "11b2d794df8"
+        "y1b2d794df8"
       ]
     }
   }

@@ -54,8 +54,7 @@ def create_oauth():
     }
     HEADER_OAUTH_CREATE = {'Content-Type': 'application/json'}
     __post_request(dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.OAUTH2_CREATE), json.dumps(body),
-                   (USERNAME, PASSWORD),
-                   HEADER_OAUTH_CREATE)
+                   (USERNAME, PASSWORD), HEADER_OAUTH_CREATE)
     set_refresh_token()
     set_access_token()
 

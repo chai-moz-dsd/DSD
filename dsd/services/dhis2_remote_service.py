@@ -1,3 +1,4 @@
+import datetime
 import json
 import logging
 
@@ -104,13 +105,15 @@ def build_data_element_values_request_body_as_dict(bes_middleware_core):
                 'value': getattr(bes_middleware_core, coc_relation.name_in_bes),
                 'categoryOptionCombo': coc_relation.coc_id,
             })
-
-    submission_date = bes_middleware_core.submission_date
-    submission_week = "%sW%s" % (submission_date.isocalendar()[0], submission_date.isocalendar()[1])
+    if bes_middleware_core.start:
+        start_date = bes_middleware_core.start
+    else:
+        start_date = datetime.datetime.now()
+    start_week = "%sW%s" % (start_date.isocalendar()[0], start_date.isocalendar()[1])
     return {
         'dataSet': dhis2_config.DATA_SET_ID,
-        'completeData': str(submission_date),
-        'period': str(submission_week),
+        'completeData': str(bes_middleware_core.submission_date),
+        'period': str(start_week),
         'orgUnit': Facility.objects.get(device_serial=bes_middleware_core.device_id).uid,
         'dataValues': data_values
     }

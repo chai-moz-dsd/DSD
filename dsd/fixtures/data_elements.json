@@ -1,7 +1,7 @@
 [
   {
     "model": "dsd.element",
-    "pk": "2f47c3c71d0",
+    "pk": "af47c3c71d0",
     "fields": {
       "aggregation_type": "SUM",
       "code": "SARAMPO_055",
@@ -9,12 +9,12 @@
       "name": "SARAMPO 055",
       "short_name": "SARAMPO 055",
       "value_type": "INTEGER",
-      "category_combo": "8c8f0381f3a"
+      "category_combo": "dc8f0381f3a"
     }
   },
   {
     "model": "dsd.element",
-    "pk": "085cd6ce5d8",
+    "pk": "c85cd6ce5d8",
     "fields": {
       "aggregation_type": "SUM",
       "code": "037_TÉTANO_RECÉM_NASCIDOS",
@@ -22,12 +22,12 @@
       "name": "037 TÉTANO RECÉM NASCIDOS",
       "short_name": "037 TÉTANO RECÉM NASCIDOS",
       "value_type": "INTEGER",
-      "category_combo": "5d729451101"
+      "category_combo": "td729451101"
     }
   },
   {
     "model": "dsd.element",
-    "pk": "9a48b98506d",
+    "pk": "fa48b98506d",
     "fields": {
       "aggregation_type": "SUM",
       "code": "MALARIA_084",
@@ -40,7 +40,7 @@
   },
   {
     "model": "dsd.element",
-    "pk": "356d98c351d",
+    "pk": "r56d98c351d",
     "fields": {
       "aggregation_type": "SUM",
       "code": "MALARIA_CLINICA",
@@ -48,7 +48,7 @@
       "name": "MALARIA CLINICA",
       "short_name": "MALARIA CLINICA",
       "value_type": "INTEGER",
-      "category_combo": "76a86d030e8"
+      "category_combo": "m6a86d030e8"
     }
   },
   {
@@ -61,12 +61,12 @@
       "name": "045 PARALISIA FLÁCIDA AGUDA",
       "short_name": "045 PARALISIA FLÁCIDA AGUDA",
       "value_type": "INTEGER",
-      "category_combo": "07e1c5853e5"
+      "category_combo": "l7e1c5853e5"
     }
   },
   {
     "model": "dsd.element",
-    "pk": "5a8c710e735",
+    "pk": "ta8c710e735",
     "fields": {
       "aggregation_type": "SUM",
       "code": "071_RAIVA",
@@ -74,12 +74,12 @@
       "name": "071 RAIVA",
       "short_name": "071 RAIVA",
       "value_type": "INTEGER",
-      "category_combo": "0df011cada4"
+      "category_combo": "tdf011cada4"
     }
   },
   {
     "model": "dsd.element",
-    "pk": "4f8817e929c",
+    "pk": "ef8817e929c",
     "fields": {
       "aggregation_type": "SUM",
       "code": "DIARREIA_009",
@@ -92,7 +92,7 @@
   },
   {
     "model": "dsd.element",
-    "pk": "2a97d9c69c5",
+    "pk": "ma97d9c69c5",
     "fields": {
       "aggregation_type": "SUM",
       "code": "009.2_DISENTERIA",
@@ -100,12 +100,12 @@
       "name": "009.2 DISENTERIA",
       "short_name": "009.2 DISENTERIA",
       "value_type": "INTEGER",
-      "category_combo": "14c2f1112ef"
+      "category_combo": "u4c2f1112ef"
     }
   },
   {
     "model": "dsd.element",
-    "pk": "0f040c9a7ab",
+    "pk": "rf040c9a7ab",
     "fields": {
       "aggregation_type": "SUM",
       "code": "001_CÓLERA",
@@ -113,12 +113,12 @@
       "name": "001 CÓLERA",
       "short_name": "001 CÓLERA",
       "value_type": "INTEGER",
-      "category_combo": "330c6839b0c"
+      "category_combo": "o30c6839b0c"
     }
   },
   {
     "model": "dsd.element",
-    "pk": "4550ca50708",
+    "pk": "h550ca50708",
     "fields": {
       "aggregation_type": "SUM",
       "code": "020_PESTE",
@@ -126,12 +126,12 @@
       "name": "020 PESTE",
       "short_name": "020 PESTE",
       "value_type": "INTEGER",
-      "category_combo": "17320d025c9"
+      "category_combo": "p73e0d025c9"
     }
   },
   {
     "model": "dsd.element",
-    "pk": "29fe3ae729c",
+    "pk": "m9fe3ae729c",
     "fields": {
       "aggregation_type": "SUM",
       "code": "MENINGITE_036",
@@ -139,7 +139,7 @@
       "name": "MENINGITE 036",
       "short_name": "MENINGITE 036",
       "value_type": "INTEGER",
-      "category_combo": "1a78c97efb2"
+      "category_combo": "ta78c97efb2"
     }
   }
 ]

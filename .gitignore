@@ -11,6 +11,7 @@ dsd/bin
 dsd/include
 dsd/lib
 dsd/man
+cover/*
 dsd/client/bower_components
 dsd/client/node_modules
 logfile

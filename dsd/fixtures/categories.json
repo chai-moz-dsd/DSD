@@ -1,36 +1,36 @@
 [
   {
     "model": "dsd.category",
-    "pk": "8c4570d5a32",
+    "pk": "qc4570d5a32",
     "fields": {
       "name": "sarampo tempo intervalo",
       "category_options": [
         "eb9f34026a3",
         "cff3b4f3f84",
-        "00185f2b3eb",
-        "315859577e2"
+        "u0185f2b3eb",
+        "t15u59j77e2"
       ]
     }
   },
   {
     "model": "dsd.category",
-    "pk": "540afc251b2",
+    "pk": "h40afc251b2",
     "fields": {
       "name": "malaria tempo intervalo",
       "category_options": [
-        "5ab5e311f4d",
-        "79532d3b911"
+        "Lab5e311f4d",
+        "p9532d3b911"
       ]
     }
   },
   {
     "model": "dsd.category",
-    "pk": "6ec63d04fce",
+    "pk": "tec63d04fce",
     "fields": {
       "name": "malaria clinica tempo intervalo",
       "category_options": [
-        "5ab5e311f4d",
-        "79532d3b911"
+        "Lab5e311f4d",
+        "p9532d3b911"
       ]
     }
   },
@@ -40,9 +40,9 @@
     "fields": {
       "name": "diarreia tempo intervalo",
       "category_options": [
-        "5ab5e311f4d",
+        "Lab5e311f4d",
         "c77d65db82c",
-        "9bbe4c65238"
+        "ebbe4c65238"
       ]
     }
   },
@@ -52,18 +52,18 @@
     "fields": {
       "name": "meningite tempo intervalo",
       "category_options": [
-        "5ab5e311f4d",
-        "79532d3b911"
+        "Lab5e311f4d",
+        "p9532d3b911"
       ]
     }
   },
   {
     "model": "dsd.category",
-    "pk": "11b2d794df8",
+    "pk": "y1b2d794df8",
     "fields": {
       "name": "indice de doenca",
       "category_options": [
-        "3c8d41da389",
+        "rc8d41da389",
         "e8a197f3d83"
       ]
     }
