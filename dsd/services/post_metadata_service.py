@@ -12,7 +12,7 @@ def sync_metadata_with_bes():
     sync_metadata_with_dhis2()
 
 def sync_metadata_with_dhis2():
-    if (SyncRecord.objects.filter(status='Success').count == 1):
+    if (SyncRecord.objects.filter(status='Success').count() == 1):
         logger.info('INITIAL UPLOAD METADATA...')
         initial_access_token()
         post_attributes()
@@ -25,7 +25,7 @@ def sync_metadata_with_dhis2():
         set_coc_id()
         assign_all_org_to_user()
         post_data_element_values()
-    if (SyncRecord.objects.filter(status='Success').count == 0):
+    if (SyncRecord.objects.filter(status='Success').count() == 0):
         sync_metadata_with_bes()
 
 sync_metadata_with_bes()
