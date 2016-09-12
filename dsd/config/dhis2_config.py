@@ -1,8 +1,10 @@
 # DHIS2 configuration
+import os
 
 VERSION = 24
-
-DHIS2_BASE_URL = 'http://52.32.36.132/'
+DHIS2_PORT_8080_TCP_ADDR = os.environ['DHIS2_PORT_8080_TCP_ADDR']
+DHIS2_PORT_8080_TCP_PORT = os.environ['DHIS2_PORT_8080_TCP_PORT']
+DHIS2_BASE_URL = 'http://%s:%s'% (DHIS2_PORT_8080_TCP_ADDR, DHIS2_PORT_8080_TCP_PORT)
 
 KEY_POST_ATTRIBUTE = '_post_attribute'
 KEY_POST_ELEMENT = '_post_element'
@@ -17,7 +19,7 @@ OAUTH2_TOKEN = 'oauth2_token'
 OAUTH2_CREATE = 'oauth2_create'
 
 DHIS2_STATIC_URLS = {
-    KEY_POST_ATTRIBUTE: "%sapi/%s/attributes" % (DHIS2_BASE_URL, VERSION),
+    KEY_POST_ATTRIBUTE: '%sapi/%s/attributes' % (DHIS2_BASE_URL, VERSION),
     KEY_POST_ORGANIZATION_UNIT: '%sapi/%s/organisationUnits' % (DHIS2_BASE_URL, VERSION),
     KEY_POST_DATA_SET_ELEMENTS: '%sapi/%s/dataValueSets' % (DHIS2_BASE_URL, VERSION),
     KEY_POST_ELEMENT: '%sapi/%s/dataElements' % (DHIS2_BASE_URL, VERSION),
@@ -26,8 +28,8 @@ DHIS2_STATIC_URLS = {
     KEY_POST_CATEGORIES: '%sapi/%s/categories' % (DHIS2_BASE_URL, VERSION),
     KEY_POST_CATEGORY_COMBINATIONS: '%sapi/%s/categoryCombos' % (DHIS2_BASE_URL, VERSION),
     KEY_GET_SELF_PROFILE: '%sapi/%s/me' % (DHIS2_BASE_URL, VERSION),
-    OAUTH2_TOKEN: "%suaa/oauth/token" % DHIS2_BASE_URL,
-    OAUTH2_CREATE: "%sapi/oAuth2Clients" % DHIS2_BASE_URL,
+    OAUTH2_TOKEN: '%suaa/oauth/token' % DHIS2_BASE_URL,
+    OAUTH2_CREATE: '%sapi/oAuth2Clients' % DHIS2_BASE_URL,
 }
 
 DATA_SET_ID = 'TTLoO39Scy9'

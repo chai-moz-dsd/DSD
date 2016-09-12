@@ -43,29 +43,3 @@ class DHIS2OauthTokenTest(TestCase):
                                               auth=('uid', 'secret'),
                                               headers=HEADER_OAUTH,
                                               verify=settings.DHIS2_SSL_VERIFY)
-
-    @patch('dsd.repositories.dhis2_oauth_token.set_refresh_token')
-    @patch('dsd.repositories.dhis2_oauth_token.set_access_token')
-    @patch('requests.post')
-    @patch('dsd.repositories.dhis2_oauth_token.OAUTH2_UID', 'uid')
-    @patch('dsd.repositories.dhis2_oauth_token.OAUTH2_SECRET', 'secret')
-    @patch('dsd.repositories.dhis2_oauth_token.USERNAME', 'username')
-    @patch('dsd.repositories.dhis2_oauth_token.PASSWORD', 'password')
-    def test_should_create_oauth_token(self, mock_post, mock_set_access_token, mock_set_refresh_token):
-        mock_set_access_token.return_value = True
-        mock_set_refresh_token.return_value = True
-        body = {
-            'name': 'DSD Client',
-            'cid': 'uid',
-            'secret': 'secret',
-            'grantTypes': ['password', 'refresh_token', 'authorization_code']
-        }
-        header = {'Content-Type': 'application/json'}
-        mock_post.return_value.text = json.dumps({})
-        create_oauth()
-        requests.post.assert_called_once_with(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.OAUTH2_CREATE),
-                                              data= json.dumps(body),
-                                              auth=('username', 'password'),
-                                              headers=header,
-                                              verify=settings.DHIS2_SSL_VERIFY)
-

@@ -33,15 +33,17 @@ def get_access_token():
 def set_access_token():
     refresh_token = cache.get(REFRESH_TOKEN)
     body = {'grant_type': REFRESH_TOKEN, REFRESH_TOKEN: refresh_token}
-    json_data = __post_request(dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.OAUTH2_TOKEN), body,
-                               (OAUTH2_UID, OAUTH2_SECRET), HEADER_OAUTH)
+    response = __post_request(dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.OAUTH2_TOKEN), body,
+                              (OAUTH2_UID, OAUTH2_SECRET), HEADER_OAUTH)
+    json_data = json.loads(response.text)
     cache.set(ACCESS_TOKEN, json_data[ACCESS_TOKEN], EXPIRES_TIME)
 
 
 def set_refresh_token():
     body = {'grant_type': 'password', 'username': USERNAME, 'password': PASSWORD}
-    json_data = __post_request(dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.OAUTH2_TOKEN), body,
-                               (OAUTH2_UID, OAUTH2_SECRET), HEADER_OAUTH)
+    response = __post_request(dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.OAUTH2_TOKEN), body,
+                              (OAUTH2_UID, OAUTH2_SECRET), HEADER_OAUTH)
+    json_data = json.loads(response.text)
     cache.set(REFRESH_TOKEN, json_data[REFRESH_TOKEN], EXPIRES_TIME)
 
 
@@ -53,8 +55,17 @@ def create_oauth():
         'grantTypes': ['password', 'refresh_token', 'authorization_code']
     }
     HEADER_OAUTH_CREATE = {'Content-Type': 'application/json'}
-    __post_request(dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.OAUTH2_CREATE), json.dumps(body),
-                   (USERNAME, PASSWORD), HEADER_OAUTH_CREATE)
+    response = __post_request(dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.OAUTH2_CREATE), json.dumps(body),
+                              (USERNAME, PASSWORD), HEADER_OAUTH_CREATE)
+    if response.status_code == 200:
+        print("hey ya")
+        return response
+    else:
+        create_oauth()
+
+
+def initial_access_token():
+    create_oauth()
     set_refresh_token()
     set_access_token()
 
@@ -66,7 +77,6 @@ def __post_request(url, data, auth, header):
                                  auth=auth,
                                  headers=header,
                                  verify=settings.DHIS2_SSL_VERIFY)
-        json_data = json.loads(response.text)
-        return json_data
+        return response
     except ConnectionError:
         raise RemoteRequestException()

@@ -4,9 +4,13 @@
 echo "setup db"
 source ~/.virtualenvs/dsd/bin/activate
 python manage.py migrate
-python manage.py createcachetable
 python manage.py loaddata dsd/fixtures/attributes.json
+python manage.py loaddata dsd/fixtures/category_options.json
+python manage.py loaddata dsd/fixtures/categories.json
+python manage.py loaddata dsd/fixtures/category_combinations.json
 python manage.py loaddata dsd/fixtures/data_elements.json
+python manage.py loaddata dsd/fixtures/coc_relations.json
+python manage.py createcachetable dsd_cache
 
 echo "post organisation units and attributes to dhis2"
 while true; do
