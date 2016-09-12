@@ -1,4 +1,5 @@
 import json
+import logging
 
 import requests
 from django.core.cache import cache
@@ -6,6 +7,8 @@ from django.core.cache import cache
 from chai import settings
 from dsd.config import dhis2_config
 from dsd.exceptions.remote_request_exception import RemoteRequestException
+
+logger = logging.getLogger(__name__)
 
 # TODO - Put these in ini config
 HEADER_OAUTH = {'Accept': 'application/json'}
@@ -58,7 +61,7 @@ def create_oauth():
     response = __post_request(dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.OAUTH2_CREATE), json.dumps(body),
                               (USERNAME, PASSWORD), HEADER_OAUTH_CREATE)
     if response.status_code == 200:
-        print("hey ya")
+        logger.info('Create oauth successfully')
         return response
     else:
         create_oauth()
