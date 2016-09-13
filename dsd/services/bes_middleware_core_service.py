@@ -1,6 +1,6 @@
 import logging
 
-from dsd.models import BesMiddlewareCore
+from dsd.models import BesMiddlewareCore, Facility
 from dsd.models.remote.bes_middleware_core import BesMiddlewareCore as BesMiddlewareCoreRemote
 
 logger = logging.getLogger(__name__)
@@ -46,3 +46,17 @@ def save(bes_middleware_core):
 
 def should_be_synced(bes_middleware_core, last_sync_date):
     return bes_middleware_core.last_update_date > last_sync_date
+
+
+def fetch_updated_data_element_values():
+    data_element_values = []
+
+    for value in BesMiddlewareCore.objects.all():
+        if is_data_element_belongs_to_facility(value):
+            data_element_values.append(value)
+
+    return data_element_values
+
+
+def is_data_element_belongs_to_facility(date_element_value):
+    return bool(Facility.objects.filter(device_serial=date_element_value.device_id).count())

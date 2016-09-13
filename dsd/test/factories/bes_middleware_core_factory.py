@@ -38,7 +38,7 @@ class BesMiddlewareCoreFactory(factory.DjangoModelFactory):
     cases_nv_measles = 0
     cases_rabies = 0
     note_malaria = None
-    device_id = factory.Iterator([356670060315512, 356670060310919, 356670060314465, 356670060310976])
+    device_id = factory.Iterator(['356670060315512', '356670060310919', '356670060314465', '356670060310976'])
     deaths_measles_24 = 0
     note_rabies = None
     deaths_diarrhea_5_14 = 0

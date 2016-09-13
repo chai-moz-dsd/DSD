@@ -4,15 +4,12 @@ import logging
 
 from dsd.config import dhis2_config
 from dsd.models import Attribute
-from dsd.models import BesMiddlewareCore
 from dsd.models import COCRelation
 from dsd.models import Category
 from dsd.models import CategoryCombination
 from dsd.models import CategoryOption
 from dsd.models import Element
 from dsd.models import Facility
-
-# from dsd.models import SyncRecord
 from dsd.models.moh import MoH, MOH_UID
 from dsd.repositories import dhis2_remote_repository
 from dsd.repositories.dhis2_remote_repository import post_attribute
@@ -58,12 +55,10 @@ def post_data_set():
     dhis2_remote_repository.post_data_set(json.dumps(build_data_set_request_body_as_dict()))
 
 
-def post_data_element_values():
-    bes_middleware_cores = BesMiddlewareCore.objects.all()
-    for bes_middleware_core in bes_middleware_cores:
-        if Facility.objects.filter(device_serial=bes_middleware_core.device_id).count():
-            dhis2_remote_repository.post_data_elements_value(
-                json.dumps(build_data_element_values_request_body_as_dict(bes_middleware_core)))
+def post_data_element_values(date_element_values):
+    for data_element in date_element_values:
+        dhis2_remote_repository.post_data_elements_value(
+            json.dumps(build_data_element_values_request_body_as_dict(data_element)))
 
 
 def post_category_options():

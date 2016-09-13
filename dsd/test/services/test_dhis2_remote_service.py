@@ -7,7 +7,7 @@ from mock import MagicMock, call, patch
 from rest_framework.status import HTTP_201_CREATED
 
 from dsd.models.moh import MoH
-from dsd.models.remote.bes_middleware_core import BesMiddlewareCore
+from dsd.models import BesMiddlewareCore
 from dsd.repositories import dhis2_remote_repository
 from dsd.repositories.dhis2_remote_repository import *
 from dsd.repositories.request_template.add_element_template import AddElementRequestTemplate
@@ -16,6 +16,8 @@ from dsd.services.dhis2_remote_service import post_organization_units, post_elem
     build_data_set_request_body_as_dict, build_data_element_values_request_body_as_dict, \
     build_category_options_request_body_as_dict, build_categories_request_body_as_dict, \
     build_category_combinations_request_body_as_dict
+from dsd.services.bes_middleware_core_service import is_data_element_belongs_to_facility
+from dsd.test.factories.bes_middleware_core_factory import BesMiddlewareCoreFactory
 from dsd.test.factories.category_combination_factory import CategoryCombinationFactory
 from dsd.test.factories.category_factory import CategoryFactory
 from dsd.test.factories.category_option_factory import CategoryOptionFactory
@@ -247,3 +249,18 @@ class DHIS2RemoteServiceTest(TestCase):
         ids = [request_body_dict.get('categories')[0].get('id'), request_body_dict.get('categories')[1].get('id')]
         self.assertTrue(category1.id in ids)
         self.assertTrue(category2.id in ids)
+
+    def test_should_be_false_when_data_element_not_belongs_to_facility(self):
+        device_id = '356670060315512'
+        device_id2= '356670060315522'
+        BesMiddlewareCoreFactory(device_id=device_id)
+        FacilityFactory(device_serial=device_id2)
+        date_element_value = BesMiddlewareCore.objects.first()
+        self.assertFalse(is_data_element_belongs_to_facility(date_element_value))
+
+    def test_should_be_true_when_data_element_not_belongs_to_facility(self):
+        device_id = '356670060315512'
+        BesMiddlewareCoreFactory(device_id=device_id)
+        FacilityFactory(device_serial=device_id)
+        date_element_value = BesMiddlewareCore.objects.first()
+        self.assertTrue(is_data_element_belongs_to_facility(date_element_value))
