@@ -17,7 +17,6 @@ def start():
     try:
         sync_remote_data_to_local()
         post_data_element_values_to_dhis2()
-
     except Exception as e:
         logger.error('Sync error: %s!' % e)
         SyncRecord.get_fail_instance().save()
