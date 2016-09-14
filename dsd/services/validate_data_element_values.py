@@ -44,7 +44,7 @@ class DataElementValuesValidation(object):
         return self.rule_group_name_id_map.get('%s GROUP' % DISEASE_I18N_MAP.get(element_name))
 
     def validate_values(self, date_element_values):
-
+        logger.info('validate_values started.')
         for value in date_element_values:
             start, end, organisation_id = self.fetch_info_from_data(value)
 
@@ -52,6 +52,7 @@ class DataElementValuesValidation(object):
                 rule_group_id = self.get_rule_group_id(element_name)
                 validate_request = self.format_validate_request(organisation_id, start, end, rule_group_id)
                 status_code = self.do_validation_by_dhis2(validate_request)
+                logger.info('validate_values started.')
                 if status_code != HTTP_200_OK:
                     logger.critical('validate request failed.')
 
