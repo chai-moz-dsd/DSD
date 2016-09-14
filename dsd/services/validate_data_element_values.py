@@ -2,6 +2,7 @@ import logging
 import re
 
 import requests
+import time
 from rest_framework.status import HTTP_200_OK
 
 from dsd.config.dhis2_config import DISEASE_I18N_MAP, DHIS2_BASE_URL
@@ -40,8 +41,7 @@ class DataElementValuesValidation(object):
         return response.status_code, self.fetch_validation_rule_groups_from_html(response.text)
 
     def get_rule_group_id(self, element_name):
-        group_id = self.rule_group_name_id_map.get('%s GROUP' % DISEASE_I18N_MAP.get(element_name))
-        return group_id
+        return self.rule_group_name_id_map.get('%s GROUP' % DISEASE_I18N_MAP.get(element_name))
 
     def validate_values(self, date_element_values):
 
@@ -53,7 +53,7 @@ class DataElementValuesValidation(object):
                 validate_request = self.format_validate_request(organisation_id, start, end, rule_group_id)
                 status_code = self.do_validation_by_dhis2(validate_request)
                 if status_code != HTTP_200_OK:
-                    logger.info('validate request failed.')
+                    logger.critical('validate request failed.')
 
     @classmethod
     def fetch_info_from_data(cls, value):
