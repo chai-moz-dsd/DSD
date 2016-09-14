@@ -8,7 +8,7 @@ from dsd.services import province_service
 from dsd.services import sender_middleware_core_service
 from dsd.services.bes_middleware_core_service import fetch_updated_data_element_values
 from dsd.services.dhis2_remote_service import post_data_element_values
-from dsd.services.validate_data_element_values import validate_values
+from dsd.services.validate_data_element_values import validate_values, DataElementValuesValidation
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +25,9 @@ def start():
 def post_data_element_values_to_dhis2():
     data_element_values = fetch_updated_data_element_values()
     post_data_element_values(data_element_values)
-    validate_values(data_element_values)
+
+    data_element_values_validation = DataElementValuesValidation()
+    data_element_values_validation.validate_values(data_element_values)
 
 
 def sync_remote_data_to_local():

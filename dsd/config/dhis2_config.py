@@ -38,6 +38,19 @@ DATA_SET_PERIOD_TYPES = 'Weekly'
 CATEGORY_DATA_DIMENSION = True
 CATEGORY_DATA_DIMENSION_TYPE = 'DISAGGREGATION'
 
+DISEASE_I18N_MAP = {
+    'measles': 'SARAMPO',
+    'tetanus': 'T&Eacute;TANO REC&Eacute;M NASCIDOS',
+    'malaria': 'MAL&Aacute;RIA',
+    'pfa': 'PARALISIA FL&Aacute;CIDA AGUDA',
+    'rabies': 'RAIVA',
+    'diarrhea': 'DIARREIA',
+    'dysentery': 'DISENTERIA',
+    'cholera': 'C&Oacute;LERA',
+    'plague': 'PESTE',
+    'meningitis': 'MENINGITE',
+}
+
 
 def key_get_cocid(category_comb_id):
     return '%sapi/%s/categoryCombos/%s?fields=categoryOptionCombos[id,name]' % (
