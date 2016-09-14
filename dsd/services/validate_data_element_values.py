@@ -9,7 +9,7 @@ from dsd.config.dhis2_config import DISEASE_I18N_MAP, DHIS2_BASE_URL
 from dsd.models import Facility
 
 logger = logging.getLogger(__name__)
-
+logging.getLogger().setLevel(logging.CRITICAL)
 
 class DataElementValuesValidation(object):
     def __init__(self):
