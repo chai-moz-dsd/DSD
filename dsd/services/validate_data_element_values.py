@@ -31,6 +31,7 @@ class DataElementValuesValidation(object):
 
     @classmethod
     def do_validation_by_dhis2(cls, validate_request):
+        logger.info(validate_request)
         response = requests.get(validate_request, auth=('admin', 'district'))
         if 'validationResults' in response.text:
             logger.info('email need to be send.')
