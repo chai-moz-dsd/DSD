@@ -6,6 +6,7 @@ from rest_framework.status import HTTP_200_OK
 
 from dsd.config.dhis2_config import DISEASE_I18N_MAP, DHIS2_BASE_URL
 from dsd.models import Facility
+from dsd.models.moh import MOH_UID
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -60,10 +61,11 @@ class DataElementValuesValidation(object):
 
     @classmethod
     def fetch_info_from_data(cls, value):
-        organisation_id = Facility.objects.filter(device_serial=value.device_id).first().uid
+        # organisation_id = Facility.objects.filter(device_serial=value.device_id).first().uid
+        organisation_id = MOH_UID
         date_week_start = value.date_week_start.strftime('%Y-%m-%d')
         date_week_end = value.date_week_end.strftime('%Y-%m-%d')
-        logger.info('%s %s' %(date_week_start, date_week_end))
+        logger.info('%s %s' % (date_week_start, date_week_end))
 
         return date_week_start, date_week_end, organisation_id
 
