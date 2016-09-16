@@ -62,6 +62,7 @@ class DataElementValuesValidation(object):
         organisation_id = Facility.objects.filter(device_serial=value.device_id).first().uid
         date_week_start = value.date_week_start.strftime('%Y-%m-%d')
         date_week_end = value.date_week_end.strftime('%Y-%m-%d')
+        logger.info('%s %s' %(date_week_start, date_week_end))
 
         return date_week_start, date_week_end, organisation_id
 
