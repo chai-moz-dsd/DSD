@@ -28,7 +28,8 @@ class ValidateDataElementValuesTest(TestCase):
                                     '?organisationUnitId=MOH12345678&startDate=2016-09-13&endDate=2016-09-13' \
                                     '&validationRuleGroupId=1582&sendAlerts=true'
 
-        validate_request = self.data_element_values_validation.format_validate_request(MOH_UID, '2016-09-13', '2016-09-13', '1582')
+        validate_request = self.data_element_values_validation.format_validate_request(MOH_UID, '2016-09-13',
+                                                                                       '2016-09-13', '1582')
 
         self.assertEqual(validate_request, expected_validate_request)
 
@@ -36,7 +37,8 @@ class ValidateDataElementValuesTest(TestCase):
     def test_should_validate_successful(self, mock_get):
         mock_get.return_value = MagicMock(status_code=HTTP_200_OK)
 
-        validate_request = self.data_element_values_validation.format_validate_request(MOH_UID, '2016-09-13', '2016-09-13', '1582')
+        validate_request = self.data_element_values_validation.format_validate_request(MOH_UID, '2016-09-13',
+                                                                                       '2016-09-13', '1582')
         status_code = self.data_element_values_validation.do_validation_by_dhis2(validate_request)
         self.assertEqual(status_code, HTTP_200_OK)
 
@@ -51,7 +53,7 @@ class ValidateDataElementValuesTest(TestCase):
         expected_group_data_id = '1652'
         rule_name = 'plague'
         with patch.dict(self.data_element_values_validation.rule_group_name_id_map,
-                    {'PESTE GROUP': '1652'}):
+                        {'PESTE GROUP': '1652'}):
             self.assertEqual(expected_group_data_id, self.data_element_values_validation.get_rule_group_id(rule_name))
 
     @patch('requests.get')
@@ -78,6 +80,15 @@ class ValidateDataElementValuesTest(TestCase):
 
         rule_groups = self.data_element_values_validation.fetch_validation_rule_groups_from_html(REAL_HTML_RESPONSE)
         self.assertDictEqual(expected_groups, rule_groups)
+
+    @patch.object(DataElementValuesValidation, 'fetch_info_from_data')
+    def test_should_validate_real_data(self, mock_fetch_info_from_data):
+        data_element_values_validation = DataElementValuesValidation()
+
+        data_element_values = ['one_mock_value']
+        mock_fetch_info_from_data.return_value = ('2015-08-01', '2016-09-01', MOH_UID)
+
+        data_element_values_validation.validate_values(data_element_values)
 
 
 REAL_HTML_RESPONSE = '''
