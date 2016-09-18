@@ -30,7 +30,7 @@ class ValidateDataElementValuesTest(TestCase):
                                     '?organisationUnitId=MOH12345678&startDate=2016-09-13&endDate=2016-09-13' \
                                     '&validationRuleGroupId=1582&sendAlerts=true'
 
-        validate_request = self.data_element_values_validation.format_validate_request(MOH_UID, '2016-09-13',
+        validate_request = self.data_element_values_validation.format_validation_request(MOH_UID, '2016-09-13',
                                                                                        '2016-09-13', '1582')
 
         self.assertEqual(validate_request, expected_validate_request)
@@ -39,7 +39,7 @@ class ValidateDataElementValuesTest(TestCase):
     def test_should_validate_request(self, mock_get):
         mock_get.return_value = MagicMock(status_code=HTTP_200_OK)
 
-        validate_request = self.data_element_values_validation.format_validate_request(MOH_UID, '2016-09-13',
+        validate_request = self.data_element_values_validation.format_validation_request(MOH_UID, '2016-09-13',
                                                                                        '2016-09-13', '1582')
         response = self.data_element_values_validation.send_request_to_dhis(validate_request)
         self.assertEqual(response.status_code, HTTP_200_OK)
@@ -85,12 +85,12 @@ class ValidateDataElementValuesTest(TestCase):
 
 
 class ValidateDataElementValuesRealRequestTest(TestCase):
-    @patch.object(DataElementValuesValidation, 'fetch_info_from_data')
-    def test_should_validate_real_data(self, mock_fetch_info_from_data):
+    @patch.object(DataElementValuesValidation, 'fetch_info_from_updated_data')
+    def test_should_validate_real_data(self, mock_fetch_info_from_updated_data):
         data_element_values_validation = DataElementValuesValidation()
 
         data_element_values = ['one_mock_value']
-        mock_fetch_info_from_data.return_value = ('2015-08-01', '2016-09-01', MOH_UID)
+        mock_fetch_info_from_updated_data.return_value = ('2015-08-01', '2016-09-01', MOH_UID)
 
         data_element_values_validation.validate_values(data_element_values)
         logger.info(data_element_values_validation.rule_group_name_id_map)

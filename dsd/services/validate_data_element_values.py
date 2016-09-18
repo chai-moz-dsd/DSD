@@ -20,7 +20,7 @@ class DataElementValuesValidation(object):
         _, self.rule_group_name_id_map = self.fetch_all_rule_groups()
 
     @classmethod
-    def format_validate_request(cls, organisation_id, start_date, end_date, rule_group_id):
+    def format_validation_request(cls, organisation_id, start_date, end_date, rule_group_id):
         validate_request = '%sdhis-web-validationrule/runValidationAction.action?organisationUnitId=%s&startDate=%s&endDate=%s&validationRuleGroupId=%s&sendAlerts=true' % \
                            (DHIS2_BASE_URL,
                             organisation_id,
@@ -36,7 +36,7 @@ class DataElementValuesValidation(object):
                             verify=settings.DHIS2_SSL_VERIFY)
 
     @classmethod
-    def fetch_info_from_data(cls, value):
+    def fetch_info_from_updated_data(cls, value):
         # organisation_id = Facility.objects.filter(device_serial=value.device_id).first().uid
         organisation_id = MOH_UID
         date_week_start = value.date_week_start.strftime('%Y-%m-%d')
@@ -69,7 +69,7 @@ class DataElementValuesValidation(object):
     def send_validation_for_each_diease(self, start, end, organisation_id):
         for element_name in DISEASE_I18N_MAP.keys():
             rule_group_id = self.get_rule_group_id(element_name)
-            validate_request = self.format_validate_request(organisation_id, start, end, rule_group_id)
+            validate_request = self.format_validation_request(organisation_id, start, end, rule_group_id)
             response = self.send_request_to_dhis(validate_request)
 
             if response.status_code != HTTP_200_OK:
@@ -77,5 +77,5 @@ class DataElementValuesValidation(object):
 
     def validate_values(self, date_element_values):
         for value in date_element_values:
-            start, end, organisation_id = self.fetch_info_from_data(value)
+            start, end, organisation_id = self.fetch_info_from_updated_data(value)
             self.send_validation_for_each_diease(start, end, organisation_id)
