@@ -11,13 +11,15 @@ from dsd.test.factories.bes_middleware_core_factory import BesMiddlewareCoreFact
 from dsd.test.factories.facility_factory import FacilityFactory
 
 logger = logging.getLogger(__name__)
+
+
 logging.getLogger().setLevel(logging.CRITICAL)
 
 
 class ValidateDataElementValuesTest(TestCase):
-    @patch('requests.get')
-    def setUp(self, mock_get):
-        mock_get.return_value = MagicMock(status_code=HTTP_200_OK, text=REAL_HTML_RESPONSE)
+    @patch.object(DataElementValuesValidation, 'fetch_all_rule_groups')
+    def setUp(self, mock_fetch_all_rule_groups):
+        mock_fetch_all_rule_groups.return_value = (HTTP_200_OK, {})
         self.data_element_values_validation = DataElementValuesValidation()
 
     def tearDown(self):
@@ -39,7 +41,7 @@ class ValidateDataElementValuesTest(TestCase):
 
         validate_request = self.data_element_values_validation.format_validate_request(MOH_UID, '2016-09-13',
                                                                                        '2016-09-13', '1582')
-        response = self.data_element_values_validation.do_validation_by_dhis2(validate_request)
+        response = self.data_element_values_validation.send_request_to_dhis(validate_request)
         self.assertEqual(response.status_code, HTTP_200_OK)
 
     @patch('requests.get')

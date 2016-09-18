@@ -2,6 +2,7 @@ import logging
 import re
 
 import requests
+import time
 from rest_framework.status import HTTP_200_OK
 
 from chai import settings
@@ -10,6 +11,7 @@ from dsd.models.moh import MOH_UID
 from dsd.repositories.dhis2_remote_repository import get_oauth_header
 
 logger = logging.getLogger(__name__)
+
 logger.setLevel(logging.DEBUG)
 
 
@@ -28,36 +30,10 @@ class DataElementValuesValidation(object):
         return validate_request
 
     @classmethod
-    def do_validation_by_dhis2(cls, validate_request):
-        logger.info(validate_request)
-        response = requests.get(validate_request,
-                                headers=get_oauth_header(),
-                                verify=settings.DHIS2_SSL_VERIFY)
-
-        return response
-
-    def fetch_all_rule_groups(self):
-        rule_groups_url = '%sdhis-web-validationrule/validationRuleGroup.action' % DHIS2_BASE_URL
-        response = requests.get(rule_groups_url, auth=('admin', 'district'))
-
-        return response.status_code, self.fetch_validation_rule_groups_from_html(response.text)
-
-    def get_rule_group_id(self, element_name):
-        return self.rule_group_name_id_map.get('%s GROUP' % DISEASE_I18N_MAP.get(element_name))
-
-    def validate_values(self, date_element_values):
-        for value in date_element_values:
-            start, end, organisation_id = self.fetch_info_from_data(value)
-            self.send_validation_for_each_diease(start, end, organisation_id)
-
-    def send_validation_for_each_diease(self, start, end, organisation_id):
-        for element_name in DISEASE_I18N_MAP.keys():
-            rule_group_id = self.get_rule_group_id(element_name)
-            validate_request = self.format_validate_request(organisation_id, start, end, rule_group_id)
-            response = self.do_validation_by_dhis2(validate_request)
-
-            if response.status_code != HTTP_200_OK:
-                logger.critical('validate request failed.')
+    def send_request_to_dhis(cls, rule_groups_url):
+        return requests.get(rule_groups_url,
+                            headers=get_oauth_header(),
+                            verify=settings.DHIS2_SSL_VERIFY)
 
     @classmethod
     def fetch_info_from_data(cls, value):
@@ -80,3 +56,26 @@ class DataElementValuesValidation(object):
                 validation_rule_groups.setdefault(ma.group(2), ma.group(1))
 
         return validation_rule_groups
+
+    def fetch_all_rule_groups(self):
+        rule_groups_url = '%sdhis-web-validationrule/validationRuleGroup.action' % DHIS2_BASE_URL
+        response = self.send_request_to_dhis(rule_groups_url)
+
+        return response.status_code, self.fetch_validation_rule_groups_from_html(response.text)
+
+    def get_rule_group_id(self, element_name):
+        return self.rule_group_name_id_map.get('%s GROUP' % DISEASE_I18N_MAP.get(element_name))
+
+    def send_validation_for_each_diease(self, start, end, organisation_id):
+        for element_name in DISEASE_I18N_MAP.keys():
+            rule_group_id = self.get_rule_group_id(element_name)
+            validate_request = self.format_validate_request(organisation_id, start, end, rule_group_id)
+            response = self.send_request_to_dhis(validate_request)
+
+            if response.status_code != HTTP_200_OK:
+                logger.critical('validate request failed.')
+
+    def validate_values(self, date_element_values):
+        for value in date_element_values:
+            start, end, organisation_id = self.fetch_info_from_data(value)
+            self.send_validation_for_each_diease(start, end, organisation_id)
