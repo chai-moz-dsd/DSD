@@ -16,13 +16,13 @@ logger = logging.getLogger(__name__)
 
 class BesMiddlewareCoreTest(TestCase):
     def test_should_be_false_when_creation_data_after_last_sync_date(self):
-        bes_middleware_core = BesMiddlewareCoreRemote(last_update_date=datetime.now())
+        bes_middleware_core = BesMiddlewareCoreRemote(middleware_updated_date=datetime.now())
         specify_date = datetime.now() + timedelta(days=1)
 
         self.assertFalse(bes_middleware_core_service.should_be_synced(bes_middleware_core, specify_date))
 
     def test_should_be_true_when_creation_data_after_last_sync_date(self):
-        bes_middleware_core = BesMiddlewareCoreRemote(last_update_date=datetime.now())
+        bes_middleware_core = BesMiddlewareCoreRemote(middleware_updated_date=datetime.now())
         specify_date = datetime.now() - timedelta(days=1)
 
         self.assertTrue(bes_middleware_core_service.should_be_synced(bes_middleware_core, specify_date))
@@ -34,15 +34,20 @@ class BesMiddlewareCoreTest(TestCase):
     def test_should_sync_all_remote_bes_middleware_core(self, mock_all):
         uuid1 = str(uuid.uuid4())
         mock_all.return_value = [
-            BesMiddlewareCoreRemote(uri=uuid1, creation_date=datetime.now(), last_update_date=datetime.now()),
+            BesMiddlewareCoreRemote(uri=uuid1, creation_date=datetime.now(), last_update_date=datetime.now(),
+                                    middleware_created_date=datetime.now(), middleware_updated_date=datetime.now()),
             BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                    last_update_date=datetime.now()),
+                                    last_update_date=datetime.now(), middleware_created_date=datetime.now(),
+                                    middleware_updated_date=datetime.now()),
             BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                    last_update_date=datetime.now()),
+                                    last_update_date=datetime.now(), middleware_created_date=datetime.now(),
+                                    middleware_updated_date=datetime.now()),
             BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                    last_update_date=datetime.now()),
+                                    last_update_date=datetime.now(), middleware_created_date=datetime.now(),
+                                    middleware_updated_date=datetime.now()),
             BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                    last_update_date=datetime.now()),
+                                    last_update_date=datetime.now(), middleware_created_date=datetime.now(),
+                                    middleware_updated_date=datetime.now()),
         ]
         bes_middleware_core_service.sync(None)
         self.assertEqual(BesMiddlewareCore.objects.count(), 5)
@@ -53,22 +58,29 @@ class BesMiddlewareCoreTest(TestCase):
     def test_should_only_sync_bes_middleware_core_from_last_successful_time(self, mock_all, mock_filter):
         mock_all.return_value = [
             BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                    last_update_date=datetime(2016, 8, 31, 1, 30, 0, 0, timezone.utc)),
+                                    last_update_date=datetime.now(), middleware_created_date=datetime.now(),
+                                    middleware_updated_date=datetime(2016, 8, 31, 1, 30, 0, 0, timezone.utc)),
             BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                    last_update_date=datetime(2016, 8, 31, 2, 0, 0, 0, timezone.utc)),
+                                    last_update_date=datetime.now(), middleware_created_date=datetime.now(),
+                                    middleware_updated_date=datetime(2016, 8, 31, 2, 0, 0, 0, timezone.utc)),
             BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                    last_update_date=datetime(2016, 8, 31, 2, 30, 0, 0, timezone.utc)),
+                                    last_update_date=datetime.now(), middleware_created_date=datetime.now(),
+                                    middleware_updated_date=datetime(2016, 8, 31, 2, 30, 0, 0, timezone.utc)),
             BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                    last_update_date=datetime(2016, 8, 31, 3, 0, 0, 0, timezone.utc)),
+                                    last_update_date=datetime.now(), middleware_created_date=datetime.now(),
+                                    middleware_updated_date=datetime(2016, 8, 31, 3, 0, 0, 0, timezone.utc)),
             BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                    last_update_date=datetime(2016, 8, 31, 3, 30, 0, 0, timezone.utc)),
+                                    last_update_date=datetime.now(), middleware_created_date=datetime.now(),
+                                    middleware_updated_date=datetime(2016, 8, 31, 3, 30, 0, 0, timezone.utc)),
         ]
 
         mock_filter.return_value = [
             BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                    last_update_date=datetime(2016, 8, 31, 3, 0, 0, 0, timezone.utc)),
+                                    last_update_date=datetime.now(), middleware_created_date=datetime.now(),
+                                    middleware_updated_date=datetime(2016, 8, 31, 3, 0, 0, 0, timezone.utc)),
             BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                    last_update_date=datetime(2016, 8, 31, 3, 30, 0, 0, timezone.utc)),
+                                    last_update_date=datetime.now(), middleware_created_date=datetime.now(),
+                                    middleware_updated_date=datetime(2016, 8, 31, 3, 30, 0, 0, timezone.utc)),
         ]
 
         bes_middleware_core_service.sync(datetime(2016, 8, 31, 2, 30, 0, 0, timezone.utc))

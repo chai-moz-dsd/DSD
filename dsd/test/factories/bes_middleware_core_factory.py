@@ -13,6 +13,8 @@ class BesMiddlewareCoreFactory(factory.DjangoModelFactory):
     uri = 'uuid:%s' % uuid.uuid4()
     creator_uri_user = 'uid:maputo-manhica|%s' % datetime.today()
     creation_date = datetime.today()
+    middleware_created_date = datetime.today()
+    middleware_updated_date = datetime.today()
     last_update_uri_user = None
     last_update_date = datetime.today()
     model_version = None

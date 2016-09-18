@@ -9,6 +9,8 @@ class SenderMiddlewareCore(models.Model):
     uri = models.CharField(max_length=80, db_column='_URI', unique=True, primary_key=True)
     creator_uri_user = models.CharField(max_length=80, db_column='_CREATOR_URI_USER')
     creation_date = models.DateTimeField(db_column='_CREATION_DATE')
+    middleware_created_date = models.DateTimeField(db_column='MIDDLEWARE_CREATED_DATE')
+    middleware_updated_date = models.DateTimeField(db_column='MIDDLEWARE_UPDATED_DATE')
     last_update_uri_user = models.CharField(max_length=80, db_column='_LAST_UPDATE_URI_USER', null=True)
     last_update_date = models.DateTimeField(db_column='_LAST_UPDATE_DATE')
     model_version = models.IntegerField(db_column='_MODEL_VERSION', null=True)
