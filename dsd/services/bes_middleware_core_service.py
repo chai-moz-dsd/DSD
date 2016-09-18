@@ -51,7 +51,7 @@ def should_be_synced(bes_middleware_core, last_sync_date):
 def fetch_updated_data_element_values():
     data_element_values = []
 
-    for value in BesMiddlewareCore.objects.all():
+    for value in BesMiddlewareCore.objects.all().order_by('date_week_start'):
         if is_data_element_belongs_to_facility(value):
             data_element_values.append(value)
 

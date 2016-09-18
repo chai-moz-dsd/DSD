@@ -6,9 +6,7 @@ from rest_framework.status import HTTP_200_OK
 
 from chai import settings
 from dsd.config.dhis2_config import DISEASE_I18N_MAP, DHIS2_BASE_URL
-from dsd.models import Facility
 from dsd.models.moh import MOH_UID
-from dsd.repositories.dhis2_oauth_token import get_access_token
 from dsd.repositories.dhis2_remote_repository import get_oauth_header
 
 logger = logging.getLogger(__name__)
