@@ -16,13 +16,13 @@ logger = logging.getLogger(__name__)
 
 class SenderMiddlewareCoreTest(TestCase):
     def test_should_be_false_when_creation_data_after_last_sync_date(self):
-        sender_middleware_core = SenderMiddlewareCoreRemote(last_update_date=datetime.now())
+        sender_middleware_core = SenderMiddlewareCoreRemote(middleware_updated_date=datetime.now())
         specify_date = datetime.now() + timedelta(days=1)
 
         self.assertFalse(sender_middleware_core_service.should_be_synced(sender_middleware_core, specify_date))
 
     def test_should_be_true_when_creation_data_after_last_sync_date(self):
-        sender_middleware_core = SenderMiddlewareCoreRemote(last_update_date=datetime.now())
+        sender_middleware_core = SenderMiddlewareCoreRemote(middleware_updated_date=datetime.now())
         specify_date = datetime.now() - timedelta(days=1)
 
         self.assertTrue(sender_middleware_core_service.should_be_synced(sender_middleware_core, specify_date))
@@ -34,15 +34,15 @@ class SenderMiddlewareCoreTest(TestCase):
     def test_should_sync_all_remote_sender_middleware_core(self, mock_all):
         uuid1 = str(uuid.uuid4())
         mock_all.return_value = [
-            SenderMiddlewareCoreRemote(uri=uuid1, creation_date=datetime.now(), last_update_date=datetime.now()),
-            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                       last_update_date=datetime.now()),
-            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                       last_update_date=datetime.now()),
-            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                       last_update_date=datetime.now()),
-            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                       last_update_date=datetime.now()),
+            SenderMiddlewareCoreRemote(uri=uuid1, creation_date=datetime.now(), last_update_date=datetime.now(),middleware_created_date=datetime.now(), middleware_updated_date=datetime.now()),
+            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()),creation_date=datetime.now(), last_update_date=datetime.now(), middleware_created_date=datetime.now(),
+                                       middleware_updated_date=datetime.now()),
+            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(), last_update_date=datetime.now(),middleware_created_date=datetime.now(),
+                                       middleware_updated_date=datetime.now()),
+            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(), last_update_date=datetime.now(),middleware_created_date=datetime.now(),
+                                       middleware_updated_date=datetime.now()),
+            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()),creation_date=datetime.now(), last_update_date=datetime.now(), middleware_created_date=datetime.now(),
+                                       middleware_updated_date=datetime.now()),
         ]
         sender_middleware_core_service.sync(None)
         self.assertEqual(SenderMiddlewareCore.objects.count(), 5)
@@ -52,23 +52,23 @@ class SenderMiddlewareCoreTest(TestCase):
     @patch('dsd.models.remote.sender_middleware_core.SenderMiddlewareCore.objects.all')
     def test_should_sync_all_remote_sender_middleware_core(self, mock_all, mock_filter):
         mock_all.return_value = [
-            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                       last_update_date=datetime(2016, 8, 31, 1, 30, 0, 0, timezone.utc)),
-            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                       last_update_date=datetime(2016, 8, 31, 2, 0, 0, 0, timezone.utc)),
-            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                       last_update_date=datetime(2016, 8, 31, 2, 30, 0, 0, timezone.utc)),
-            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                       last_update_date=datetime(2016, 8, 31, 3, 0, 0, 0, timezone.utc)),
-            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                       last_update_date=datetime(2016, 8, 31, 3, 30, 0, 0, timezone.utc)),
+            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(), last_update_date=datetime.now(), middleware_created_date=datetime.now(),
+                                       middleware_updated_date=datetime(2016, 8, 31, 1, 30, 0, 0, timezone.utc)),
+            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(), last_update_date=datetime.now(), middleware_created_date=datetime.now(),
+                                       middleware_updated_date=datetime(2016, 8, 31, 2, 0, 0, 0, timezone.utc)),
+            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(), last_update_date=datetime.now(), middleware_created_date=datetime.now(),
+                                       middleware_updated_date=datetime(2016, 8, 31, 2, 30, 0, 0, timezone.utc)),
+            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(), last_update_date=datetime.now(), middleware_created_date=datetime.now(),
+                                       middleware_updated_date=datetime(2016, 8, 31, 3, 0, 0, 0, timezone.utc)),
+            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(), last_update_date=datetime.now(), middleware_created_date=datetime.now(),
+                                       middleware_updated_date=datetime(2016, 8, 31, 3, 30, 0, 0, timezone.utc)),
         ]
 
         mock_filter.return_value = [
-            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                       last_update_date=datetime(2016, 8, 31, 3, 0, 0, 0, timezone.utc)),
-            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
-                                       last_update_date=datetime(2016, 8, 31, 3, 30, 0, 0, timezone.utc)),
+            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(), last_update_date=datetime.now(), middleware_created_date=datetime.now(),
+                                       middleware_updated_date=datetime(2016, 8, 31, 3, 0, 0, 0, timezone.utc)),
+            SenderMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(), last_update_date=datetime.now(), middleware_created_date=datetime.now(),
+                                       middleware_updated_date=datetime(2016, 8, 31, 3, 30, 0, 0, timezone.utc)),
         ]
         sender_middleware_core_service.sync(datetime(2016, 8, 31, 2, 30, 0, 0, timezone.utc))
         self.assertEqual(SenderMiddlewareCore.objects.count(), 2)

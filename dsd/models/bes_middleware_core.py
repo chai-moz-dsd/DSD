@@ -8,6 +8,8 @@ class BesMiddlewareCore(models.Model):
     uri = models.CharField(max_length=80, unique=True, primary_key=True)
     creator_uri_user = models.CharField(max_length=80)
     creation_date = models.DateTimeField()
+    middleware_created_date = models.DateTimeField()
+    middleware_updated_date = models.DateTimeField()
     last_update_uri_user = models.CharField(max_length=255, null=True)
     last_update_date = models.DateTimeField()
     model_version = models.IntegerField(null=True)

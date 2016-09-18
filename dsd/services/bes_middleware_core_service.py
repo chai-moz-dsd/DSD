@@ -11,7 +11,7 @@ def sync(sync_time):
         all_remote_bes_middleware_cores = BesMiddlewareCoreRemote.objects.all()
         logger.debug('sync all bes_middleware_cores at %s' % sync_time)
     else:
-        all_remote_bes_middleware_cores = BesMiddlewareCoreRemote.objects.filter(last_update_date__gte=sync_time)
+        all_remote_bes_middleware_cores = BesMiddlewareCoreRemote.objects.filter(middleware_updated_date__gte=sync_time)
         logger.debug('sync bes_middleware_cores from %s' % sync_time)
 
     all_local_bes_middleware_cores = get_all_from_local(all_remote_bes_middleware_cores)
@@ -45,7 +45,7 @@ def save(bes_middleware_core):
 
 
 def should_be_synced(bes_middleware_core, last_sync_date):
-    return bes_middleware_core.last_update_date > last_sync_date
+    return bes_middleware_core.middleware_updated_date > last_sync_date
 
 
 def fetch_updated_data_element_values():
