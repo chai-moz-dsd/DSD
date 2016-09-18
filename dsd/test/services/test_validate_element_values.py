@@ -17,7 +17,7 @@ logging.getLogger().setLevel(logging.CRITICAL)
 class ValidateDataElementValuesTest(TestCase):
     @patch('requests.get')
     def setUp(self, mock_get):
-        mock_get.return_value = MagicMock(status_code=HTTP_200_OK)
+        mock_get.return_value = MagicMock(status_code=HTTP_200_OK, text=REAL_HTML_RESPONSE)
         self.data_element_values_validation = DataElementValuesValidation()
 
     def tearDown(self):
@@ -34,13 +34,13 @@ class ValidateDataElementValuesTest(TestCase):
         self.assertEqual(validate_request, expected_validate_request)
 
     @patch('requests.get')
-    def test_should_validate_successful(self, mock_get):
+    def test_should_validate_request(self, mock_get):
         mock_get.return_value = MagicMock(status_code=HTTP_200_OK)
 
         validate_request = self.data_element_values_validation.format_validate_request(MOH_UID, '2016-09-13',
                                                                                        '2016-09-13', '1582')
-        status_code = self.data_element_values_validation.do_validation_by_dhis2(validate_request)
-        self.assertEqual(status_code, HTTP_200_OK)
+        response = self.data_element_values_validation.do_validation_by_dhis2(validate_request)
+        self.assertEqual(response.status_code, HTTP_200_OK)
 
     @patch('requests.get')
     def test_should_fetch_all_rule_groups(self, mock_get):
@@ -81,6 +81,8 @@ class ValidateDataElementValuesTest(TestCase):
         rule_groups = self.data_element_values_validation.fetch_validation_rule_groups_from_html(REAL_HTML_RESPONSE)
         self.assertDictEqual(expected_groups, rule_groups)
 
+
+class ValidateDataElementValuesRealRequestTest(TestCase):
     @patch.object(DataElementValuesValidation, 'fetch_info_from_data')
     def test_should_validate_real_data(self, mock_fetch_info_from_data):
         data_element_values_validation = DataElementValuesValidation()
@@ -89,6 +91,7 @@ class ValidateDataElementValuesTest(TestCase):
         mock_fetch_info_from_data.return_value = ('2015-08-01', '2016-09-01', MOH_UID)
 
         data_element_values_validation.validate_values(data_element_values)
+        logger.info(data_element_values_validation.rule_group_name_id_map)
 
 
 REAL_HTML_RESPONSE = '''
