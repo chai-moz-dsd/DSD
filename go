@@ -42,8 +42,6 @@ function run_unit_test {
   if [ "$1" = "--prod" ]; then
     python manage.py test -v 2 --noinput --settings=chai.settings_prod
   elif [ "$1" = "--ci" ]; then
-    python manage.py makemigrations --settings=chai.settings_ci
-    python manage.py migrate --settings=chai.settings_ci
     python manage.py test -v 2 --noinput --settings=chai.settings_ci
   else
     python manage.py test -v 2 --noinput --settings=chai.settings_test
