@@ -17,16 +17,19 @@ logger.setLevel(logging.DEBUG)
 
 class DataElementValuesValidation(object):
     def __init__(self):
+        self.alert_should_be_sent = {}.fromkeys(DISEASE_I18N_MAP.keys(), True)
         _, self.rule_group_name_id_map = self.fetch_all_rule_groups()
 
     @classmethod
-    def format_validation_request(cls, organisation_id, start_date, end_date, rule_group_id):
-        validate_request = '%sdhis-web-validationrule/runValidationAction.action?organisationUnitId=%s&startDate=%s&endDate=%s&validationRuleGroupId=%s&sendAlerts=true' % \
+    def format_validation_request(cls, organisation_id, start_date, end_date, rule_group_id, alert_should_be_sent):
+        alert_flag = 'true' if alert_should_be_sent else 'false'
+        validate_request = '%sdhis-web-validationrule/runValidationAction.action?organisationUnitId=%s&startDate=%s&endDate=%s&validationRuleGroupId=%s&sendAlerts=%s' % \
                            (DHIS2_BASE_URL,
                             organisation_id,
                             start_date,
                             end_date,
-                            rule_group_id)
+                            rule_group_id,
+                            alert_flag)
         return validate_request
 
     @classmethod
@@ -66,16 +69,30 @@ class DataElementValuesValidation(object):
     def get_rule_group_id(self, element_name):
         return self.rule_group_name_id_map.get('%s GROUP' % DISEASE_I18N_MAP.get(element_name))
 
-    def send_validation_for_each_diease(self, start, end, organisation_id):
+    def send_validation_for_each_disease(self, start, end, organisation_id):
         for element_name in DISEASE_I18N_MAP.keys():
-            rule_group_id = self.get_rule_group_id(element_name)
-            validate_request = self.format_validation_request(organisation_id, start, end, rule_group_id)
-            response = self.send_request_to_dhis(validate_request)
+            response = self.send_validation_request(element_name, start, end, organisation_id)
+
+            if 'validationResults' in response.text:
+                self.alert_should_be_sent[element_name] = False
+            elif 'Validation passed successfully' in response.text:
+                self.alert_should_be_sent[element_name] = True
 
             if response.status_code != HTTP_200_OK:
                 logger.critical('validate request failed.')
 
+    def send_validation_request(self, element_name, start, end, organisation_id):
+        rule_group_id = self.get_rule_group_id(element_name)
+        alert_should_be_sent = self.alert_should_be_sent.get(element_name, True)
+        validate_request = self.format_validation_request(organisation_id,
+                                                          start,
+                                                          end,
+                                                          rule_group_id,
+                                                          alert_should_be_sent)
+        response = self.send_request_to_dhis(validate_request)
+        return response
+
     def validate_values(self, date_element_values):
         for value in date_element_values:
             start, end, organisation_id = self.fetch_info_from_updated_data(value)
-            self.send_validation_for_each_diease(start, end, organisation_id)
+            self.send_validation_for_each_disease(start, end, organisation_id)
