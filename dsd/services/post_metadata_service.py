@@ -16,7 +16,7 @@ def sync_metadata_with_bes():
 
 
 def sync_metadata_with_dhis2():
-    create_oauth()
+    initial_access_token()
     post_attributes()
     post_organization_units()
     post_category_options()

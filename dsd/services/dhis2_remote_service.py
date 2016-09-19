@@ -100,11 +100,11 @@ def build_data_element_values_request_body_as_dict(bes_middleware_core):
                 'value': getattr(bes_middleware_core, coc_relation.name_in_bes),
                 'categoryOptionCombo': coc_relation.coc_id,
             })
-    if bes_middleware_core.start:
-        start_date = bes_middleware_core.start
+    if bes_middleware_core.bes_year:
+        year = bes_middleware_core.bes_year
     else:
-        start_date = datetime.datetime.now()
-    start_week = "%sW%s" % (start_date.isocalendar()[0], start_date.isocalendar()[1])
+        year = datetime.datetime.now()
+    start_week = "%sW%s" % (year.isocalendar()[0], str(bes_middleware_core.bes_number))
     return {
         'dataSet': dhis2_config.DATA_SET_ID,
         'completeData': str(bes_middleware_core.submission_date),
