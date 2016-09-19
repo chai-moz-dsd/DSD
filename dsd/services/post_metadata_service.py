@@ -26,6 +26,7 @@ def sync_metadata_with_dhis2():
     post_data_set()
     set_coc_id()
     assign_all_org_to_user()
+    set_org_unit_level()
 
 
 def need_sync_bes_data():
