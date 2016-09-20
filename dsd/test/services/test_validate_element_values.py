@@ -4,6 +4,7 @@ from django.test import TestCase
 from mock import patch, MagicMock
 from rest_framework.status import HTTP_200_OK
 
+from dsd.config.dhis2_config import FOUR_WEEKS_DAYS
 from dsd.models.moh import MOH_UID
 from dsd.services.bes_middleware_core_service import fetch_updated_data_element_values
 from dsd.services.validate_data_element_values import DataElementValuesValidation
@@ -86,6 +87,7 @@ class ValidateDataElementValuesTest(TestCase):
                            'C&Oacute;LERA GROUP': '1582',
                            'SARAMPO GROUP': '1602',
                            'SARAMPO MONTH GROUP': '1677',
+                           'MENINGITE INCREASEMENT GROUP': '1922',
                            'MENINGITE GROUP': '1595',
                            'T&Eacute;TANO REC&Eacute;M NASCIDOS GROUP': '1601'}
 
@@ -102,10 +104,10 @@ class ValidateDataElementValuesTest(TestCase):
         self.assertEqual(False, self.data_element_values_validation.alert_should_be_sent['measles'])
 
     def test_should_get_four_weeks_before_date(self):
-        before_20th = self.data_element_values_validation.get_four_weeks_before_date('2016-09-20')
+        before_20th = self.data_element_values_validation.change_date_to_days_before('2016-09-20', FOUR_WEEKS_DAYS)
         self.assertEqual(before_20th, '2016-08-24')
 
-        before_08th = self.data_element_values_validation.get_four_weeks_before_date('2016-08-13')
+        before_08th = self.data_element_values_validation.change_date_to_days_before('2016-08-13', FOUR_WEEKS_DAYS)
         self.assertEqual(before_08th, '2016-07-17')
 
     @patch('dsd.services.validate_data_element_values.DataElementValuesValidation.send_request_to_dhis')
@@ -125,9 +127,27 @@ class ValidateDataElementValuesTest(TestCase):
                                                                                    '2016-09-19',
                                                                                    MOH_UID)
 
-        mock_send_request_to_dhis.assert_called_once_with('http://52.32.36.132:80/dhis-web-validationrule/runValidationAction.action' \
-                            '?organisationUnitId=MOH12345678&startDate=2016-08-17&endDate=2016-09-19' \
-                            '&validationRuleGroupId=1677&sendAlerts=true')
+        mock_send_request_to_dhis.assert_called_once_with(
+            'http://52.32.36.132:80/dhis-web-validationrule/runValidationAction.action' \
+            '?organisationUnitId=MOH12345678&startDate=2016-08-17&endDate=2016-09-19' \
+            '&validationRuleGroupId=1677&sendAlerts=true')
+
+    @patch('dsd.services.validate_data_element_values.DataElementValuesValidation.send_request_to_dhis')
+    def test_should_validate_meningitis_every_two_weeks(self,
+                                                       mock_send_request_to_dhis):
+        mock_send_request_to_dhis.return_value = (HTTP_200_OK, {})
+
+        with patch(
+            'dsd.services.validate_data_element_values.DataElementValuesValidation.is_meningitis_increasement_rule_match',
+            return_value=True):
+            self.data_element_values_validation.send_validation_for_meningitis_every_two_weeks('2016-09-13',
+                                                                                          '2016-09-19',
+                                                                                          MOH_UID)
+
+        mock_send_request_to_dhis.assert_called_once_with(
+            'http://52.32.36.132:80/dhis-web-validationrule/runValidationAction.action' \
+            '?organisationUnitId=MOH12345678&startDate=2016-08-30&endDate=2016-09-19' \
+            '&validationRuleGroupId=1922&sendAlerts=true')
 
 
 REAL_HTML_RESPONSE = '''
@@ -193,6 +213,12 @@ REAL_HTML_RESPONSE = '''
             data-can-update="true"
             data-can-delete="true">
             <td>SARAMPO MONTH GROUP</td>
+        </tr>
+                        <tr id="tr1922" data-id="1922" data-uid="TToEcWIrPVp" data-type="ValidationRuleGroup" data-name="MENINGITE INCREASEMENT GROUP"
+            data-can-manage="true"
+            data-can-update="true"
+            data-can-delete="true">
+            <td>MENINGITE INCREASEMENT GROUP</td>
         </tr>
                 <tr id="tr1601" data-id="1601" data-uid="vQWvq6azBqE" data-type="ValidationRuleGroup" data-name="T&Eacute;TANO REC&Eacute;M NASCIDOS GROUP"
             data-can-manage="true"

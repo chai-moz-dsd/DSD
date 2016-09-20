@@ -6,7 +6,8 @@ import requests
 from rest_framework.status import HTTP_200_OK
 
 from chai import settings
-from dsd.config.dhis2_config import DISEASE_I18N_MAP, DHIS2_BASE_URL, FOUR_WEEKS_DAYS, SARAMPO_IN_A_MONTH_THRESHOLD
+from dsd.config.dhis2_config import DISEASE_I18N_MAP, DHIS2_BASE_URL, FOUR_WEEKS_DAYS, SARAMPO_IN_A_MONTH_THRESHOLD, \
+    ONE_WEEK_DAYS, THREE_WEEKS_DAYS
 from dsd.models.moh import MOH_UID
 from dsd.repositories.dhis2_remote_repository import get_oauth_header
 
@@ -103,10 +104,9 @@ class DataElementValuesValidation(object):
             self.send_validation_for_sarampo_in_a_month(start, end, organisation_id)
 
     @staticmethod
-    def get_four_weeks_before_date(current_date):
+    def change_date_to_days_before(current_date, the_days_before):
         current_date_format = datetime.datetime.strptime(current_date, '%Y-%m-%d')
-        before_date = current_date_format - datetime.timedelta(days=FOUR_WEEKS_DAYS)
-
+        before_date = current_date_format - datetime.timedelta(days=the_days_before)
         return before_date.strftime("%Y-%m-%d")
 
     @staticmethod
@@ -114,11 +114,34 @@ class DataElementValuesValidation(object):
         return 10
 
     def send_validation_for_sarampo_in_a_month(self, start, end, organisation_id):
-        month_start = self.get_four_weeks_before_date(start)
+        month_start = self.change_date_to_days_before(start, FOUR_WEEKS_DAYS)
 
         sarampo_in_a_month = self.fetch_sarampo_in_a_month(month_start, end, organisation_id)
 
         if SARAMPO_IN_A_MONTH_THRESHOLD < sarampo_in_a_month:
             rule_group_id = self.rule_group_name_id_map.get('%s MONTH GROUP' % DISEASE_I18N_MAP.get('measles'))
-
             self.send_validation_request(rule_group_id, month_start, end, organisation_id, True)
+
+    def send_validation_for_meningitis_every_two_weeks(self, start, end, organisation_id):
+        if self.is_meningitis_increasement_rule_match(start, end, organisation_id):
+            rule_group_id = self.rule_group_name_id_map.get('%s INCREASEMENT GROUP' % DISEASE_I18N_MAP.get('meningitis'))
+            start_before = self.change_date_to_days_before(end, THREE_WEEKS_DAYS)
+            self.send_validation_request(rule_group_id, start_before, end, organisation_id, True)
+
+    @staticmethod
+    def is_meningitis_increasement_rule_match(start, end, organisation_id):
+        meningitis_third_week = DataElementValuesValidation.fetch_meningitis(start, end, organisation_id)
+        meningitis_second_week = DataElementValuesValidation.fetch_meningitis(
+            DataElementValuesValidation.change_date_to_days_before(start, ONE_WEEK_DAYS),
+            DataElementValuesValidation.change_date_to_days_before(end, ONE_WEEK_DAYS),
+            organisation_id)
+        if meningitis_third_week < meningitis_second_week * 2:
+            pass
+        meningitis_first_week = DataElementValuesValidation.fetch_meningitis(start, end, organisation_id)
+        if meningitis_second_week < meningitis_first_week * 2:
+            pass
+        return False
+
+    @staticmethod
+    def fetch_meningitis(start, end, organisation_id):
+        return 3
