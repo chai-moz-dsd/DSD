@@ -131,16 +131,28 @@ class DataElementValuesValidation(object):
     @staticmethod
     def is_meningitis_increasement_rule_match(start, end, organisation_id):
         meningitis_third_week = DataElementValuesValidation.fetch_meningitis(start, end, organisation_id)
+
+        second_week_start = DataElementValuesValidation.change_date_to_days_before(start, ONE_WEEK_DAYS)
+        second_week_end = DataElementValuesValidation.change_date_to_days_before(end, ONE_WEEK_DAYS)
         meningitis_second_week = DataElementValuesValidation.fetch_meningitis(
-            DataElementValuesValidation.change_date_to_days_before(start, ONE_WEEK_DAYS),
-            DataElementValuesValidation.change_date_to_days_before(end, ONE_WEEK_DAYS),
+            second_week_start,
+            second_week_end,
             organisation_id)
+
         if meningitis_third_week < meningitis_second_week * 2:
-            pass
-        meningitis_first_week = DataElementValuesValidation.fetch_meningitis(start, end, organisation_id)
+            return False
+
+        first_week_start = DataElementValuesValidation.change_date_to_days_before(second_week_start, ONE_WEEK_DAYS)
+        first_week_end = DataElementValuesValidation.change_date_to_days_before(second_week_end, ONE_WEEK_DAYS)
+        meningitis_first_week = DataElementValuesValidation.fetch_meningitis(
+            first_week_start,
+            first_week_end,
+            organisation_id)
+
         if meningitis_second_week < meningitis_first_week * 2:
-            pass
-        return False
+            return False
+
+        return True
 
     @staticmethod
     def fetch_meningitis(start, end, organisation_id):
