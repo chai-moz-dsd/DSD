@@ -51,14 +51,19 @@ def post_organization_units():
         logger.info('response status = %s' % response.status_code)
 
 
-def post_data_set():
-    dhis2_remote_repository.post_data_set(json.dumps(build_data_set_request_body_as_dict()))
+def get_user_profile():
+    profile = dhis2_remote_repository.get_self_profile()
+    profile_json = json.loads(profile)
+    return profile_json.get('id'), profile_json.get('surname'), profile_json.get('firstName')
 
 
-def post_data_element_values(date_element_values):
-    for data_element in date_element_values:
-        dhis2_remote_repository.post_data_elements_value(
-            json.dumps(build_data_element_values_request_body_as_dict(data_element)))
+def assign_all_org_to_user():
+    user_id, surname, first_name = get_user_profile()
+    dhis2_remote_repository.update_user(json.dumps(user_update_body(surname, first_name)), user_id)
+
+
+def set_org_unit_level():
+    dhis2_remote_repository.post_to_set_org_level(build_org_level_dict())
 
 
 def post_category_options():
@@ -79,15 +84,14 @@ def post_category_combinations():
         dhis2_remote_repository.post_category_combinations(json.dumps(request_body_dict))
 
 
-def get_user_profile():
-    profile = dhis2_remote_repository.get_self_profile()
-    profile_json = json.loads(profile)
-    return profile_json.get('id'), profile_json.get('surname'), profile_json.get('firstName')
+def post_data_set():
+    dhis2_remote_repository.post_data_set(json.dumps(build_data_set_request_body_as_dict()))
 
 
-def assign_all_org_to_user():
-    user_id, surname, first_name = get_user_profile()
-    dhis2_remote_repository.update_user(json.dumps(user_update_body(surname, first_name)), user_id)
+def post_data_element_values(date_element_values):
+    for data_element in date_element_values:
+        dhis2_remote_repository.post_data_elements_value(
+            json.dumps(build_data_element_values_request_body_as_dict(data_element)))
 
 
 def build_data_element_values_request_body_as_dict(bes_middleware_core):
@@ -100,11 +104,11 @@ def build_data_element_values_request_body_as_dict(bes_middleware_core):
                 'value': getattr(bes_middleware_core, coc_relation.name_in_bes),
                 'categoryOptionCombo': coc_relation.coc_id,
             })
-    if bes_middleware_core.start:
-        start_date = bes_middleware_core.start
+    if bes_middleware_core.bes_year:
+        year = bes_middleware_core.bes_year
     else:
-        start_date = datetime.datetime.now()
-    start_week = "%sW%s" % (start_date.isocalendar()[0], start_date.isocalendar()[1])
+        year = datetime.datetime.now()
+    start_week = "%sW%s" % (year.isocalendar()[0], str(bes_middleware_core.bes_number))
     return {
         'dataSet': dhis2_config.DATA_SET_ID,
         'completeData': str(bes_middleware_core.submission_date),
@@ -196,3 +200,12 @@ def user_update_body(surname, first_name):
             'id': MOH_UID
         }]
     }
+
+
+def build_org_level_dict():
+    return {'organisationUnitLevels':
+                [{'name': 'MoH', 'level': 1, 'offlineLevels': 1},
+                 {'name': 'Province', 'level': 2, 'offlineLevels': 2},
+                 {'name': 'District', 'level': 3, 'offlineLevels': 3},
+                 {'name': 'Facility', 'level': 4, 'offlineLevels': 4}]
+            }
