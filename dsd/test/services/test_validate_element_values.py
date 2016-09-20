@@ -16,9 +16,9 @@ logging.getLogger().setLevel(logging.CRITICAL)
 
 
 class ValidateDataElementValuesTest(TestCase):
-    @patch.object(DataElementValuesValidation, 'fetch_all_rule_groups')
-    def setUp(self, mock_fetch_all_rule_groups):
-        mock_fetch_all_rule_groups.return_value = (HTTP_200_OK, {})
+    @patch('dsd.services.validate_data_element_values.DataElementValuesValidation.send_request_to_dhis')
+    def setUp(self, mock_send_request_to_dhis):
+        mock_send_request_to_dhis.return_value = MagicMock(status_code=HTTP_200_OK, text=REAL_HTML_RESPONSE)
         self.data_element_values_validation = DataElementValuesValidation()
 
     def tearDown(self):
@@ -29,15 +29,15 @@ class ValidateDataElementValuesTest(TestCase):
                                     '?organisationUnitId=MOH12345678&startDate=2016-09-13&endDate=2016-09-13' \
                                     '&validationRuleGroupId=1582&sendAlerts=true'
 
-        validate_request = self.data_element_values_validation.format_validation_request(MOH_UID,
-                                                                                         '2016-09-13',
-                                                                                         '2016-09-13',
-                                                                                         '1582',
-                                                                                         True)
+        validate_request = DataElementValuesValidation.format_validation_request(MOH_UID,
+                                                                                 '2016-09-13',
+                                                                                 '2016-09-13',
+                                                                                 '1582',
+                                                                                 True)
 
         self.assertEqual(validate_request, expected_validate_request)
 
-    @patch('requests.get')
+    @patch('dsd.services.validate_data_element_values.DataElementValuesValidation.send_request_to_dhis')
     def test_should_validate_request(self, mock_get):
         mock_get.return_value = MagicMock(status_code=HTTP_200_OK)
 
@@ -49,7 +49,7 @@ class ValidateDataElementValuesTest(TestCase):
         response = self.data_element_values_validation.send_request_to_dhis(validate_request)
         self.assertEqual(response.status_code, HTTP_200_OK)
 
-    @patch('requests.get')
+    @patch('dsd.services.validate_data_element_values.DataElementValuesValidation.send_request_to_dhis')
     def test_should_fetch_all_rule_groups(self, mock_get):
         mock_get.return_value = MagicMock(status_code=HTTP_200_OK)
 
@@ -63,15 +63,18 @@ class ValidateDataElementValuesTest(TestCase):
                         {'PESTE GROUP': '1652'}):
             self.assertEqual(expected_group_data_id, self.data_element_values_validation.get_rule_group_id(rule_name))
 
-    @patch('requests.get')
-    def test_should_validate_data_element_values(self, mock_get):
+    @patch('dsd.services.validate_data_element_values.DataElementValuesValidation.send_request_to_dhis')
+    @patch.object(DataElementValuesValidation, 'send_validation_for_each_disease')
+    def test_should_validate_data_element_values(self, mock_send_request_to_dhis, mock_send_validation):
         device_serial1 = '356670060315512'
         FacilityFactory(device_serial=device_serial1, uid=MOH_UID)
         BesMiddlewareCoreFactory(device_id=device_serial1)
-        mock_get.return_value = MagicMock(status_code=HTTP_200_OK, text=REAL_HTML_RESPONSE)
+        mock_send_request_to_dhis.return_value = MagicMock(status_code=HTTP_200_OK, text=REAL_HTML_RESPONSE)
 
         data_element_values = fetch_updated_data_element_values()
         self.data_element_values_validation.validate_values(data_element_values)
+
+    #        mock_send_validation.assert_called_once_with(start=None, end='2016-09-20', organisation_id=MOH_UID)
 
     def test_should_fetch_validation_rule_groups_from_html(self):
         expected_groups = {'PARALISIA FL&Aacute;CIDA AGUDA GROUP': '1599',
@@ -82,13 +85,14 @@ class ValidateDataElementValuesTest(TestCase):
                            'RAIVA GROUP': '1598',
                            'C&Oacute;LERA GROUP': '1582',
                            'SARAMPO GROUP': '1602',
+                           'SARAMPO MONTH GROUP': '1677',
                            'MENINGITE GROUP': '1595',
                            'T&Eacute;TANO REC&Eacute;M NASCIDOS GROUP': '1601'}
 
         rule_groups = self.data_element_values_validation.fetch_validation_rule_groups_from_html(REAL_HTML_RESPONSE)
         self.assertDictEqual(expected_groups, rule_groups)
 
-    @patch('requests.get')
+    @patch('dsd.services.validate_data_element_values.DataElementValuesValidation.send_request_to_dhis')
     def test_should_be_false_if_match_rule(self, mock_get):
         mock_get.return_value = MagicMock(status_code=HTTP_200_OK, text='<div id="validationResults">')
         self.data_element_values_validation.send_validation_for_each_disease('2016-09-13',
@@ -97,7 +101,14 @@ class ValidateDataElementValuesTest(TestCase):
 
         self.assertEqual(False, self.data_element_values_validation.alert_should_be_sent['measles'])
 
-    @patch('requests.get')
+    def test_should_get_four_weeks_before_date(self):
+        before_20th = self.data_element_values_validation.get_four_weeks_before_date('2016-09-20')
+        self.assertEqual(before_20th, '2016-08-24')
+
+        before_08th = self.data_element_values_validation.get_four_weeks_before_date('2016-08-13')
+        self.assertEqual(before_08th, '2016-07-17')
+
+    @patch('dsd.services.validate_data_element_values.DataElementValuesValidation.send_request_to_dhis')
     def test_should_be_true_if_mismatch_rule(self, mock_get):
         mock_get.return_value = MagicMock(status_code=HTTP_200_OK, text='Validation passed successfully')
         self.data_element_values_validation.send_validation_for_each_disease('2016-09-13',
@@ -105,6 +116,18 @@ class ValidateDataElementValuesTest(TestCase):
                                                                              MOH_UID)
 
         self.assertEqual(True, self.data_element_values_validation.alert_should_be_sent['pfa'])
+
+    @patch.object(DataElementValuesValidation, 'send_request_to_dhis')
+    def test_should_validate_sarampo_in_a_month(self, mock_send_request_to_dhis):
+        mock_send_request_to_dhis.return_value = (HTTP_200_OK, {})
+
+        self.data_element_values_validation.send_validation_for_sarampo_in_a_month('2016-09-13',
+                                                                                   '2016-09-19',
+                                                                                   MOH_UID)
+
+        mock_send_request_to_dhis.assert_called_once_with('http://52.32.36.132:80/dhis-web-validationrule/runValidationAction.action' \
+                            '?organisationUnitId=MOH12345678&startDate=2016-08-17&endDate=2016-09-19' \
+                            '&validationRuleGroupId=1602&sendAlerts=true')
 
 
 REAL_HTML_RESPONSE = '''
@@ -163,6 +186,13 @@ REAL_HTML_RESPONSE = '''
             data-can-update="true"
             data-can-delete="true">
             <td>SARAMPO GROUP</td>
+        </tr>
+                </tr>
+                <tr id="tr1677" data-id="1677" data-uid="TToEcWIrPVp" data-type="ValidationRuleGroup" data-name="SARAMPO MONTH GROUP"
+            data-can-manage="true"
+            data-can-update="true"
+            data-can-delete="true">
+            <td>SARAMPO MONTH GROUP</td>
         </tr>
                 <tr id="tr1601" data-id="1601" data-uid="vQWvq6azBqE" data-type="ValidationRuleGroup" data-name="T&Eacute;TANO REC&Eacute;M NASCIDOS GROUP"
             data-can-manage="true"
