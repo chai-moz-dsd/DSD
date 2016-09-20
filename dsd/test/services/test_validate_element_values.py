@@ -117,7 +117,7 @@ class ValidateDataElementValuesTest(TestCase):
 
         self.assertEqual(True, self.data_element_values_validation.alert_should_be_sent['pfa'])
 
-    @patch.object(DataElementValuesValidation, 'send_request_to_dhis')
+    @patch('dsd.services.validate_data_element_values.DataElementValuesValidation.send_request_to_dhis')
     def test_should_validate_sarampo_in_a_month(self, mock_send_request_to_dhis):
         mock_send_request_to_dhis.return_value = (HTTP_200_OK, {})
 
@@ -127,7 +127,7 @@ class ValidateDataElementValuesTest(TestCase):
 
         mock_send_request_to_dhis.assert_called_once_with('http://52.32.36.132:80/dhis-web-validationrule/runValidationAction.action' \
                             '?organisationUnitId=MOH12345678&startDate=2016-08-17&endDate=2016-09-19' \
-                            '&validationRuleGroupId=1602&sendAlerts=true')
+                            '&validationRuleGroupId=1677&sendAlerts=true')
 
 
 REAL_HTML_RESPONSE = '''

@@ -32,14 +32,14 @@ class DataElementValuesValidation(object):
                             alert_flag)
         return validate_request
 
-    def send_request_to_dhis(cls, rule_groups_url):
-        logger.info('-----------------------')
-        return requests.get(rule_groups_url,
+    @staticmethod
+    def send_request_to_dhis(dhis2_request):
+        return requests.get(dhis2_request,
                             headers=get_oauth_header(),
                             verify=settings.DHIS2_SSL_VERIFY)
 
-    @classmethod
-    def fetch_info_from_updated_data(cls, value):
+    @staticmethod
+    def fetch_info_from_updated_data(value):
         # organisation_id = Facility.objects.filter(device_serial=value.device_id).first().uid
         organisation_id = MOH_UID
         date_week_start = value.date_week_start.strftime('%Y-%m-%d')
@@ -47,8 +47,8 @@ class DataElementValuesValidation(object):
 
         return date_week_start, date_week_end, organisation_id
 
-    @classmethod
-    def fetch_validation_rule_groups_from_html(cls, html_text):
+    @staticmethod
+    def fetch_validation_rule_groups_from_html(html_text):
         validation_rule_groups = {}
         validation_rule_group_pattern = re.compile(r'<tr\sid="tr(\d+)".+data-name="(.+)"')
 
@@ -71,7 +71,12 @@ class DataElementValuesValidation(object):
     def send_validation_for_each_disease(self, start, end, organisation_id):
         for element_name in DISEASE_I18N_MAP.keys():
             alert_should_be_sent = self.alert_should_be_sent.get(element_name, True)
-            response = self.send_validation_request(element_name, start, end, organisation_id, alert_should_be_sent)
+            rule_group_id = self.get_rule_group_id(element_name)
+            response = self.send_validation_request(rule_group_id,
+                                                    start,
+                                                    end,
+                                                    organisation_id,
+                                                    alert_should_be_sent)
 
             if 'validationResults' in response.text:
                 self.alert_should_be_sent[element_name] = False
@@ -81,8 +86,7 @@ class DataElementValuesValidation(object):
             if response.status_code != HTTP_200_OK:
                 logger.critical('validate request failed.')
 
-    def send_validation_request(self, element_name, start, end, organisation_id, alert_should_be_sent):
-        rule_group_id = self.get_rule_group_id(element_name)
+    def send_validation_request(self, rule_group_id, start, end, organisation_id, alert_should_be_sent):
         validate_request = self.format_validation_request(organisation_id,
                                                           start,
                                                           end,
@@ -98,8 +102,8 @@ class DataElementValuesValidation(object):
 
             self.send_validation_for_sarampo_in_a_month(start, end, organisation_id)
 
-    @classmethod
-    def get_four_weeks_before_date(cls, current_date):
+    @staticmethod
+    def get_four_weeks_before_date(current_date):
         current_date_format = datetime.datetime.strptime(current_date, '%Y-%m-%d')
         before_date = current_date_format - datetime.timedelta(days=FOUR_WEEKS_DAYS)
 
@@ -115,4 +119,6 @@ class DataElementValuesValidation(object):
         sarampo_in_a_month = self.fetch_sarampo_in_a_month(month_start, end, organisation_id)
 
         if SARAMPO_IN_A_MONTH_THRESHOLD < sarampo_in_a_month:
-            self.send_validation_request('measles', month_start, end, organisation_id, True)
+            rule_group_id = self.rule_group_name_id_map.get('%s MONTH GROUP' % DISEASE_I18N_MAP.get('measles'))
+
+            self.send_validation_request(rule_group_id, month_start, end, organisation_id, True)
