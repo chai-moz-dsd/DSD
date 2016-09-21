@@ -3,11 +3,12 @@ import re
 
 import datetime
 import requests
+from math import sqrt
 from rest_framework.status import HTTP_200_OK
 
 from chai import settings
 from dsd.config.dhis2_config import DISEASE_I18N_MAP, DHIS2_BASE_URL, FOUR_WEEKS_DAYS, SARAMPO_IN_A_MONTH_THRESHOLD, \
-    ONE_WEEK_DAYS, THREE_WEEKS_DAYS
+    ONE_WEEK_DAYS, THREE_WEEKS_DAYS, FIVE_WEEKS_DAYS
 from dsd.models.moh import MOH_UID
 from dsd.repositories.dhis2_remote_repository import get_oauth_header
 
@@ -43,8 +44,11 @@ class DataElementValuesValidation(object):
     def fetch_info_from_updated_data(value):
         # organisation_id = Facility.objects.filter(device_serial=value.device_id).first().uid
         organisation_id = MOH_UID
-        date_week_start = value.date_week_start.strftime('%Y-%m-%d')
-        date_week_end = value.date_week_end.strftime('%Y-%m-%d')
+        year, _, _ = value.bes_year.isocalendar()
+        week_time = '%s-W%s' % (year, value.bes_number)
+
+        date_week_start = datetime.datetime.strptime('%s-0' % week_time, '%Y-W%U-%w').strftime('%Y-%m-%d')
+        date_week_end = datetime.datetime.strptime('%s-6' % week_time, '%Y-W%U-%w').strftime('%Y-%m-%d')
 
         return date_week_start, date_week_end, organisation_id
 
@@ -103,6 +107,8 @@ class DataElementValuesValidation(object):
 
             self.send_validation_for_sarampo_in_a_month(start, end, organisation_id)
 
+            self.send_validation_malaria_fiveyears_average(value, organisation_id)
+
     @staticmethod
     def change_date_to_days_before(current_date, the_days_before):
         current_date_format = datetime.datetime.strptime(current_date, '%Y-%m-%d')
@@ -124,7 +130,8 @@ class DataElementValuesValidation(object):
 
     def send_validation_for_meningitis_every_two_weeks(self, start, end, organisation_id):
         if self.is_meningitis_increasement_rule_match(start, end, organisation_id):
-            rule_group_id = self.rule_group_name_id_map.get('%s INCREASEMENT GROUP' % DISEASE_I18N_MAP.get('meningitis'))
+            rule_group_id = self.rule_group_name_id_map.get(
+                '%s INCREASEMENT GROUP' % DISEASE_I18N_MAP.get('meningitis'))
             start_before = self.change_date_to_days_before(end, THREE_WEEKS_DAYS)
             self.send_validation_request(rule_group_id, start_before, end, organisation_id, True)
 
@@ -157,3 +164,38 @@ class DataElementValuesValidation(object):
     @staticmethod
     def fetch_meningitis(start, end, organisation_id):
         return 3
+
+    @staticmethod
+    def fetch_malaria_last_five_weeks(year, week):
+        return 200
+
+    @staticmethod
+    def fetch_malaria_last_year(year, week):
+        return 3000
+
+    def send_validation_malaria_fiveyears_average(self, value, organisation_id):
+        current_year, _, _ = value.bes_year.isocalendar()
+        week_num = value.bes_number
+
+        malaria_last_five_weeks = self.fetch_malaria_last_five_weeks(current_year, week_num)
+
+        first_year_malaria = self.fetch_malaria_last_year(year=('%s' % (current_year - 5)), week=week_num)
+        second_year_malaria = self.fetch_malaria_last_year(year=('%s' % (current_year - 4)), week=week_num)
+        third_year_malaria = self.fetch_malaria_last_year(year=('%s' % (current_year - 3)), week=week_num)
+        forth_year_malaria = self.fetch_malaria_last_year(year=('%s' % (current_year - 2)), week=week_num)
+        fifth_year_malaria = self.fetch_malaria_last_year(year=('%s' % (current_year - 1)), week=week_num)
+
+        five_years_malarias = [first_year_malaria, second_year_malaria, third_year_malaria, forth_year_malaria,
+                               fifth_year_malaria]
+        average_five_years_malaria = sum(five_years_malarias) / 5.0
+        map_result = map(lambda malarias: pow(malarias - average_five_years_malaria, 2), five_years_malarias)
+        std_dev = sqrt(sum(list(map_result)))
+
+        data_week_end, _, _ = self.fetch_info_from_updated_data(value)
+        start = self.change_date_to_days_before(data_week_end, FIVE_WEEKS_DAYS)
+
+        if malaria_last_five_weeks > average_five_years_malaria + 2 * std_dev:
+            logger.info(self.rule_group_name_id_map)
+            rule_group_id = self.rule_group_name_id_map.get(
+                '%s FIVEYEAR AVAERAGE GROUP' % DISEASE_I18N_MAP.get('malaria'))
+            self.send_validation_request(rule_group_id, start, data_week_end, organisation_id, True)
