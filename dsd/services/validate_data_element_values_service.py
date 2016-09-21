@@ -1,22 +1,25 @@
+import datetime
 import logging
 import re
 
-import datetime
 import requests
 from rest_framework.status import HTTP_200_OK
 
 from chai import settings
 from dsd.config.dhis2_config import DISEASE_I18N_MAP, DHIS2_BASE_URL, FOUR_WEEKS_DAYS, SARAMPO_IN_A_MONTH_THRESHOLD, \
-    ONE_WEEK_DAYS, THREE_WEEKS_DAYS
+    THREE_WEEKS_DAYS
+from dsd.models import Element
 from dsd.models.moh import MOH_UID
+from dsd.repositories import dhis2_remote_repository
 from dsd.repositories.dhis2_remote_repository import get_oauth_header
+from dsd.services.dhis2_remote_service import construct_get_element_values_request_query_params
 
 logger = logging.getLogger(__name__)
 
 logger.setLevel(logging.DEBUG)
 
 
-class DataElementValuesValidation(object):
+class DataElementValuesValidationService(object):
     def __init__(self):
         self.alert_should_be_sent = {}.fromkeys(DISEASE_I18N_MAP.keys(), True)
         _, self.rule_group_name_id_map = self.fetch_all_rule_groups()
@@ -41,7 +44,6 @@ class DataElementValuesValidation(object):
 
     @staticmethod
     def fetch_info_from_updated_data(value):
-        # organisation_id = Facility.objects.filter(device_serial=value.device_id).first().uid
         organisation_id = MOH_UID
         date_week_start = value.date_week_start.strftime('%Y-%m-%d')
         date_week_end = value.date_week_end.strftime('%Y-%m-%d')
@@ -124,36 +126,40 @@ class DataElementValuesValidation(object):
 
     def send_validation_for_meningitis_every_two_weeks(self, start, end, organisation_id):
         if self.is_meningitis_increasement_rule_match(start, end, organisation_id):
-            rule_group_id = self.rule_group_name_id_map.get('%s INCREASEMENT GROUP' % DISEASE_I18N_MAP.get('meningitis'))
+            rule_group_id = self.rule_group_name_id_map.get(
+                '%s INCREASEMENT GROUP' % DISEASE_I18N_MAP.get('meningitis'))
             start_before = self.change_date_to_days_before(end, THREE_WEEKS_DAYS)
             self.send_validation_request(rule_group_id, start_before, end, organisation_id, True)
 
     @staticmethod
-    def is_meningitis_increasement_rule_match(start, end, organisation_id):
-        meningitis_third_week = DataElementValuesValidation.fetch_meningitis(start, end, organisation_id)
+    def is_meningitis_increasement_rule_match(year, week, organisation_id):
+        meningitis_third_week = DataElementValuesValidationService.fetch_meningitis(year, week, organisation_id)
 
-        second_week_start = DataElementValuesValidation.change_date_to_days_before(start, ONE_WEEK_DAYS)
-        second_week_end = DataElementValuesValidation.change_date_to_days_before(end, ONE_WEEK_DAYS)
-        meningitis_second_week = DataElementValuesValidation.fetch_meningitis(
-            second_week_start,
-            second_week_end,
-            organisation_id)
-
+        target_year, target_week = DataElementValuesValidationService.calculate_previous_week(year, week, -1)
+        meningitis_second_week = DataElementValuesValidationService.fetch_meningitis(target_year, target_week,
+                                                                                     organisation_id)
         if meningitis_third_week < meningitis_second_week * 2:
             return False
 
-        first_week_start = DataElementValuesValidation.change_date_to_days_before(second_week_start, ONE_WEEK_DAYS)
-        first_week_end = DataElementValuesValidation.change_date_to_days_before(second_week_end, ONE_WEEK_DAYS)
-        meningitis_first_week = DataElementValuesValidation.fetch_meningitis(
-            first_week_start,
-            first_week_end,
-            organisation_id)
+        target_year, target_week = DataElementValuesValidationService.calculate_previous_week(year, week, -2)
+        meningitis_first_week = DataElementValuesValidationService.fetch_meningitis(target_year, target_week,
+                                                                                    organisation_id)
 
-        if meningitis_second_week < meningitis_first_week * 2:
-            return False
-
-        return True
+        return meningitis_second_week >= meningitis_first_week * 2
 
     @staticmethod
-    def fetch_meningitis(start, end, organisation_id):
-        return 3
+    def calculate_year_week_by_offset(current_year, current_week, offset):
+        target_year = None
+        target_week = None
+        return target_year, target_week
+
+    @staticmethod
+    def fetch_meningitis(year, week, organisation_id):
+        element_ids = [Element.objects.filter(code='MENINGITE_036').first().id]
+        period_weeks = ['%sW%s' % (year, week)]
+        query_params = construct_get_element_values_request_query_params(
+            organisation_unit_id=organisation_id,
+            element_ids=element_ids,
+            period_weeks=period_weeks
+        )
+        return int(float(dhis2_remote_repository.get_data_element_values(query_params).json().get('rows')[0][2]))

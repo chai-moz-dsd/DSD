@@ -1,3 +1,4 @@
+import json
 import uuid
 
 from django.test import TestCase
@@ -144,7 +145,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
     @override_settings(DHIS2_SSL_VERIFY=False)
     @patch('dsd.repositories.dhis2_remote_repository.get_access_token')
     @patch('requests.get')
-    def test_should_get_data_element_value_in_specific_period(self, mock_get, mock_get_access_token):
+    def should_get_data_element_value_in_specific_period(self, mock_get, mock_get_access_token):
         mock_get.return_value = MagicMock(status_code=HTTP_200_OK)
         mock_get_access_token.return_value = uuid.uuid4()
         HEADER_DHIS2 = get_oauth_header()

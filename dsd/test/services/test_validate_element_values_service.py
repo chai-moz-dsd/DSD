@@ -1,14 +1,16 @@
 import logging
 
 from django.test import TestCase
+from django.test import override_settings
 from mock import patch, MagicMock
 from rest_framework.status import HTTP_200_OK
 
 from dsd.config.dhis2_config import FOUR_WEEKS_DAYS
 from dsd.models.moh import MOH_UID
 from dsd.services.bes_middleware_core_service import fetch_updated_data_element_values
-from dsd.services.validate_data_element_values import DataElementValuesValidation
+from dsd.services.validate_data_element_values_service import DataElementValuesValidationService
 from dsd.test.factories.bes_middleware_core_factory import BesMiddlewareCoreFactory
+from dsd.test.factories.element_factory import ElementFactory
 from dsd.test.factories.facility_factory import FacilityFactory
 
 logger = logging.getLogger(__name__)
@@ -16,29 +18,48 @@ logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.CRITICAL)
 
 
-class ValidateDataElementValuesTest(TestCase):
-    @patch('dsd.services.validate_data_element_values.DataElementValuesValidation.send_request_to_dhis')
+class ValidateDataElementValuesServiceTest(TestCase):
+    @patch('dsd.services.validate_data_element_values_service.DataElementValuesValidationService.send_request_to_dhis')
     def setUp(self, mock_send_request_to_dhis):
         mock_send_request_to_dhis.return_value = MagicMock(status_code=HTTP_200_OK, text=REAL_HTML_RESPONSE)
-        self.data_element_values_validation = DataElementValuesValidation()
+        self.data_element_values_validation = DataElementValuesValidationService()
 
-    def tearDown(self):
-        pass
+    @override_settings(DHIS2_SSL_VERIFY=False)
+    @patch('dsd.repositories.dhis2_remote_repository.get_data_element_values')
+    def test_should_fetch_meningitis(self, mock_fetch_meningitis):
+        ElementFactory(code='MENINGITE_036')
+        response = {
+            'rows': [
+                [
+                    "rf040c9a7ab.GRIMsGFQHUc",
+                    "MOH12345678",
+                    "10.0"
+                ]
+            ]
+        }
+        mock_fetch_meningitis.return_value = MagicMock(json=MagicMock(return_value=response), status_code=200)
+        year = 2016
+        week = 25
+        organisation_id = MOH_UID
+
+        result = DataElementValuesValidationService.fetch_meningitis(year, week, organisation_id)
+
+        self.assertEqual(result, 10)
 
     def test_should_format_validate_request(self):
         expected_validate_request = 'http://52.32.36.132:80/dhis-web-validationrule/runValidationAction.action' \
                                     '?organisationUnitId=MOH12345678&startDate=2016-09-13&endDate=2016-09-13' \
                                     '&validationRuleGroupId=1582&sendAlerts=true'
 
-        validate_request = DataElementValuesValidation.format_validation_request(MOH_UID,
-                                                                                 '2016-09-13',
-                                                                                 '2016-09-13',
-                                                                                 '1582',
-                                                                                 True)
+        validate_request = DataElementValuesValidationService.format_validation_request(MOH_UID,
+                                                                                        '2016-09-13',
+                                                                                        '2016-09-13',
+                                                                                        '1582',
+                                                                                        True)
 
         self.assertEqual(validate_request, expected_validate_request)
 
-    @patch('dsd.services.validate_data_element_values.DataElementValuesValidation.send_request_to_dhis')
+    @patch('dsd.services.validate_data_element_values_service.DataElementValuesValidationService.send_request_to_dhis')
     def test_should_validate_request(self, mock_get):
         mock_get.return_value = MagicMock(status_code=HTTP_200_OK)
 
@@ -50,7 +71,7 @@ class ValidateDataElementValuesTest(TestCase):
         response = self.data_element_values_validation.send_request_to_dhis(validate_request)
         self.assertEqual(response.status_code, HTTP_200_OK)
 
-    @patch('dsd.services.validate_data_element_values.DataElementValuesValidation.send_request_to_dhis')
+    @patch('dsd.services.validate_data_element_values_service.DataElementValuesValidationService.send_request_to_dhis')
     def test_should_fetch_all_rule_groups(self, mock_get):
         mock_get.return_value = MagicMock(status_code=HTTP_200_OK)
 
@@ -64,8 +85,8 @@ class ValidateDataElementValuesTest(TestCase):
                         {'PESTE GROUP': '1652'}):
             self.assertEqual(expected_group_data_id, self.data_element_values_validation.get_rule_group_id(rule_name))
 
-    @patch('dsd.services.validate_data_element_values.DataElementValuesValidation.send_request_to_dhis')
-    @patch.object(DataElementValuesValidation, 'send_validation_for_each_disease')
+    @patch('dsd.services.validate_data_element_values_service.DataElementValuesValidationService.send_request_to_dhis')
+    @patch.object(DataElementValuesValidationService, 'send_validation_for_each_disease')
     def test_should_validate_data_element_values(self, mock_send_request_to_dhis, mock_send_validation):
         device_serial1 = '356670060315512'
         FacilityFactory(device_serial=device_serial1, uid=MOH_UID)
@@ -94,7 +115,7 @@ class ValidateDataElementValuesTest(TestCase):
         rule_groups = self.data_element_values_validation.fetch_validation_rule_groups_from_html(REAL_HTML_RESPONSE)
         self.assertDictEqual(expected_groups, rule_groups)
 
-    @patch('dsd.services.validate_data_element_values.DataElementValuesValidation.send_request_to_dhis')
+    @patch('dsd.services.validate_data_element_values_service.DataElementValuesValidationService.send_request_to_dhis')
     def test_should_be_false_if_match_rule(self, mock_get):
         mock_get.return_value = MagicMock(status_code=HTTP_200_OK, text='<div id="validationResults">')
         self.data_element_values_validation.send_validation_for_each_disease('2016-09-13',
@@ -110,7 +131,7 @@ class ValidateDataElementValuesTest(TestCase):
         before_08th = self.data_element_values_validation.change_date_to_days_before('2016-08-13', FOUR_WEEKS_DAYS)
         self.assertEqual(before_08th, '2016-07-17')
 
-    @patch('dsd.services.validate_data_element_values.DataElementValuesValidation.send_request_to_dhis')
+    @patch('dsd.services.validate_data_element_values_service.DataElementValuesValidationService.send_request_to_dhis')
     def test_should_be_true_if_mismatch_rule(self, mock_get):
         mock_get.return_value = MagicMock(status_code=HTTP_200_OK, text='Validation passed successfully')
         self.data_element_values_validation.send_validation_for_each_disease('2016-09-13',
@@ -119,7 +140,7 @@ class ValidateDataElementValuesTest(TestCase):
 
         self.assertEqual(True, self.data_element_values_validation.alert_should_be_sent['pfa'])
 
-    @patch('dsd.services.validate_data_element_values.DataElementValuesValidation.send_request_to_dhis')
+    @patch('dsd.services.validate_data_element_values_service.DataElementValuesValidationService.send_request_to_dhis')
     def test_should_validate_sarampo_in_a_month(self, mock_send_request_to_dhis):
         mock_send_request_to_dhis.return_value = (HTTP_200_OK, {})
 
@@ -132,17 +153,17 @@ class ValidateDataElementValuesTest(TestCase):
             '?organisationUnitId=MOH12345678&startDate=2016-08-17&endDate=2016-09-19' \
             '&validationRuleGroupId=1677&sendAlerts=true')
 
-    @patch('dsd.services.validate_data_element_values.DataElementValuesValidation.send_request_to_dhis')
+    @patch('dsd.services.validate_data_element_values_service.DataElementValuesValidationService.send_request_to_dhis')
     def test_should_validate_meningitis_every_two_weeks(self,
-                                                       mock_send_request_to_dhis):
+                                                        mock_send_request_to_dhis):
         mock_send_request_to_dhis.return_value = (HTTP_200_OK, {})
 
         with patch(
-            'dsd.services.validate_data_element_values.DataElementValuesValidation.is_meningitis_increasement_rule_match',
-            return_value=True):
+                'dsd.services.validate_data_element_values_service.DataElementValuesValidationService.is_meningitis_increasement_rule_match',
+                return_value=True):
             self.data_element_values_validation.send_validation_for_meningitis_every_two_weeks('2016-09-13',
-                                                                                          '2016-09-19',
-                                                                                          MOH_UID)
+                                                                                               '2016-09-19',
+                                                                                               MOH_UID)
 
         mock_send_request_to_dhis.assert_called_once_with(
             'http://52.32.36.132:80/dhis-web-validationrule/runValidationAction.action' \

@@ -1,22 +1,27 @@
 import datetime
+import json
+import logging
 import uuid
 
+import requests
+from django.conf import settings
 from django.test import TestCase
 from django.test import override_settings
 from mock import MagicMock, call, patch
 from rest_framework.status import HTTP_201_CREATED
 
+from dsd.config import dhis2_config
 from dsd.models import BesMiddlewareCore
 from dsd.models.moh import MoH, MOH_UID
 from dsd.repositories import dhis2_remote_repository
-from dsd.repositories.dhis2_remote_repository import *
+from dsd.repositories.dhis2_remote_repository import get_oauth_header
 from dsd.repositories.request_template.add_element_template import AddElementRequestTemplate
 from dsd.services import dhis2_remote_service
 from dsd.services.bes_middleware_core_service import is_data_element_belongs_to_facility
 from dsd.services.dhis2_remote_service import post_organization_units, post_elements, \
     build_data_set_request_body_as_dict, build_data_element_values_request_body_as_dict, \
     build_category_options_request_body_as_dict, build_categories_request_body_as_dict, \
-    build_category_combinations_request_body_as_dict, construct_get_element_values_request_url
+    build_category_combinations_request_body_as_dict, construct_get_element_values_request_query_params
 from dsd.test.factories.bes_middleware_core_factory import BesMiddlewareCoreFactory
 from dsd.test.factories.category_combination_factory import CategoryCombinationFactory
 from dsd.test.factories.category_factory import CategoryFactory
@@ -28,6 +33,8 @@ from dsd.test.factories.facility_factory import FacilityFactory
 from dsd.test.factories.province_factory import ProvinceFactory
 from dsd.test.helpers.fake_date import FakeDate
 from dsd.util.id_generator import generate_id
+
+logger = logging.getLogger(__name__)
 
 
 class DHIS2RemoteServiceTest(TestCase):
@@ -270,9 +277,8 @@ class DHIS2RemoteServiceTest(TestCase):
         element_ids = ['rf040c9a7ab.GRIMsGFQHUc']
         period_weeks = ['2016W23', '2016W24', '2016W25', '2016W26']
         query_params = 'dimension=dx:rf040c9a7ab.GRIMsGFQHUc&dimension=ou:MOH12345678&filter=pe:2016W23;2016W24;2016W25;2016W26'
-        expected_request_url = '%s?%s' % (
-        dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_DATA_ELEMENT_VALUES), query_params)
-        request_url = construct_get_element_values_request_url(
+        expected_request_url = '%s' % query_params
+        request_url = construct_get_element_values_request_query_params(
             organisation_unit_id=organisation_unit_id,
             element_ids=element_ids,
             period_weeks=period_weeks

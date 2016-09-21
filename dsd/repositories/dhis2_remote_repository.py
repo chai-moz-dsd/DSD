@@ -1,4 +1,11 @@
-from dsd.repositories.dhis2_oauth_token import *
+import logging
+
+import requests
+from django.conf import settings
+
+from dsd.config import dhis2_config
+from dsd.exceptions.remote_request_exception import RemoteRequestException
+from dsd.repositories.dhis2_oauth_token import get_access_token
 
 CONTENT_TYPE = {'Content-Type': 'application/json'}
 
@@ -47,7 +54,7 @@ def post_to_set_org_level(request_body):
 
 def get_data_element_values(query_params):
     url = '%s?%s' % (dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_DATA_ELEMENT_VALUES), query_params)
-    return requests.get(url=url, headers=get_oauth_header(), verify=settings.DHIS2_SSL_VERIFY)
+    return requests.get(url=url, headers=get_oauth_header())
 
 
 def get_self_profile():
@@ -56,6 +63,12 @@ def get_self_profile():
                             headers=header,
                             verify=settings.DHIS2_SSL_VERIFY)
     return response.text
+
+
+@staticmethod
+def get_data_element_values(query_params):
+    url = '%s?%s' % (dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_DATA_ELEMENT_VALUES), query_params)
+    return requests.get(url=url, headers=get_oauth_header())
 
 
 def update_user(request_body, user_id):
