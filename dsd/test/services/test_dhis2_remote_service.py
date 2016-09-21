@@ -6,17 +6,17 @@ from django.test import override_settings
 from mock import MagicMock, call, patch
 from rest_framework.status import HTTP_201_CREATED
 
-from dsd.models.moh import MoH
 from dsd.models import BesMiddlewareCore
+from dsd.models.moh import MoH, MOH_UID
 from dsd.repositories import dhis2_remote_repository
 from dsd.repositories.dhis2_remote_repository import *
 from dsd.repositories.request_template.add_element_template import AddElementRequestTemplate
 from dsd.services import dhis2_remote_service
+from dsd.services.bes_middleware_core_service import is_data_element_belongs_to_facility
 from dsd.services.dhis2_remote_service import post_organization_units, post_elements, \
     build_data_set_request_body_as_dict, build_data_element_values_request_body_as_dict, \
     build_category_options_request_body_as_dict, build_categories_request_body_as_dict, \
-    build_category_combinations_request_body_as_dict
-from dsd.services.bes_middleware_core_service import is_data_element_belongs_to_facility
+    build_category_combinations_request_body_as_dict, construct_get_element_values_request_url
 from dsd.test.factories.bes_middleware_core_factory import BesMiddlewareCoreFactory
 from dsd.test.factories.category_combination_factory import CategoryCombinationFactory
 from dsd.test.factories.category_factory import CategoryFactory
@@ -252,7 +252,7 @@ class DHIS2RemoteServiceTest(TestCase):
 
     def test_should_be_false_when_data_element_not_belongs_to_facility(self):
         device_id = '356670060315512'
-        device_id2= '356670060315522'
+        device_id2 = '356670060315522'
         BesMiddlewareCoreFactory(device_id=device_id)
         FacilityFactory(device_serial=device_id2)
         date_element_value = BesMiddlewareCore.objects.first()
@@ -264,3 +264,17 @@ class DHIS2RemoteServiceTest(TestCase):
         FacilityFactory(device_serial=device_id)
         date_element_value = BesMiddlewareCore.objects.first()
         self.assertTrue(is_data_element_belongs_to_facility(date_element_value))
+
+    def test_should_construct_true_when_data_element_not_belongs_to_facility(self):
+        organisation_unit_id = MOH_UID
+        element_ids = ['rf040c9a7ab.GRIMsGFQHUc']
+        period_weeks = ['2016W23', '2016W24', '2016W25', '2016W26']
+        query_params = 'dimension=dx:rf040c9a7ab.GRIMsGFQHUc&dimension=ou:MOH12345678&filter=pe:2016W23;2016W24;2016W25;2016W26'
+        expected_request_url = '%s?%s' % (
+        dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_DATA_ELEMENT_VALUES), query_params)
+        request_url = construct_get_element_values_request_url(
+            organisation_unit_id=organisation_unit_id,
+            element_ids=element_ids,
+            period_weeks=period_weeks
+        )
+        self.assertEqual(request_url, expected_request_url)

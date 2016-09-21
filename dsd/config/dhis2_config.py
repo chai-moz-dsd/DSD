@@ -15,6 +15,8 @@ KEY_POST_CATEGORIES = '_post_categories'
 KEY_POST_CATEGORY_COMBINATIONS = '_post_category_combinations'
 KEY_SET_ORG_LEVEL = '_set_org_level'
 KEY_GET_SELF_PROFILE = '_get_self_profile'
+KEY_GET_DATA_ELEMENT_VALUES = '_get_data_element_values'
+
 OAUTH2_TOKEN = 'oauth2_token'
 OAUTH2_CREATE = 'oauth2_create'
 
@@ -29,6 +31,7 @@ DHIS2_STATIC_URLS = {
     KEY_POST_CATEGORY_COMBINATIONS: '%sapi/%s/categoryCombos' % (DHIS2_BASE_URL, VERSION),
     KEY_SET_ORG_LEVEL: '%sapi/%s/filledOrganisationUnitLevels' % (DHIS2_BASE_URL, VERSION),
     KEY_GET_SELF_PROFILE: '%sapi/%s/me' % (DHIS2_BASE_URL, VERSION),
+    KEY_GET_DATA_ELEMENT_VALUES: '%sapi/%s/analytics' % (DHIS2_BASE_URL, VERSION),
     OAUTH2_TOKEN: '%suaa/oauth/token' % DHIS2_BASE_URL,
     OAUTH2_CREATE: '%sapi/oAuth2Clients' % DHIS2_BASE_URL,
 }

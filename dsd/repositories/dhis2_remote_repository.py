@@ -1,5 +1,3 @@
-import logging
-
 from dsd.repositories.dhis2_oauth_token import *
 
 CONTENT_TYPE = {'Content-Type': 'application/json'}
@@ -42,8 +40,14 @@ def post_element(request_body):
 def post_data_set(request_body):
     return __post_request(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_DATA_SET), data=request_body)
 
+
 def post_to_set_org_level(request_body):
     return __post_request(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_SET_ORG_LEVEL), data=request_body)
+
+
+def get_data_element_values(query_params):
+    url = '%s?%s' % (dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_DATA_ELEMENT_VALUES), query_params)
+    return requests.get(url=url, headers=get_oauth_header(), verify=settings.DHIS2_SSL_VERIFY)
 
 
 def get_self_profile():

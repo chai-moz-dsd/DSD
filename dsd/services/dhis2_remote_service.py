@@ -154,6 +154,12 @@ def convert_attribute_to_dict(attribute):
     }
 
 
+def construct_get_element_values_request_url(organisation_unit_id, element_ids, period_weeks):
+    query_params = 'dimension=dx:%s&dimension=ou:%s&filter=pe:%s' % (
+        ';'.join(element_ids), organisation_unit_id, ';'.join(period_weeks))
+    return '%s?%s' % (dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_DATA_ELEMENT_VALUES), query_params)
+
+
 def build_category_options_request_body_as_dict(category_option):
     organisation_units = []
     for facility in Facility.objects.all():
