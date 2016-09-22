@@ -175,6 +175,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
                            'SARAMPO MONTH GROUP': '1677',
                            'MENINGITE INCREASEMENT GROUP': '1922',
                            'MAL&Aacute;RIA FIVEYEAR AVAERAGE GROUP': '1988',
+                           'DIARREIA FIVEYEAR AVAERAGE GROUP': '1689',
                            'MENINGITE GROUP': '1595',
                            'T&Eacute;TANO REC&Eacute;M NASCIDOS GROUP': '1601'}
 
@@ -253,6 +254,28 @@ class ValidateDataElementValuesServiceTest(TestCase):
             '?organisationUnitId=MOH12345678&startDate=2016-05-22&endDate=2016-06-25' \
             '&validationRuleGroupId=1988&sendAlerts=true')
 
+    @patch('dsd.services.validate_data_element_values_service.DataElementValuesValidationService.send_request_to_dhis')
+    def test_should_validate_diarrhea_fiveyears_average(self, mock_send_request_to_dhis):
+        mock_send_request_to_dhis.return_value = (HTTP_200_OK, {})
+
+        BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
+
+        data_element_values = BesMiddlewareCore.objects.first()
+
+        with patch(
+                'dsd.services.validate_data_element_values_service.DataElementValuesValidationService.fetch_malaria_last_five_weeks',
+                return_value=2):
+            with patch(
+                    'dsd.services.validate_data_element_values_service.DataElementValuesValidationService.fetch_malaria_last_year',
+                    return_value=1):
+                self.data_element_values_validation.send_validation_malaria_fiveyears_average(data_element_values,
+                                                                                              MOH_UID)
+
+                mock_send_request_to_dhis.assert_called_once_with(
+                    'http://52.32.36.132:80/dhis-web-validationrule/runValidationAction.action' \
+                    '?organisationUnitId=MOH12345678&startDate=2016-05-22&endDate=2016-06-25' \
+                    '&validationRuleGroupId=1988&sendAlerts=true')
+
 
 REAL_HTML_RESPONSE = '''
 
@@ -329,6 +352,11 @@ REAL_HTML_RESPONSE = '''
             data-can-update="true"
             data-can-delete="true">
             <td>MAL&Aacute;RIA FIVEYEAR AVAERAGE GROUP</td>
+        </tr>            <tr id="tr1689" data-id="1689" data-uid="TToEcWIrPVp" data-type="ValidationRuleGroup" data-name="DIARREIA FIVEYEAR AVAERAGE GROUP"
+            data-can-manage="true"
+            data-can-update="true"
+            data-can-delete="true">
+            <td>DIARREIA FIVEYEAR AVAERAGE GROUP</td>
         </tr>
                 <tr id="tr1601" data-id="1601" data-uid="vQWvq6azBqE" data-type="ValidationRuleGroup" data-name="T&Eacute;TANO REC&Eacute;M NASCIDOS GROUP"
             data-can-manage="true"
