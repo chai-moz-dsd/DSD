@@ -179,9 +179,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
     def test_should_validate_malaria_fiveyears_average(self, mock_send_request_to_dhis):
         mock_send_request_to_dhis.return_value = (HTTP_200_OK, {})
 
-        uri = str(uuid.uuid4())
-        BesMiddlewareCoreFactory(uri=uri)
-        BesMiddlewareCoreFactory(bes_year=datetime.datetime.today())
+        BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
 
         data_element_values = BesMiddlewareCore.objects.first()
 
@@ -196,7 +194,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
 
                 mock_send_request_to_dhis.assert_called_once_with(
                     'http://52.32.36.132:80/dhis-web-validationrule/runValidationAction.action' \
-                    '?organisationUnitId=MOH12345678&startDate=2016-05-09&endDate=2016-06-12' \
+                    '?organisationUnitId=MOH12345678&startDate=2016-05-16&endDate=2016-06-19' \
                     '&validationRuleGroupId=1988&sendAlerts=true')
 
 

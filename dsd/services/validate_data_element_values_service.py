@@ -200,7 +200,6 @@ class DataElementValuesValidationService(object):
         start = self.change_date_to_days_before(data_week_end, FIVE_WEEKS_DAYS)
 
         if malaria_last_five_weeks > average_five_years_malaria + 2 * std_dev:
-            logger.info(self.rule_group_name_id_map)
             rule_group_id = self.rule_group_name_id_map.get(
                 '%s FIVEYEAR AVAERAGE GROUP' % DISEASE_I18N_MAP.get('malaria'))
             self.send_validation_request(rule_group_id, start, data_week_end, organisation_id, True)
