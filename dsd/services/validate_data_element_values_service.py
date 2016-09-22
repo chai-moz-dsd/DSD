@@ -94,10 +94,7 @@ class DataElementValuesValidationService(object):
                 logger.critical('validate request failed.')
 
     def send_validation_request(self, rule_group_id, start, end, organisation_id, alert_should_be_sent):
-        validate_request = self.format_validation_request(organisation_id,
-                                                          start,
-                                                          end,
-                                                          rule_group_id,
+        validate_request = self.format_validation_request(organisation_id, start, end, rule_group_id,
                                                           alert_should_be_sent)
         response = self.send_request_to_dhis(validate_request)
         return response
@@ -109,7 +106,9 @@ class DataElementValuesValidationService(object):
 
             self.send_validation_for_sarampo_in_a_month(start, end, organisation_id)
 
-            self.send_validation_malaria_fiveyears_average(value, organisation_id)
+            self.send_validation_for_meningitis_every_two_weeks(value, organisation_id)
+
+            self.send_validation_malaria_five_years_average(value, organisation_id)
 
     @staticmethod
     def change_date_to_days_before(current_date, the_days_before):
@@ -130,12 +129,18 @@ class DataElementValuesValidationService(object):
             rule_group_id = self.rule_group_name_id_map.get('%s MONTH GROUP' % DISEASE_I18N_MAP.get('measles'))
             self.send_validation_request(rule_group_id, month_start, end, organisation_id, True)
 
-    def send_validation_for_meningitis_every_two_weeks(self, start, end, organisation_id):
-        if self.is_meningitis_increasement_rule_match(start, end, organisation_id):
+    def send_validation_for_meningitis_every_two_weeks(self, value, organisation_id):
+        current_year, _, _ = value.bes_year.isocalendar()
+        week_num = value.bes_number
+
+        if self.is_meningitis_increasement_rule_match(current_year, week_num, organisation_id):
             rule_group_id = self.rule_group_name_id_map.get(
                 '%s INCREASEMENT GROUP' % DISEASE_I18N_MAP.get('meningitis'))
-            start_before = self.change_date_to_days_before(end, THREE_WEEKS_DAYS)
-            self.send_validation_request(rule_group_id, start_before, end, organisation_id, True)
+            _, data_week_end, _ = self.fetch_info_from_updated_data(value)
+
+            start_before = self.change_date_to_days_before(data_week_end, THREE_WEEKS_DAYS)
+
+            self.send_validation_request(rule_group_id, start_before, data_week_end, organisation_id, True)
 
     @staticmethod
     def is_meningitis_increasement_rule_match(year, week, organisation_id):
@@ -150,7 +155,6 @@ class DataElementValuesValidationService(object):
         target_year, target_week = DataElementValuesValidationService.calculate_year_week_by_offset(year, week, -2)
         meningitis_first_week = DataElementValuesValidationService.fetch_meningitis(target_year, target_week,
                                                                                     organisation_id)
-
         return meningitis_second_week >= meningitis_first_week * 2
 
     @staticmethod
@@ -171,18 +175,28 @@ class DataElementValuesValidationService(object):
         return int(float(dhis2_remote_repository.get_data_element_values(query_params).json().get('rows')[0][2]))
 
     @staticmethod
-    def fetch_malaria_last_five_weeks(year, week):
-        return 200
+    def fetch_malaria_last_five_weeks(year, week, organisation_id):
+        element_ids = [Element.objects.filter(code='MENINGITE_036').first().id]
+        period_weeks = []
+        for i in range(5)[::-1]:
+            period_weeks = [
+                '%sW%s' % (DataElementValuesValidationService.calculate_year_week_by_offset(year, week, -i))]
+        query_params = construct_get_element_values_request_query_params(
+            organisation_unit_id=organisation_id,
+            element_ids=element_ids,
+            period_weeks=period_weeks
+        )
+        return int(float(dhis2_remote_repository.get_data_element_values(query_params).json().get('rows')[0][2]))
 
     @staticmethod
     def fetch_malaria_last_year(year, week):
         return 3000
 
-    def send_validation_malaria_fiveyears_average(self, value, organisation_id):
+    def send_validation_malaria_five_years_average(self, value, organisation_id):
         current_year, _, _ = value.bes_year.isocalendar()
         week_num = value.bes_number
 
-        malaria_last_five_weeks = self.fetch_malaria_last_five_weeks(current_year, week_num)
+        malaria_last_five_weeks = self.fetch_malaria_last_five_weeks(current_year, week_num, organisation_id)
         five_years_malarias = self.fetch_same_period_in_recent_five_years(current_year, week_num)
 
         average_five_years_malaria = mean(five_years_malarias)
