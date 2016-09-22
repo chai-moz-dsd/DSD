@@ -154,9 +154,9 @@ class DataElementValuesValidationService(object):
         return meningitis_second_week >= meningitis_first_week * 2
 
     @staticmethod
-    def calculate_year_week_by_offset(current_year, current_week, offset):
+    def calculate_year_week_by_offset(current_year, current_week, offset_weeks):
         current_week_start_date = datetime.datetime.strptime('%s-W%s-0' % (current_year, current_week), '%Y-W%U-%w')
-        target_week_start_date = current_week_start_date + datetime.timedelta(days=offset * 7)
+        target_week_start_date = current_week_start_date + datetime.timedelta(weeks=offset_weeks)
         return int(target_week_start_date.strftime('%Y')), int(target_week_start_date.strftime('%U'))
 
     @staticmethod
