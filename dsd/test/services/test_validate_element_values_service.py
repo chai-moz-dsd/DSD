@@ -52,20 +52,31 @@ class ValidateDataElementValuesServiceTest(TestCase):
         self.assertEqual(result, 10)
 
     @patch('datetime.date', FakeDate)
-    def test_should_fetch_info_from_updated_data(self):
-        BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=31)
+    def test_should_fetch_info_from_updated_data_when_on_random_week(self):
+        BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=29)
 
         value = BesMiddlewareCore.objects.first()
         start, end, _ = self.data_element_values_validation.fetch_info_from_updated_data(value)
-        self.assertEqual(start, '2016-07-31')
-        self.assertEqual(end, '2016-08-06')
-
-        uri = uuid.uuid4()
-        BesMiddlewareCoreFactory(uri=uri, bes_year=datetime.datetime.today(), bes_number=29)
-        start, end, _ = self.data_element_values_validation.fetch_info_from_updated_data(
-            BesMiddlewareCore.objects.get(uri=uri))
         self.assertEqual(start, '2016-07-17')
         self.assertEqual(end, '2016-07-23')
+
+    @patch('datetime.date', FakeDate)
+    def test_should_fetch_info_from_updated_data_when_on_year_end(self):
+        BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=52)
+
+        value = BesMiddlewareCore.objects.first()
+        start, end, _ = self.data_element_values_validation.fetch_info_from_updated_data(value)
+        self.assertEqual(start, '2016-12-25')
+        self.assertEqual(end, '2016-12-31')
+
+    @patch('datetime.date', FakeDate)
+    def test_should_fetch_info_from_updated_data_when_on_year_start(self):
+        uri = uuid.uuid4()
+        BesMiddlewareCoreFactory(uri=uri, bes_year=datetime.datetime.today(), bes_number=1)
+        start, end, _ = self.data_element_values_validation.fetch_info_from_updated_data(
+            BesMiddlewareCore.objects.get(uri=uri))
+        self.assertEqual(start, '2016-01-03')
+        self.assertEqual(end, '2016-01-09')
 
     def test_should_format_validate_request(self):
         expected_validate_request = 'http://52.32.36.132:80/dhis-web-validationrule/runValidationAction.action' \
