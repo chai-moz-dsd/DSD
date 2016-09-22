@@ -4,7 +4,6 @@ import re
 from statistics import mean, stdev
 
 import requests
-from math import sqrt
 from rest_framework.status import HTTP_200_OK
 
 from chai import settings
@@ -142,13 +141,13 @@ class DataElementValuesValidationService(object):
     def is_meningitis_increasement_rule_match(year, week, organisation_id):
         meningitis_third_week = DataElementValuesValidationService.fetch_meningitis(year, week, organisation_id)
 
-        target_year, target_week = DataElementValuesValidationService.calculate_previous_week(year, week, -1)
+        target_year, target_week = DataElementValuesValidationService.calculate_year_week_by_offset(year, week, -1)
         meningitis_second_week = DataElementValuesValidationService.fetch_meningitis(target_year, target_week,
                                                                                      organisation_id)
         if meningitis_third_week < meningitis_second_week * 2:
             return False
 
-        target_year, target_week = DataElementValuesValidationService.calculate_previous_week(year, week, -2)
+        target_year, target_week = DataElementValuesValidationService.calculate_year_week_by_offset(year, week, -2)
         meningitis_first_week = DataElementValuesValidationService.fetch_meningitis(target_year, target_week,
                                                                                     organisation_id)
 
@@ -156,9 +155,9 @@ class DataElementValuesValidationService(object):
 
     @staticmethod
     def calculate_year_week_by_offset(current_year, current_week, offset):
-        target_year = None
-        target_week = None
-        return target_year, target_week
+        current_week_start_date = datetime.datetime.strptime('%s-W%s-0' % (current_year, current_week), '%Y-W%U-%w')
+        target_week_start_date = current_week_start_date + datetime.timedelta(days=offset * 7)
+        return int(target_week_start_date.strftime('%Y')), int(target_week_start_date.strftime('%U'))
 
     @staticmethod
     def fetch_meningitis(year, week, organisation_id):

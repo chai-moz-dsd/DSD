@@ -1,6 +1,5 @@
-import logging
-
 import datetime
+import logging
 import uuid
 
 from django.test import TestCase
@@ -28,6 +27,21 @@ class ValidateDataElementValuesServiceTest(TestCase):
     def setUp(self, mock_send_request_to_dhis):
         mock_send_request_to_dhis.return_value = MagicMock(status_code=HTTP_200_OK, text=REAL_HTML_RESPONSE)
         self.data_element_values_validation = DataElementValuesValidationService()
+
+    def test_should_calculate_year_week_by_offset_minus_1_when_on_year_end(self):
+        target_year, target_week = self.data_element_values_validation.calculate_year_week_by_offset(2015, 52, 1)
+        self.assertEqual(target_year, 2016)
+        self.assertEqual(target_week, 1)
+
+    def test_should_calculate_year_week_by_offset_minus_1_when_on_year_start(self):
+        target_year, target_week = self.data_element_values_validation.calculate_year_week_by_offset(2016, 1, -1)
+        self.assertEqual(target_year, 2015)
+        self.assertEqual(target_week, 52)
+
+    def test_should_calculate_year_week_by_offset_minus_1_when_random_date(self):
+        target_year, target_week = self.data_element_values_validation.calculate_year_week_by_offset(2016, 5, -2)
+        self.assertEqual(target_year, 2016)
+        self.assertEqual(target_week, 3)
 
     @override_settings(DHIS2_SSL_VERIFY=False)
     @patch('dsd.repositories.dhis2_remote_repository.get_data_element_values')
