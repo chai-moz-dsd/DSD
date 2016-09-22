@@ -62,10 +62,10 @@ class ValidateDataElementValuesServiceTest(TestCase):
 
         uri = uuid.uuid4()
         BesMiddlewareCoreFactory(uri=uri, bes_year=datetime.datetime.today(), bes_number=29)
-        start, end, _ = self.data_element_values_validation.fetch_info_from_updated_data(BesMiddlewareCore.objects.get(uri=uri))
+        start, end, _ = self.data_element_values_validation.fetch_info_from_updated_data(
+            BesMiddlewareCore.objects.get(uri=uri))
         self.assertEqual(start, '2016-07-17')
         self.assertEqual(end, '2016-07-23')
-
 
     def test_should_format_validate_request(self):
         expected_validate_request = 'http://52.32.36.132:80/dhis-web-validationrule/runValidationAction.action' \

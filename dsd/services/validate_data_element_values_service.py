@@ -1,6 +1,7 @@
 import datetime
 import logging
 import re
+from statistics import mean, stdev
 
 import requests
 from math import sqrt
@@ -183,23 +184,26 @@ class DataElementValuesValidationService(object):
         week_num = value.bes_number
 
         malaria_last_five_weeks = self.fetch_malaria_last_five_weeks(current_year, week_num)
+        five_years_malarias = self.fetch_same_period_in_recent_five_years(current_year, week_num)
 
-        first_year_malaria = self.fetch_malaria_last_year(year=('%s' % (current_year - 5)), week=week_num)
-        second_year_malaria = self.fetch_malaria_last_year(year=('%s' % (current_year - 4)), week=week_num)
-        third_year_malaria = self.fetch_malaria_last_year(year=('%s' % (current_year - 3)), week=week_num)
-        forth_year_malaria = self.fetch_malaria_last_year(year=('%s' % (current_year - 2)), week=week_num)
-        fifth_year_malaria = self.fetch_malaria_last_year(year=('%s' % (current_year - 1)), week=week_num)
-
-        five_years_malarias = [first_year_malaria, second_year_malaria, third_year_malaria, forth_year_malaria,
-                               fifth_year_malaria]
-        average_five_years_malaria = sum(five_years_malarias) / 5.0
-        map_result = map(lambda malarias: pow(malarias - average_five_years_malaria, 2), five_years_malarias)
-        std_dev = sqrt(sum(list(map_result)))
+        average_five_years_malaria = mean(five_years_malarias)
+        std_dev_five_years_malaria = stdev(five_years_malarias)
 
         _, data_week_end, _ = self.fetch_info_from_updated_data(value)
         start = self.change_date_to_days_before(data_week_end, FIVE_WEEKS_DAYS)
 
-        if malaria_last_five_weeks > average_five_years_malaria + 2 * std_dev:
+        if malaria_last_five_weeks > average_five_years_malaria + 2 * std_dev_five_years_malaria:
             rule_group_id = self.rule_group_name_id_map.get(
                 '%s FIVEYEAR AVAERAGE GROUP' % DISEASE_I18N_MAP.get('malaria'))
             self.send_validation_request(rule_group_id, start, data_week_end, organisation_id, True)
+
+    @staticmethod
+    def fetch_same_period_in_recent_five_years(current_year, week_num):
+
+        five_years_malarias = []
+
+        for year in range(current_year - 5, current_year):
+            malaria = DataElementValuesValidationService.fetch_malaria_last_year(year=('%s' % year), week=week_num)
+            five_years_malarias.append(malaria)
+
+        return five_years_malarias
