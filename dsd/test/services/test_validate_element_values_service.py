@@ -16,6 +16,7 @@ from dsd.services.validate_data_element_values_service import DataElementValuesV
 from dsd.test.factories.bes_middleware_core_factory import BesMiddlewareCoreFactory
 from dsd.test.factories.element_factory import ElementFactory
 from dsd.test.factories.facility_factory import FacilityFactory
+from dsd.test.helpers.fake_date import FakeDate
 
 logger = logging.getLogger(__name__)
 
@@ -49,6 +50,22 @@ class ValidateDataElementValuesServiceTest(TestCase):
         result = DataElementValuesValidationService.fetch_meningitis(year, week, organisation_id)
 
         self.assertEqual(result, 10)
+
+    @patch('datetime.date', FakeDate)
+    def test_should_fetch_info_from_updated_data(self):
+        BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=31)
+
+        value = BesMiddlewareCore.objects.first()
+        start, end, _ = self.data_element_values_validation.fetch_info_from_updated_data(value)
+        self.assertEqual(start, '2016-07-31')
+        self.assertEqual(end, '2016-08-06')
+
+        uri = uuid.uuid4()
+        BesMiddlewareCoreFactory(uri=uri, bes_year=datetime.datetime.today(), bes_number=29)
+        start, end, _ = self.data_element_values_validation.fetch_info_from_updated_data(BesMiddlewareCore.objects.get(uri=uri))
+        self.assertEqual(start, '2016-07-17')
+        self.assertEqual(end, '2016-07-23')
+
 
     def test_should_format_validate_request(self):
         expected_validate_request = 'http://52.32.36.132:80/dhis-web-validationrule/runValidationAction.action' \
@@ -194,7 +211,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
 
                 mock_send_request_to_dhis.assert_called_once_with(
                     'http://52.32.36.132:80/dhis-web-validationrule/runValidationAction.action' \
-                    '?organisationUnitId=MOH12345678&startDate=2016-05-16&endDate=2016-06-19' \
+                    '?organisationUnitId=MOH12345678&startDate=2016-05-22&endDate=2016-06-25' \
                     '&validationRuleGroupId=1988&sendAlerts=true')
 
 

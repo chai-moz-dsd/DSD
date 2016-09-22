@@ -196,7 +196,7 @@ class DataElementValuesValidationService(object):
         map_result = map(lambda malarias: pow(malarias - average_five_years_malaria, 2), five_years_malarias)
         std_dev = sqrt(sum(list(map_result)))
 
-        data_week_end, _, _ = self.fetch_info_from_updated_data(value)
+        _, data_week_end, _ = self.fetch_info_from_updated_data(value)
         start = self.change_date_to_days_before(data_week_end, FIVE_WEEKS_DAYS)
 
         if malaria_last_five_weeks > average_five_years_malaria + 2 * std_dev:
