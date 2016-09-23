@@ -37,7 +37,7 @@ class DataElementValuesValidationService(object):
         return date_week_start, date_week_end, organisation_id
 
     @staticmethod
-    def format_validation_request(organisation_id, start_date, end_date, rule_group_id, alert_should_be_sent):
+    def format_validation_request_url(organisation_id, start_date, end_date, rule_group_id, alert_should_be_sent):
         alert_flag = 'true' if alert_should_be_sent else 'false'
         validate_request = '%sdhis-web-validationrule/runValidationAction.action?organisationUnitId=%s&startDate=%s&endDate=%s&validationRuleGroupId=%s&sendAlerts=%s' % \
                            (DHIS2_BASE_URL,
@@ -100,8 +100,8 @@ class DataElementValuesValidationService(object):
                 logger.critical('validate request failed.')
 
     def send_validation_request(self, rule_group_id, start, end, organisation_id, alert_should_be_sent):
-        validate_request = self.format_validation_request(organisation_id, start, end, rule_group_id,
-                                                          alert_should_be_sent)
+        validate_request = self.format_validation_request_url(organisation_id, start, end, rule_group_id,
+                                                              alert_should_be_sent)
         response = self.send_request_to_dhis(validate_request)
         return response
 
@@ -184,32 +184,32 @@ class DataElementValuesValidationService(object):
     @staticmethod
     def fetch_meningitis(year, week_num, organisation_id):
         period_weeks = ['%sW%s' % (year, week_num)]
-        return DataElementValuesValidationService.__fetch_disease_in_year_weeks(organisation_id, 'MENINGITE_036',
-                                                                                period_weeks)
+        return DataElementValuesValidationService.fetch_disease_in_year_weeks(organisation_id, 'MENINGITE_036',
+                                                                              period_weeks)
 
     @staticmethod
     def fetch_sarampo_in_a_month(year, week_num, organisation_id):
         period_weeks = ['%sW%s' % (DataElementValuesValidationService.calculate_year_week_by_offset(year, week_num, i))
                         for i in range(-3, 1)]
-        return DataElementValuesValidationService.__fetch_disease_in_year_weeks(organisation_id, 'SARAMPO_055',
-                                                                                period_weeks)
+        return DataElementValuesValidationService.fetch_disease_in_year_weeks(organisation_id, 'SARAMPO_055',
+                                                                              period_weeks)
 
     @staticmethod
     def fetch_malaria_last_five_weeks(year, week_num, organisation_id):
         period_weeks = ['%sW%s' % (DataElementValuesValidationService.calculate_year_week_by_offset(year, week_num, i))
                         for i in range(-4, 1)]
-        return DataElementValuesValidationService.__fetch_disease_in_year_weeks(organisation_id, 'MALARIA_084',
-                                                                                period_weeks)
+        return DataElementValuesValidationService.fetch_disease_in_year_weeks(organisation_id, 'MALARIA_084',
+                                                                              period_weeks)
 
     @staticmethod
     def fetch_malaria_by_year_two_weeks_wrapped(year, week_num, organisation_id):
         period_weeks = ['%sW%s' % (DataElementValuesValidationService.calculate_year_week_by_offset(year, week_num, i))
                         for i in range(-2, 3)]
-        return DataElementValuesValidationService.__fetch_disease_in_year_weeks(organisation_id, 'MALARIA_084',
-                                                                                period_weeks)
+        return DataElementValuesValidationService.fetch_disease_in_year_weeks(organisation_id, 'MALARIA_084',
+                                                                              period_weeks)
 
     @staticmethod
-    def __fetch_disease_in_year_weeks(organisation_id, disease_code, period_weeks):
+    def fetch_disease_in_year_weeks(organisation_id, disease_code, period_weeks):
         element_ids = [Element.objects.filter(code=disease_code).first().id]
         query_params = construct_get_element_values_request_query_params(
             organisation_unit_id=organisation_id,

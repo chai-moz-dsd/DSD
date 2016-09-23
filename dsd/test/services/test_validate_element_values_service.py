@@ -4,7 +4,7 @@ import uuid
 
 from django.test import TestCase
 from django.test import override_settings
-from mock import patch, MagicMock
+from mock import patch, MagicMock, Mock
 from rest_framework.status import HTTP_200_OK
 
 from dsd.config.dhis2_config import FOUR_WEEKS_DAYS
@@ -21,12 +21,20 @@ logger = logging.getLogger(__name__)
 
 logging.getLogger().setLevel(logging.CRITICAL)
 
+fetch_disease_in_year_weeks_result = Mock(return_value=10)
+
 
 class ValidateDataElementValuesServiceTest(TestCase):
     @patch.object(DataElementValuesValidationService, 'send_request_to_dhis')
     def setUp(self, mock_send_request_to_dhis):
         mock_send_request_to_dhis.return_value = MagicMock(status_code=HTTP_200_OK, text=REAL_HTML_RESPONSE)
         self.data_element_values_validation = DataElementValuesValidationService()
+
+    @patch.object(DataElementValuesValidationService, 'fetch_disease_in_year_weeks', fetch_disease_in_year_weeks_result)
+    def test_should_fetch_malaria_by_year_two_weeks_wrapped(self):
+        self.data_element_values_validation.fetch_malaria_by_year_two_weeks_wrapped(2016, 25, MOH_UID)
+        fetch_disease_in_year_weeks_result.assert_called_with(MOH_UID, 'MALARIA_084',
+                                                              ['2016W23', '2016W24', '2016W25', '2016W26', '2016W27'])
 
     def test_should_calculate_year_week_by_offset_minus_1_when_on_year_end(self):
         target_year, target_week = self.data_element_values_validation.calculate_year_week_by_offset(2015, 52, 1)
@@ -97,11 +105,11 @@ class ValidateDataElementValuesServiceTest(TestCase):
                                     '?organisationUnitId=MOH12345678&startDate=2016-09-13&endDate=2016-09-13' \
                                     '&validationRuleGroupId=1582&sendAlerts=true'
 
-        validate_request = DataElementValuesValidationService.format_validation_request(MOH_UID,
+        validate_request = DataElementValuesValidationService.format_validation_request_url(MOH_UID,
                                                                                         '2016-09-13',
                                                                                         '2016-09-13',
                                                                                         '1582',
-                                                                                        True)
+                                                                                            True)
 
         self.assertEqual(validate_request, expected_validate_request)
 
@@ -109,11 +117,11 @@ class ValidateDataElementValuesServiceTest(TestCase):
     def test_should_validate_request(self, mock_get):
         mock_get.return_value = MagicMock(status_code=HTTP_200_OK)
 
-        validate_request = self.data_element_values_validation.format_validation_request(MOH_UID,
+        validate_request = self.data_element_values_validation.format_validation_request_url(MOH_UID,
                                                                                          '2016-09-13',
                                                                                          '2016-09-13',
                                                                                          '1582',
-                                                                                         True)
+                                                                                             True)
         response = self.data_element_values_validation.send_request_to_dhis(validate_request)
         self.assertEqual(response.status_code, HTTP_200_OK)
 
