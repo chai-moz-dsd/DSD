@@ -26,8 +26,7 @@ def post_data_element_values_to_dhis2():
     data_element_values = fetch_updated_data_element_values()
     post_data_element_values(data_element_values)
 
-    data_element_values_validation = DataElementValuesValidationService()
-    data_element_values_validation.validate_values(data_element_values)
+    DataElementValuesValidationService().validate_values(data_element_values)
 
 
 def sync_remote_data_to_local():
@@ -40,11 +39,15 @@ def sync_remote_data_to_local():
 
 
 def sync_metadata_to_local():
+    logger.info('Sync meta data start...')
     province_service.sync()
     district_service.sync()
     facility_service.sync()
+    logger.info('Sync meta data end...')
 
 
 def sync_data_to_local(sync_time):
+    logger.info('Sync data start...')
     bes_middleware_core_service.sync(sync_time)
     sender_middleware_core_service.sync(sync_time)
+    logger.info('Sync data end...')

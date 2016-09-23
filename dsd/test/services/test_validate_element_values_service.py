@@ -164,6 +164,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
 
         data_element_values = fetch_updated_data_element_values()
         self.data_element_values_validation.validate_values(data_element_values)
+
         mock_send_validation.assert_called_once_with('2016-06-05', '2016-06-11', MOH_UID)
 
     def test_should_fetch_validation_rule_groups_from_html(self):
