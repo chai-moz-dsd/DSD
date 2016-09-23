@@ -46,13 +46,12 @@ class ValidateDataElementValuesServiceTest(TestCase):
     @override_settings(DHIS2_SSL_VERIFY=False)
     @patch('dsd.repositories.dhis2_remote_repository.get_data_element_values')
     def test_should_fetch_malaria_last_five_weeks(self, mock_get_data_element_values):
-        ElementFactory(code='MENINGITE_036')
+        ElementFactory(code='MALARIA_084')
         response = {'rows': [["rf040c9a7ab.GRIMsGFQHUc", "MOH12345678", "15.0"]]}
         mock_get_data_element_values.return_value = MagicMock(json=MagicMock(return_value=response), status_code=200)
-        year = 2016
-        week = 25
-        organisation_id = MOH_UID
-        result = DataElementValuesValidationService.fetch_malaria_last_five_weeks(year, week, organisation_id)
+
+        result = DataElementValuesValidationService.fetch_malaria_last_five_weeks(2016, 25, MOH_UID)
+
         self.assertEqual(result, 15)
 
     @override_settings(DHIS2_SSL_VERIFY=False)
@@ -61,11 +60,8 @@ class ValidateDataElementValuesServiceTest(TestCase):
         ElementFactory(code='MENINGITE_036')
         response = {'rows': [["rf040c9a7ab.GRIMsGFQHUc", "MOH12345678", "10.0"]]}
         mock_get_data_element_values.return_value = MagicMock(json=MagicMock(return_value=response), status_code=200)
-        year = 2016
-        week = 25
-        organisation_id = MOH_UID
 
-        result = DataElementValuesValidationService.fetch_meningitis(year, week, organisation_id)
+        result = DataElementValuesValidationService.fetch_meningitis(2016, 25, MOH_UID)
 
         self.assertEqual(result, 10)
 
@@ -135,14 +131,21 @@ class ValidateDataElementValuesServiceTest(TestCase):
                         {'PESTE GROUP': '1652'}):
             self.assertEqual(expected_group_data_id, self.data_element_values_validation.get_rule_group_id(rule_name))
 
+    @patch.object(DataElementValuesValidationService, 'fetch_sarampo_in_a_month')
+    @patch.object(DataElementValuesValidationService, 'fetch_malaria_by_year_two_weeks_wrapped')
     @patch.object(DataElementValuesValidationService, 'fetch_meningitis')
     @patch.object(DataElementValuesValidationService, 'fetch_malaria_last_five_weeks')
     @patch.object(DataElementValuesValidationService, 'send_request_to_dhis')
     @patch.object(DataElementValuesValidationService, 'send_validation_for_each_disease')
     def test_should_validate_data_element_values(self, mock_send_validation, mock_send_request_to_dhis,
-                                                 mock_fetch_malaria_last_five_weeks, mock_fetch_meningitis):
+                                                 mock_fetch_malaria_last_five_weeks, mock_fetch_meningitis,
+                                                 mock_fetch_malaria_by_year_two_weeks_wrapped,
+                                                 mock_fetch_sarampo_in_a_month):
         mock_fetch_malaria_last_five_weeks.return_value = 50
         mock_fetch_meningitis.return_value = 10
+        mock_fetch_malaria_by_year_two_weeks_wrapped.return_value = 10
+        mock_fetch_sarampo_in_a_month.return_value = 10
+
         device_serial1 = '356670060315512'
         FacilityFactory(device_serial=device_serial1, uid=MOH_UID)
         BesMiddlewareCoreFactory(device_id=device_serial1)
@@ -195,17 +198,17 @@ class ValidateDataElementValuesServiceTest(TestCase):
 
         self.assertEqual(True, self.data_element_values_validation.alert_should_be_sent['pfa'])
 
+    @patch.object(DataElementValuesValidationService, 'fetch_sarampo_in_a_month')
     @patch.object(DataElementValuesValidationService, 'send_request_to_dhis')
-    def test_should_validate_sarampo_in_a_month(self, mock_send_request_to_dhis):
+    def test_should_validate_sarampo_in_a_month(self, mock_send_request_to_dhis, mock_fetch_sarampo_in_a_month):
         mock_send_request_to_dhis.return_value = (HTTP_200_OK, {})
-
-        self.data_element_values_validation.send_validation_for_sarampo_in_a_month('2016-09-13',
-                                                                                   '2016-09-19',
-                                                                                   MOH_UID)
+        mock_fetch_sarampo_in_a_month.return_value = 10
+        data_element_values = BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
+        self.data_element_values_validation.send_validation_for_sarampo_in_a_month(data_element_values, MOH_UID)
 
         mock_send_request_to_dhis.assert_called_once_with(
             'http://52.32.36.132:80/dhis-web-validationrule/runValidationAction.action' \
-            '?organisationUnitId=MOH12345678&startDate=2016-08-17&endDate=2016-09-19' \
+            '?organisationUnitId=MOH12345678&startDate=2016-05-23&endDate=2016-06-25' \
             '&validationRuleGroupId=1677&sendAlerts=true')
 
     @patch.object(DataElementValuesValidationService, 'is_meningitis_increasement_rule_match')
@@ -224,15 +227,15 @@ class ValidateDataElementValuesServiceTest(TestCase):
             '?organisationUnitId=MOH12345678&startDate=2016-06-05&endDate=2016-06-25' \
             '&validationRuleGroupId=1922&sendAlerts=true')
 
-    @patch.object(DataElementValuesValidationService, 'fetch_malaria_last_year')
+    @patch.object(DataElementValuesValidationService, 'fetch_malaria_by_year_two_weeks_wrapped')
     @patch.object(DataElementValuesValidationService, 'fetch_malaria_last_five_weeks')
     @patch.object(DataElementValuesValidationService, 'send_request_to_dhis')
-    def test_should_validate_malaria_fiveyears_average(self, mock_send_request_to_dhis,
-                                                       mocke_fetch_malaria_last_five_weeks,
-                                                       mock_fetch_malaria_last_year):
+    def test_should_validate_malaria_five_years_average(self, mock_send_request_to_dhis,
+                                                        mocke_fetch_malaria_last_five_weeks,
+                                                        mock_fetch_malaria_by_year_two_weeks_wrapped):
         mock_send_request_to_dhis.return_value = (HTTP_200_OK, {})
         mocke_fetch_malaria_last_five_weeks.return_value = 2
-        mock_fetch_malaria_last_year.return_value = 1
+        mock_fetch_malaria_by_year_two_weeks_wrapped.return_value = 1
         data_element_values = BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
 
         self.data_element_values_validation.send_validation_malaria_five_years_average(data_element_values,

@@ -26,6 +26,17 @@ class DataElementValuesValidationService(object):
         _, self.rule_group_name_id_map = self.fetch_all_rule_groups()
 
     @staticmethod
+    def fetch_info_from_updated_data(value):
+        organisation_id = MOH_UID
+        year, _, _ = value.bes_year.isocalendar()
+        week_time = '%s-W%s' % (year, value.bes_number)
+
+        date_week_start = datetime.datetime.strptime('%s-0' % week_time, '%Y-W%U-%w').strftime('%Y-%m-%d')
+        date_week_end = datetime.datetime.strptime('%s-6' % week_time, '%Y-W%U-%w').strftime('%Y-%m-%d')
+
+        return date_week_start, date_week_end, organisation_id
+
+    @staticmethod
     def format_validation_request(organisation_id, start_date, end_date, rule_group_id, alert_should_be_sent):
         alert_flag = 'true' if alert_should_be_sent else 'false'
         validate_request = '%sdhis-web-validationrule/runValidationAction.action?organisationUnitId=%s&startDate=%s&endDate=%s&validationRuleGroupId=%s&sendAlerts=%s' % \
@@ -44,17 +55,6 @@ class DataElementValuesValidationService(object):
                             verify=settings.DHIS2_SSL_VERIFY)
 
     @staticmethod
-    def fetch_info_from_updated_data(value):
-        organisation_id = MOH_UID
-        year, _, _ = value.bes_year.isocalendar()
-        week_time = '%s-W%s' % (year, value.bes_number)
-
-        date_week_start = datetime.datetime.strptime('%s-0' % week_time, '%Y-W%U-%w').strftime('%Y-%m-%d')
-        date_week_end = datetime.datetime.strptime('%s-6' % week_time, '%Y-W%U-%w').strftime('%Y-%m-%d')
-
-        return date_week_start, date_week_end, organisation_id
-
-    @staticmethod
     def fetch_validation_rule_groups_from_html(html_text):
         validation_rule_groups = {}
         validation_rule_group_pattern = re.compile(r'<tr\sid="tr(\d+)".+data-name="(.+)"')
@@ -65,6 +65,12 @@ class DataElementValuesValidationService(object):
                 validation_rule_groups.setdefault(ma.group(2), ma.group(1))
 
         return validation_rule_groups
+
+    @staticmethod
+    def change_date_to_days_before(current_date, the_days_before):
+        current_date_format = datetime.datetime.strptime(current_date, '%Y-%m-%d')
+        before_date = current_date_format - datetime.timedelta(days=the_days_before)
+        return before_date.strftime("%Y-%m-%d")
 
     def fetch_all_rule_groups(self):
         rule_groups_url = '%sdhis-web-validationrule/validationRuleGroup.action' % DHIS2_BASE_URL
@@ -99,33 +105,34 @@ class DataElementValuesValidationService(object):
         response = self.send_request_to_dhis(validate_request)
         return response
 
-    def validate_values(self, date_element_values):
-        for value in date_element_values:
-            start, end, organisation_id = self.fetch_info_from_updated_data(value)
-            self.send_validation_for_each_disease(start, end, organisation_id)
+    def send_validation_malaria_five_years_average(self, value, organisation_id):
+        current_year, _, _ = value.bes_year.isocalendar()
+        week_num = value.bes_number
 
-            self.send_validation_for_sarampo_in_a_month(start, end, organisation_id)
+        malaria_last_five_weeks = self.fetch_malaria_last_five_weeks(current_year, week_num, organisation_id)
+        five_years_malaria = self.fetch_same_period_in_recent_five_years(current_year, week_num, organisation_id)
 
-            self.send_validation_for_meningitis_every_two_weeks(value, organisation_id)
+        average_five_years_malaria = mean(five_years_malaria)
+        std_dev_five_years_malaria = stdev(five_years_malaria)
 
-            self.send_validation_malaria_five_years_average(value, organisation_id)
+        _, data_week_end, _ = self.fetch_info_from_updated_data(value)
+        start = self.change_date_to_days_before(data_week_end, FIVE_WEEKS_DAYS)
 
-    @staticmethod
-    def change_date_to_days_before(current_date, the_days_before):
-        current_date_format = datetime.datetime.strptime(current_date, '%Y-%m-%d')
-        before_date = current_date_format - datetime.timedelta(days=the_days_before)
-        return before_date.strftime("%Y-%m-%d")
+        if malaria_last_five_weeks > average_five_years_malaria + 2 * std_dev_five_years_malaria:
+            rule_group_id = self.rule_group_name_id_map.get(
+                '%s FIVEYEAR AVAERAGE GROUP' % DISEASE_I18N_MAP.get('malaria'))
+            self.send_validation_request(rule_group_id, start, data_week_end, organisation_id, True)
 
-    @staticmethod
-    def fetch_sarampo_in_a_month(start, end, organisation_id):
-        return 10
+    def send_validation_for_sarampo_in_a_month(self, value, organisation_id):
+        current_year, _, _ = value.bes_year.isocalendar()
+        week_num = value.bes_number
+        start, end, _ = self.fetch_info_from_updated_data(value)
 
-    def send_validation_for_sarampo_in_a_month(self, start, end, organisation_id):
         month_start = self.change_date_to_days_before(start, FOUR_WEEKS_DAYS)
 
-        sarampo_in_a_month = self.fetch_sarampo_in_a_month(month_start, end, organisation_id)
+        sarampo_in_a_month = self.fetch_sarampo_in_a_month(current_year, week_num, organisation_id)
 
-        if SARAMPO_IN_A_MONTH_THRESHOLD < sarampo_in_a_month:
+        if sarampo_in_a_month > SARAMPO_IN_A_MONTH_THRESHOLD:
             rule_group_id = self.rule_group_name_id_map.get('%s MONTH GROUP' % DISEASE_I18N_MAP.get('measles'))
             self.send_validation_request(rule_group_id, month_start, end, organisation_id, True)
 
@@ -141,6 +148,17 @@ class DataElementValuesValidationService(object):
             start_before = self.change_date_to_days_before(data_week_end, THREE_WEEKS_DAYS)
 
             self.send_validation_request(rule_group_id, start_before, data_week_end, organisation_id, True)
+
+    def validate_values(self, date_element_values):
+        for value in date_element_values:
+            start, end, organisation_id = self.fetch_info_from_updated_data(value)
+            self.send_validation_for_each_disease(start, end, organisation_id)
+
+            self.send_validation_for_sarampo_in_a_month(value, organisation_id)
+
+            self.send_validation_for_meningitis_every_two_weeks(value, organisation_id)
+
+            self.send_validation_malaria_five_years_average(value, organisation_id)
 
     @staticmethod
     def is_meningitis_increasement_rule_match(year, week, organisation_id):
@@ -164,9 +182,35 @@ class DataElementValuesValidationService(object):
         return int(target_week_start_date.strftime('%Y')), int(target_week_start_date.strftime('%U'))
 
     @staticmethod
-    def fetch_meningitis(year, week, organisation_id):
-        element_ids = [Element.objects.filter(code='MENINGITE_036').first().id]
-        period_weeks = ['%sW%s' % (year, week)]
+    def fetch_meningitis(year, week_num, organisation_id):
+        period_weeks = ['%sW%s' % (year, week_num)]
+        return DataElementValuesValidationService.__fetch_disease_in_year_weeks(organisation_id, 'MENINGITE_036',
+                                                                                period_weeks)
+
+    @staticmethod
+    def fetch_sarampo_in_a_month(year, week_num, organisation_id):
+        period_weeks = ['%sW%s' % (DataElementValuesValidationService.calculate_year_week_by_offset(year, week_num, i))
+                        for i in range(-3, 1)]
+        return DataElementValuesValidationService.__fetch_disease_in_year_weeks(organisation_id, 'SARAMPO_055',
+                                                                                period_weeks)
+
+    @staticmethod
+    def fetch_malaria_last_five_weeks(year, week_num, organisation_id):
+        period_weeks = ['%sW%s' % (DataElementValuesValidationService.calculate_year_week_by_offset(year, week_num, i))
+                        for i in range(-4, 1)]
+        return DataElementValuesValidationService.__fetch_disease_in_year_weeks(organisation_id, 'MALARIA_084',
+                                                                                period_weeks)
+
+    @staticmethod
+    def fetch_malaria_by_year_two_weeks_wrapped(year, week_num, organisation_id):
+        period_weeks = ['%sW%s' % (DataElementValuesValidationService.calculate_year_week_by_offset(year, week_num, i))
+                        for i in range(-2, 3)]
+        return DataElementValuesValidationService.__fetch_disease_in_year_weeks(organisation_id, 'MALARIA_084',
+                                                                                period_weeks)
+
+    @staticmethod
+    def __fetch_disease_in_year_weeks(organisation_id, disease_code, period_weeks):
+        element_ids = [Element.objects.filter(code=disease_code).first().id]
         query_params = construct_get_element_values_request_query_params(
             organisation_unit_id=organisation_id,
             element_ids=element_ids,
@@ -175,48 +219,12 @@ class DataElementValuesValidationService(object):
         return int(float(dhis2_remote_repository.get_data_element_values(query_params).json().get('rows')[0][2]))
 
     @staticmethod
-    def fetch_malaria_last_five_weeks(year, week, organisation_id):
-        element_ids = [Element.objects.filter(code='MENINGITE_036').first().id]
-        period_weeks = []
-        for i in range(5)[::-1]:
-            period_weeks = [
-                '%sW%s' % (DataElementValuesValidationService.calculate_year_week_by_offset(year, week, -i))]
-        query_params = construct_get_element_values_request_query_params(
-            organisation_unit_id=organisation_id,
-            element_ids=element_ids,
-            period_weeks=period_weeks
-        )
-        return int(float(dhis2_remote_repository.get_data_element_values(query_params).json().get('rows')[0][2]))
-
-    @staticmethod
-    def fetch_malaria_last_year(year, week):
-        return 3000
-
-    def send_validation_malaria_five_years_average(self, value, organisation_id):
-        current_year, _, _ = value.bes_year.isocalendar()
-        week_num = value.bes_number
-
-        malaria_last_five_weeks = self.fetch_malaria_last_five_weeks(current_year, week_num, organisation_id)
-        five_years_malarias = self.fetch_same_period_in_recent_five_years(current_year, week_num)
-
-        average_five_years_malaria = mean(five_years_malarias)
-        std_dev_five_years_malaria = stdev(five_years_malarias)
-
-        _, data_week_end, _ = self.fetch_info_from_updated_data(value)
-        start = self.change_date_to_days_before(data_week_end, FIVE_WEEKS_DAYS)
-
-        if malaria_last_five_weeks > average_five_years_malaria + 2 * std_dev_five_years_malaria:
-            rule_group_id = self.rule_group_name_id_map.get(
-                '%s FIVEYEAR AVAERAGE GROUP' % DISEASE_I18N_MAP.get('malaria'))
-            self.send_validation_request(rule_group_id, start, data_week_end, organisation_id, True)
-
-    @staticmethod
-    def fetch_same_period_in_recent_five_years(current_year, week_num):
-
-        five_years_malarias = []
-
+    def fetch_same_period_in_recent_five_years(current_year, week_num, organisation_id):
+        five_years_malaria = []
         for year in range(current_year - 5, current_year):
-            malaria = DataElementValuesValidationService.fetch_malaria_last_year(year=('%s' % year), week=week_num)
-            five_years_malarias.append(malaria)
+            malaria = DataElementValuesValidationService.fetch_malaria_by_year_two_weeks_wrapped('%s' % year,
+                                                                                                 week_num,
+                                                                                                 organisation_id)
+            five_years_malaria.append(malaria)
 
-        return five_years_malarias
+        return five_years_malaria
