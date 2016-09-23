@@ -106,9 +106,9 @@ class ValidateDataElementValuesServiceTest(TestCase):
                                     '&validationRuleGroupId=1582&sendAlerts=true'
 
         validate_request = DataElementValuesValidationService.format_validation_request_url(MOH_UID,
-                                                                                        '2016-09-13',
-                                                                                        '2016-09-13',
-                                                                                        '1582',
+                                                                                            '2016-09-13',
+                                                                                            '2016-09-13',
+                                                                                            '1582',
                                                                                             True)
 
         self.assertEqual(validate_request, expected_validate_request)
@@ -118,9 +118,9 @@ class ValidateDataElementValuesServiceTest(TestCase):
         mock_get.return_value = MagicMock(status_code=HTTP_200_OK)
 
         validate_request = self.data_element_values_validation.format_validation_request_url(MOH_UID,
-                                                                                         '2016-09-13',
-                                                                                         '2016-09-13',
-                                                                                         '1582',
+                                                                                             '2016-09-13',
+                                                                                             '2016-09-13',
+                                                                                             '1582',
                                                                                              True)
         response = self.data_element_values_validation.send_request_to_dhis(validate_request)
         self.assertEqual(response.status_code, HTTP_200_OK)
@@ -139,6 +139,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
                         {'PESTE GROUP': '1652'}):
             self.assertEqual(expected_group_data_id, self.data_element_values_validation.get_rule_group_id(rule_name))
 
+    @patch.object(DataElementValuesValidationService, 'fetch_diarrhea_in_week_num')
     @patch.object(DataElementValuesValidationService, 'fetch_sarampo_in_a_month')
     @patch.object(DataElementValuesValidationService, 'fetch_malaria_by_year_two_weeks_wrapped')
     @patch.object(DataElementValuesValidationService, 'fetch_meningitis')
@@ -148,11 +149,13 @@ class ValidateDataElementValuesServiceTest(TestCase):
     def test_should_validate_data_element_values(self, mock_send_validation, mock_send_request_to_dhis,
                                                  mock_fetch_malaria_last_five_weeks, mock_fetch_meningitis,
                                                  mock_fetch_malaria_by_year_two_weeks_wrapped,
-                                                 mock_fetch_sarampo_in_a_month):
+                                                 mock_fetch_sarampo_in_a_month,
+                                                 mock_fetch_diarrhea_in_week_num):
         mock_fetch_malaria_last_five_weeks.return_value = 50
         mock_fetch_meningitis.return_value = 10
         mock_fetch_malaria_by_year_two_weeks_wrapped.return_value = 10
         mock_fetch_sarampo_in_a_month.return_value = 10
+        mock_fetch_diarrhea_in_week_num.return_value = 10
 
         device_serial1 = '356670060315512'
         FacilityFactory(device_serial=device_serial1, uid=MOH_UID)
@@ -161,7 +164,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
 
         data_element_values = fetch_updated_data_element_values()
         self.data_element_values_validation.validate_values(data_element_values)
-        # mock_send_validation.assert_called_once_with('2016-06-05', '2016-06-11', MOH_UID)
+        mock_send_validation.assert_called_once_with('2016-06-05', '2016-06-11', MOH_UID)
 
     def test_should_fetch_validation_rule_groups_from_html(self):
         expected_groups = {'PARALISIA FL&Aacute;CIDA AGUDA GROUP': '1599',
@@ -254,28 +257,24 @@ class ValidateDataElementValuesServiceTest(TestCase):
             '?organisationUnitId=MOH12345678&startDate=2016-05-22&endDate=2016-06-25' \
             '&validationRuleGroupId=1988&sendAlerts=true')
 
-    # @patch.object(DataElementValuesValidationService, 'fetch_malaria_last_year')
-    # @patch.object(DataElementValuesValidationService, 'fetch_malaria_last_five_weeks')
-    # @patch.object(DataElementValuesValidationService, 'send_request_to_dhis')
-    # def test_should_validate_diarrhea_fiveyears_average(self, mock_send_request_to_dhis,
-    #                                                     mock_fetch_malaria_last_five_weeks,
-    #                                                     mock_fetch_malaria_last_year):
-    #     mock_send_request_to_dhis.return_value = (HTTP_200_OK, {})
-    #     mock_fetch_malaria_last_five_weeks.return_value = 2
-    #     mock_fetch_malaria_last_year.return_value = 1
-    #
-    #
-    #     BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
-    #
-    #     data_element_values = BesMiddlewareCore.objects.first()
-    #
-    #     self.data_element_values_validation.send_validation_malaria_fiveyears_average(data_element_values,
-    #                                                                                   MOH_UID)
-    #
-    #     mock_send_request_to_dhis.assert_called_once_with(
-    #         'http://52.32.36.132:80/dhis-web-validationrule/runValidationAction.action' \
-    #         '?organisationUnitId=MOH12345678&startDate=2016-05-22&endDate=2016-06-25' \
-    #         '&validationRuleGroupId=1988&sendAlerts=true')
+    @patch.object(DataElementValuesValidationService, 'fetch_diarrhea_same_week_in_recent_five_years')
+    @patch.object(DataElementValuesValidationService, 'fetch_diarrhea_in_week_num')
+    @patch.object(DataElementValuesValidationService, 'send_request_to_dhis')
+    def test_should_validate_diarrhea_fiveyears_average(self, mock_send_request_to_dhis,
+                                                        mock_fetch_diarrhea_in_week_num,
+                                                        mock_fetch_diarrhea_same_week_in_recent_five_years):
+        mock_send_request_to_dhis.return_value = (HTTP_200_OK, {})
+        mock_fetch_diarrhea_in_week_num.return_value = 2
+        mock_fetch_diarrhea_same_week_in_recent_five_years.return_value = [1, 1, 1, 1, 1]
+        data_element_values = BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
+
+        self.data_element_values_validation.send_validation_diarrhea_fiveyears_average(data_element_values,
+                                                                                       MOH_UID)
+
+        mock_send_request_to_dhis.assert_called_once_with(
+            'http://52.32.36.132:80/dhis-web-validationrule/runValidationAction.action' \
+            '?organisationUnitId=MOH12345678&startDate=2016-06-19&endDate=2016-06-25' \
+            '&validationRuleGroupId=1689&sendAlerts=true')
 
 
 REAL_HTML_RESPONSE = '''

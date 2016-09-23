@@ -123,6 +123,24 @@ class DataElementValuesValidationService(object):
                 '%s FIVEYEAR AVAERAGE GROUP' % DISEASE_I18N_MAP.get('malaria'))
             self.send_validation_request(rule_group_id, start, data_week_end, organisation_id, True)
 
+    def send_validation_diarrhea_fiveyears_average(self, value, organisation_id):
+        current_year, _, _ = value.bes_year.isocalendar()
+        week_num = value.bes_number
+
+        diarrhea_in_current_week = self.fetch_diarrhea_in_week_num(current_year, week_num, organisation_id)
+        diarrhea_five_years_same_week = self.fetch_diarrhea_same_week_in_recent_five_years(current_year, week_num,
+                                                                                           organisation_id)
+
+        average_five_years_diarrhea = mean(diarrhea_five_years_same_week)
+        std_dev_five_years_diarrhea = stdev(diarrhea_five_years_same_week)
+
+        data_week_start, data_week_end, _ = self.fetch_info_from_updated_data(value)
+
+        if diarrhea_in_current_week > average_five_years_diarrhea + 2 * std_dev_five_years_diarrhea:
+            rule_group_id = self.rule_group_name_id_map.get(
+                '%s FIVEYEAR AVAERAGE GROUP' % DISEASE_I18N_MAP.get('diarrhea'))
+            self.send_validation_request(rule_group_id, data_week_start, data_week_end, organisation_id, True)
+
     def send_validation_for_sarampo_in_a_month(self, value, organisation_id):
         current_year, _, _ = value.bes_year.isocalendar()
         week_num = value.bes_number
@@ -155,10 +173,9 @@ class DataElementValuesValidationService(object):
             self.send_validation_for_each_disease(start, end, organisation_id)
 
             self.send_validation_for_sarampo_in_a_month(value, organisation_id)
-
             self.send_validation_for_meningitis_every_two_weeks(value, organisation_id)
-
             self.send_validation_malaria_five_years_average(value, organisation_id)
+            self.send_validation_diarrhea_fiveyears_average(value, organisation_id)
 
     @staticmethod
     def is_meningitis_increasement_rule_match(year, week, organisation_id):
@@ -229,3 +246,20 @@ class DataElementValuesValidationService(object):
 
         return five_years_malaria
 
+    @staticmethod
+    def fetch_diarrhea_in_week_num(current_year, week_num, organisation_id):
+        period_weeks = ['%sW%s' % (current_year, week_num)]
+
+        return DataElementValuesValidationService.fetch_disease_in_year_weeks(organisation_id, 'DIARREIA_009',
+                                                                              period_weeks)
+
+    @staticmethod
+    def fetch_diarrhea_same_week_in_recent_five_years(current_year, week_num, organisation_id):
+        five_years_diarrhea = []
+
+        for year in range(current_year - 5, current_year):
+            diarrhea = DataElementValuesValidationService.fetch_malaria_by_year_two_weeks_wrapped('%s' % year,
+                                                                                                  week_num,
+                                                                                                  organisation_id)
+            five_years_diarrhea.append(diarrhea)
+        return five_years_diarrhea
