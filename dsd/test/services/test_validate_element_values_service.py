@@ -254,27 +254,28 @@ class ValidateDataElementValuesServiceTest(TestCase):
             '?organisationUnitId=MOH12345678&startDate=2016-05-22&endDate=2016-06-25' \
             '&validationRuleGroupId=1988&sendAlerts=true')
 
-    @patch('dsd.services.validate_data_element_values_service.DataElementValuesValidationService.send_request_to_dhis')
-    def test_should_validate_diarrhea_fiveyears_average(self, mock_send_request_to_dhis):
-        mock_send_request_to_dhis.return_value = (HTTP_200_OK, {})
-
-        BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
-
-        data_element_values = BesMiddlewareCore.objects.first()
-
-        with patch(
-                'dsd.services.validate_data_element_values_service.DataElementValuesValidationService.fetch_malaria_last_five_weeks',
-                return_value=2):
-            with patch(
-                    'dsd.services.validate_data_element_values_service.DataElementValuesValidationService.fetch_malaria_last_year',
-                    return_value=1):
-                self.data_element_values_validation.send_validation_malaria_fiveyears_average(data_element_values,
-                                                                                              MOH_UID)
-
-                mock_send_request_to_dhis.assert_called_once_with(
-                    'http://52.32.36.132:80/dhis-web-validationrule/runValidationAction.action' \
-                    '?organisationUnitId=MOH12345678&startDate=2016-05-22&endDate=2016-06-25' \
-                    '&validationRuleGroupId=1988&sendAlerts=true')
+    # @patch.object(DataElementValuesValidationService, 'fetch_malaria_last_year')
+    # @patch.object(DataElementValuesValidationService, 'fetch_malaria_last_five_weeks')
+    # @patch.object(DataElementValuesValidationService, 'send_request_to_dhis')
+    # def test_should_validate_diarrhea_fiveyears_average(self, mock_send_request_to_dhis,
+    #                                                     mock_fetch_malaria_last_five_weeks,
+    #                                                     mock_fetch_malaria_last_year):
+    #     mock_send_request_to_dhis.return_value = (HTTP_200_OK, {})
+    #     mock_fetch_malaria_last_five_weeks.return_value = 2
+    #     mock_fetch_malaria_last_year.return_value = 1
+    #
+    #
+    #     BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
+    #
+    #     data_element_values = BesMiddlewareCore.objects.first()
+    #
+    #     self.data_element_values_validation.send_validation_malaria_fiveyears_average(data_element_values,
+    #                                                                                   MOH_UID)
+    #
+    #     mock_send_request_to_dhis.assert_called_once_with(
+    #         'http://52.32.36.132:80/dhis-web-validationrule/runValidationAction.action' \
+    #         '?organisationUnitId=MOH12345678&startDate=2016-05-22&endDate=2016-06-25' \
+    #         '&validationRuleGroupId=1988&sendAlerts=true')
 
 
 REAL_HTML_RESPONSE = '''
