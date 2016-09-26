@@ -28,7 +28,7 @@ def get_all_local_facilities(all_remote_facilities):
     for remote_facility in all_remote_facilities:
         remote_facility.__dict__.pop('_state')
         local_facility = Facility(**remote_facility.__dict__)
-        local_facility.uid = id_generator.generate_id()
+        local_facility.uid = id_generator.generate_md5_id(local_facility.facility_name)
         all_local_facilities.append(local_facility)
 
     return all_local_facilities

@@ -90,8 +90,9 @@ def post_data_set():
 
 def post_data_element_values(date_element_values):
     for data_element in date_element_values:
-        dhis2_remote_repository.post_data_elements_value(
-            json.dumps(build_data_element_values_request_body_as_dict(data_element)))
+        json_dumps = json.dumps(build_data_element_values_request_body_as_dict(data_element))
+        logger.info('post request body = %s '%json_dumps)
+        dhis2_remote_repository.post_data_elements_value(json_dumps)
 
 
 def build_data_element_values_request_body_as_dict(bes_middleware_core):

@@ -16,7 +16,7 @@
     "model": "dsd.category",
     "pk": "h40afc251b2",
     "fields": {
-      "name": "malaria tempo intervalo",
+      "name": "malaria confirmada tempo intervalo",
       "category_options": [
         "Lab5e311f4d",
         "p9532d3b911"

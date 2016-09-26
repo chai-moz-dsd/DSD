@@ -29,7 +29,7 @@ def get_all_local_provinces(all_remote_provinces):
         logger.info('remote province = %s' % remote_province.__dict__)
         remote_province.__dict__.pop('_state')
         local_province = Province(**remote_province.__dict__)
-        local_province.uid = id_generator.generate_id()
+        local_province.uid = id_generator.generate_md5_id(local_province.province_name)
         all_local_provinces.append(local_province)
 
     return all_local_provinces

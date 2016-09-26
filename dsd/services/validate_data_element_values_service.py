@@ -92,8 +92,10 @@ class DataElementValuesValidationService(object):
                                                     alert_should_be_sent)
 
             if 'validationResults' in response.text:
+                logger.critical('validate request success, need to send email.')
                 self.alert_should_be_sent[element_name] = False
             elif 'Validation passed successfully' in response.text:
+                logger.critical('validate request success, dose not need to send email.')
                 self.alert_should_be_sent[element_name] = True
 
             if response.status_code != HTTP_200_OK:
@@ -172,10 +174,10 @@ class DataElementValuesValidationService(object):
             start, end, organisation_id = self.fetch_info_from_updated_data(value)
             self.send_validation_for_each_disease(start, end, organisation_id)
 
-            self.send_validation_for_sarampo_in_a_month(value, organisation_id)
-            self.send_validation_for_meningitis_every_two_weeks(value, organisation_id)
-            self.send_validation_malaria_five_years_average(value, organisation_id)
-            self.send_validation_diarrhea_fiveyears_average(value, organisation_id)
+            # self.send_validation_for_sarampo_in_a_month(value, organisation_id)
+            # self.send_validation_for_meningitis_every_two_weeks(value, organisation_id)
+            # self.send_validation_malaria_five_years_average(value, organisation_id)
+            # self.send_validation_diarrhea_fiveyears_average(value, organisation_id)
 
     @staticmethod
     def is_meningitis_increasement_rule_match(year, week, organisation_id):
