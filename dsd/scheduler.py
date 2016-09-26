@@ -1,5 +1,6 @@
 import logging
 
+from chai.settings import DEFAULT_FROM_EMAIL
 from dsd.models import SyncRecord
 from dsd.services import bes_middleware_core_service
 from dsd.services import district_service
@@ -8,6 +9,7 @@ from dsd.services import province_service
 from dsd.services import sender_middleware_core_service
 from dsd.services.bes_middleware_core_service import fetch_updated_data_element_values
 from dsd.services.dhis2_remote_service import post_data_element_values
+from dsd.services.dhis2_send_email_service import dhis2_send_email
 from dsd.services.validate_data_element_values_service import DataElementValuesValidationService
 
 logger = logging.getLogger(__name__)
@@ -20,6 +22,7 @@ def start():
     except Exception as e:
         logger.error('Sync error: %s!' % e)
         SyncRecord.get_fail_instance().save()
+        send_msg_when_error_happened('Sync error: %s!' % e, 'wbwang@thoughtworks.com')
 
 
 def post_data_element_values_to_dhis2():
@@ -51,3 +54,7 @@ def sync_data_to_local(sync_time):
     bes_middleware_core_service.sync(sync_time)
     sender_middleware_core_service.sync(sync_time)
     logger.info('Sync data end...')
+
+
+def send_msg_when_error_happened(content, receiver):
+    dhis2_send_email('Error happens when element data was syn to dhis2.', DEFAULT_FROM_EMAIL, receiver)
