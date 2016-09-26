@@ -59,6 +59,7 @@ class BesMiddlewareCore(models.Model):
     sim_serial = models.CharField(max_length=255, db_column='SIMSERIAL', null=True)
     cases_measles_9 = models.IntegerField(db_column='CASOS_SARAMPO_9', null=True)
     phone_number_test_output = models.CharField(max_length=255, db_column='PHONENUMBER_TEST_OUTPUT', null=True)
+    deaths_malaria_confirmed_0_4 = models.IntegerField(default=0, db_column='OBITOS_MALARIA_CONFIRMADA_0_4', null=True)
     deaths_malaria_confirmed_5 = models.IntegerField(default=0, db_column='OBITOS_MALARIA_CONFIRMADA_5', null=True)
     date_week_start = models.DateTimeField(db_column='DATE_WEEK_START', null=True)
     cases_malaria_confirmed_0_4 = models.IntegerField(default=0, db_column='CASOS_MALARIA_CONFIRMADA_0_4', null=True)

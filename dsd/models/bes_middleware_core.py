@@ -59,6 +59,7 @@ class BesMiddlewareCore(models.Model):
     cases_measles_9 = models.IntegerField(null=True)
     phone_number_test_output = models.CharField(max_length=255, null=True)
     deaths_malaria_confirmed_5 = models.IntegerField(default=0, null=True)
+    deaths_malaria_confirmed_0_4 = models.IntegerField(default=0, null=True)
     date_week_start = models.DateTimeField(null=True)
     cases_malaria_confirmed_0_4 = models.IntegerField(default=0, null=True)
     cases_pfa = models.IntegerField(null=True)
