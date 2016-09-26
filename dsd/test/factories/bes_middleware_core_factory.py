@@ -60,7 +60,6 @@ class BesMiddlewareCoreFactory(factory.DjangoModelFactory):
     start_test_output = None
     skip_open_field = factory.Iterator(['yes', 'no'])
     note_pfa = None
-    cases_malaria_5 = factory.Iterator([31, 15, 1, 4, 26, 0, 2, 8, 91, 45])
     meta_instance_id = 'uuid:%s' % uuid.uuid4()
     cases_measles_24 = 0
     sim_serial = factory.Iterator(
