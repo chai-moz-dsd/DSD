@@ -237,4 +237,13 @@ CRONJOBS = (
 
 DHIS2_SSL_VERIFY = False
 
+#email configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'do.not.reply.diease.dashboard@gmail.com'
+EMAIL_HOST_PASSWORD = 'chaidiease'
+DEFAULT_FROM_EMAIL = 'do.not.reply.diease.dashboard@gmail.com'
+
 

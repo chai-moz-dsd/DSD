@@ -1,6 +1,7 @@
 import logging
 
-from chai.settings import DEFAULT_FROM_EMAIL
+from django.conf import settings
+
 from dsd.models import SyncRecord
 from dsd.services import bes_middleware_core_service
 from dsd.services import district_service
@@ -57,4 +58,4 @@ def sync_data_to_local(sync_time):
 
 
 def send_msg_when_error_happened(content, receiver):
-    dhis2_send_email('Error happens when element data was syn to dhis2.', DEFAULT_FROM_EMAIL, receiver)
+    dhis2_send_email('Error happens when element data was syn to dhis2.', settings.DEFAULT_FROM_EMAIL, receiver)
