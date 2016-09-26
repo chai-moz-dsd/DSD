@@ -23,10 +23,8 @@ def start():
     except Exception as e:
         logger.error('Sync error: %s!' % e)
         SyncRecord.get_fail_instance().save()
-        send_msg_when_error_happened(('Sync error: %s!' % e), ['wbwang@thoughtworks.com',
-                                                               'sjyuan@thoughtworks.com',
-                                                               'bfeng@thoughtworks.com',
-                                                               'jyyan@thoughtworks.com'])
+        send_msg_when_error_happened(('Sync error: %s!' % e), ['sjyuan@thoughtworks.com'])
+
 
 
 def post_data_element_values_to_dhis2():
