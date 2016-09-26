@@ -24,7 +24,7 @@
     "model": "dsd.categorycombination",
     "pk": "aa776715a56",
     "fields": {
-      "name": "malaria breakpoint",
+      "name": "malaria confirmada breakpoint",
       "categories": [
         "h40afc251b2",
         "y1b2d794df8"
