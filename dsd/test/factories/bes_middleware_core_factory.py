@@ -75,15 +75,15 @@ class BesMiddlewareCoreFactory(factory.DjangoModelFactory):
     cases_meningitis_5 = 0
     cases_dysentery = 0
     cases_measles_v9_23 = 0
-    deaths_malaria_5 = 0
+    deaths_malaria_clinic_5 = 0
     deaths_dysentery = 0
     cases_diarrhea_15 = factory.Iterator([7, 0, 1, 2, 6, 9, 16, 4])
     note_plague = None
     deaths_pfa = 0
     note_tetanus = None
     note_dysentery = None
-    deaths_malaria_0_4 = 0
-    cases_malaria_0_4 = factory.Iterator([10, 8, 0, 2, 11, 1, 39, 18])
+    deaths_malaria_clinic_0_4 = 0
+    cases_malaria_clinic_0_4 = factory.Iterator([10, 8, 0, 2, 11, 1, 39, 18])
     deaths_tetanus = 0
     start = datetime.today()
     deaths_measles_v_9_23 = 0
@@ -92,7 +92,4 @@ class BesMiddlewareCoreFactory(factory.DjangoModelFactory):
     deaths_measles_9 = 0
     cases_plague = 0
     today_test_output = None
-    cases_clinic_malaria_0_4 = 0
-    cases_clinic_malaria_5 = 0
-    deaths_clinic_malaria_0_4 = 0
-    deaths_clinic_malaria_5 = 0
+    cases_malaria_clinic_5 = 0
