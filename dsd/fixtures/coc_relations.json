@@ -303,27 +303,17 @@
     "model": "dsd.cocrelation",
     "pk": 31,
     "fields": {
-      "name_in_bes": "cases_malaria_0_4",
+      "name_in_bes": "deaths_malaria_clinic_0_4",
       "element_id": "fa48b98506d",
       "cc_id": "aa776715a56",
-      "name_of_coc": "0-4 anos, C"
+      "name_of_coc": "0-4 anos, O"
     }
   },
   {
     "model": "dsd.cocrelation",
     "pk": 32,
     "fields": {
-      "name_in_bes": "deaths_malaria_0_4",
-      "element_id": "fa48b98506d",
-      "cc_id": "aa776715a56",
-      "name_of_coc": "0-4 anos, O"
-    }
-  },
-  {
-    "model": "dsd.cocrelation",
-    "pk": 33,
-    "fields": {
-      "name_in_bes": "cases_malaria_5",
+      "name_in_bes": "cases_malaria_clinic_5",
       "element_id": "fa48b98506d",
       "cc_id": "aa776715a56",
       "name_of_coc": "5 anos+, C"
@@ -331,19 +321,9 @@
   },
   {
     "model": "dsd.cocrelation",
-    "pk": 34,
+    "pk": 33,
     "fields": {
-      "name_in_bes": "deaths_malaria_5",
-      "element_id": "fa48b98506d",
-      "cc_id": "aa776715a56",
-      "name_of_coc": "5 anos+, O"
-    }
-  },
-  {
-    "model": "dsd.cocrelation",
-    "pk": 35,
-    "fields": {
-      "name_in_bes": "cases_clinic_malaria_0_4",
+      "name_in_bes": "cases_malaria_clinic_0_4",
       "element_id": "r56d98c351d",
       "cc_id": "m6a86d030e8",
       "name_of_coc": "0-4 anos, C"
@@ -351,9 +331,9 @@
   },
   {
     "model": "dsd.cocrelation",
-    "pk": 36,
+    "pk": 34,
     "fields": {
-      "name_in_bes": "deaths_clinic_malaria_0_4",
+      "name_in_bes": "deaths_malaria_clinic_0_4",
       "element_id": "r56d98c351d",
       "cc_id": "m6a86d030e8",
       "name_of_coc": "0-4 anos, O"
@@ -361,9 +341,9 @@
   },
   {
     "model": "dsd.cocrelation",
-    "pk": 37,
+    "pk": 35,
     "fields": {
-      "name_in_bes": "cases_clinic_malaria_5",
+      "name_in_bes": "cases_malaria_clinic_5",
       "element_id": "r56d98c351d",
       "cc_id": "m6a86d030e8",
       "name_of_coc": "5 anos+, C"
@@ -371,9 +351,9 @@
   },
   {
     "model": "dsd.cocrelation",
-    "pk": 38,
+    "pk": 36,
     "fields": {
-      "name_in_bes": "deaths_clinic_malaria_5",
+      "name_in_bes": "deaths_malaria_clinic_5",
       "element_id": "r56d98c351d",
       "cc_id": "m6a86d030e8",
       "name_of_coc": "5 anos+, O"

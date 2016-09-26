@@ -9,10 +9,10 @@ logger = logging.getLogger(__name__)
 def sync(sync_time):
     if not sync_time:
         all_remote_bes_middleware_cores = BesMiddlewareCoreRemote.objects.all()
-        logger.debug('sync all bes_middleware_cores at %s' % sync_time)
+        logger.info('sync all bes_middleware_cores at %s' % sync_time)
     else:
-        all_remote_bes_middleware_cores = BesMiddlewareCoreRemote.objects.filter(middleware_updated_date__gte=sync_time)
-        logger.debug('sync bes_middleware_cores from %s' % sync_time)
+        all_remote_bes_middleware_cores = BesMiddlewareCoreRemote.objects.filter(last_update_date__gte=sync_time)
+        logger.info('sync bes_middleware_cores from %s' % sync_time)
 
     all_local_bes_middleware_cores = get_all_from_local(all_remote_bes_middleware_cores)
     all_valid_local_bes_middleware_cores = filter(is_valid, all_local_bes_middleware_cores)
@@ -40,7 +40,6 @@ def save(bes_middleware_core):
     if result_filter.count():
         existed_bes_middleware_core = result_filter.first()
         bes_middleware_core.uri = existed_bes_middleware_core.uri
-
     bes_middleware_core.save()
 
 
