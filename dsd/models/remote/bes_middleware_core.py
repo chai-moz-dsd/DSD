@@ -85,5 +85,5 @@ class BesMiddlewareCore(models.Model):
     deaths_measles_9 = models.IntegerField(db_column='OBITOS_SARAMPO_9', null=True)
     cases_plague = models.IntegerField(db_column='CASOS_PESTE', null=True)
     today_test_output = models.CharField(max_length=255, db_column='TODAY_TEST_OUTPUT', null=True)
-    middleware_created_date = models.DateTimeField(db_column='MIDDLEWARE_CREATED_DATE')
-    middleware_updated_date = models.DateTimeField(db_column='MIDDLEWARE_UPDATED_DATE')
+    middleware_created_date = models.DateTimeField(db_column='MIDDLEWARE_CREATED_DATE', null=True)
+    middleware_updated_date = models.DateTimeField(db_column='MIDDLEWARE_UPDATED_DATE', null=True)

@@ -26,7 +26,6 @@ def start():
         send_msg_when_error_happened(('Sync error: %s!' % e), ['sjyuan@thoughtworks.com'])
 
 
-
 def post_data_element_values_to_dhis2():
     data_element_values = fetch_updated_data_element_values()
     post_data_element_values(data_element_values)
@@ -59,4 +58,5 @@ def sync_data_to_local(sync_time):
 
 
 def send_msg_when_error_happened(content, receivers):
-    dhis2_send_email('Error happens when element data was syn to dhis2.', content, settings.DEFAULT_FROM_EMAIL, receivers)
+    dhis2_send_email('Error happens when element data was syn to dhis2.', content, settings.DEFAULT_FROM_EMAIL,
+                     receivers)
