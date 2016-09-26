@@ -54,7 +54,6 @@ class BesMiddlewareCore(models.Model):
     deaths_malaria_clinic_0_4 = models.IntegerField(default=0, db_column='OBITOS_MALARIA_CLINICA_0_4', null=True)
     skip_open_field = models.CharField(max_length=255, db_column='SKIP_CAMPO_ABERTO', null=True)
     note_pfa = models.CharField(max_length=255, db_column='NOTE_PFA', null=True)
-    cases_malaria_5 = models.IntegerField(db_column='CASOS_MALARIA_5', null=True)
     meta_instance_id = models.CharField(max_length=255, db_column='META_INSTANCE_ID', null=True)
     cases_measles_24 = models.IntegerField(db_column='CASOS_SARAMPO_24', null=True)
     sim_serial = models.CharField(max_length=255, db_column='SIMSERIAL', null=True)
