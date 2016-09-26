@@ -23,7 +23,7 @@ def start():
     except Exception as e:
         logger.error('Sync error: %s!' % e)
         SyncRecord.get_fail_instance().save()
-        send_msg_when_error_happened('Sync error: %s!' % e, 'wbwang@thoughtworks.com')
+        send_msg_when_error_happened(('Sync error: %s!' % e), 'wbwang@thoughtworks.com')
 
 
 def post_data_element_values_to_dhis2():
@@ -58,4 +58,4 @@ def sync_data_to_local(sync_time):
 
 
 def send_msg_when_error_happened(content, receiver):
-    dhis2_send_email('Error happens when element data was syn to dhis2.', settings.DEFAULT_FROM_EMAIL, receiver)
+    dhis2_send_email('Error happens when element data was syn to dhis2.', content, settings.DEFAULT_FROM_EMAIL, receiver)
