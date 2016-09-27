@@ -17,7 +17,7 @@ from dsd.services.dhis2_remote_service import construct_get_element_values_reque
 
 logger = logging.getLogger(__name__)
 
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.CRITICAL)
 
 
 class DataElementValuesValidationService(object):
@@ -81,8 +81,10 @@ class DataElementValuesValidationService(object):
     def get_rule_group_id(self, element_name):
         return self.rule_group_name_id_map.get('%s GROUP' % DISEASE_I18N_MAP.get(element_name))
 
-    def send_validation_for_each_disease(self, start, end, organisation_id):
+    def send_validation_for_each_disease(self, value, organisation_id):
+        start, end, organisation_id = self.fetch_info_from_updated_data(value)
         for element_name in DISEASE_I18N_MAP.keys():
+
             alert_should_be_sent = self.alert_should_be_sent.get(element_name, True)
             rule_group_id = self.get_rule_group_id(element_name)
             response = self.send_validation_request(rule_group_id,
@@ -100,6 +102,7 @@ class DataElementValuesValidationService(object):
 
             if response.status_code != HTTP_200_OK:
                 logger.critical('validate request failed.')
+                pass
 
     def send_validation_request(self, rule_group_id, start, end, organisation_id, alert_should_be_sent):
         validate_request = self.format_validation_request_url(organisation_id, start, end, rule_group_id,
@@ -171,13 +174,12 @@ class DataElementValuesValidationService(object):
 
     def validate_values(self, date_element_values):
         for value in date_element_values:
-            start, end, organisation_id = self.fetch_info_from_updated_data(value)
-            self.send_validation_for_each_disease(start, end, organisation_id)
+            self.send_validation_for_each_disease(value, MOH_UID)
 
-            # self.send_validation_for_sarampo_in_a_month(value, organisation_id)
-            # self.send_validation_for_meningitis_every_two_weeks(value, organisation_id)
-            # self.send_validation_malaria_five_years_average(value, organisation_id)
-            # self.send_validation_diarrhea_fiveyears_average(value, organisation_id)
+            self.send_validation_for_sarampo_in_a_month(value, MOH_UID)
+            # self.send_validation_for_meningitis_every_two_weeks(value, MOH_UID)
+            # self.send_validation_malaria_five_years_average(value, MOH_UID)
+            # self.send_validation_diarrhea_fiveyears_average(value, MOH_UID)
 
     @staticmethod
     def is_meningitis_increasement_rule_match(year, week, organisation_id):

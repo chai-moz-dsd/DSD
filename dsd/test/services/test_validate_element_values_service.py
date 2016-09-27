@@ -184,12 +184,14 @@ class ValidateDataElementValuesServiceTest(TestCase):
         rule_groups = self.data_element_values_validation.fetch_validation_rule_groups_from_html(REAL_HTML_RESPONSE)
         self.assertDictEqual(expected_groups, rule_groups)
 
+    @patch('datetime.date', FakeDate)
     @patch.object(DataElementValuesValidationService, 'send_request_to_dhis')
     def test_should_be_false_if_match_rule(self, mock_get):
         mock_get.return_value = MagicMock(status_code=HTTP_200_OK, text='<div id="validationResults">')
-        self.data_element_values_validation.send_validation_for_each_disease('2016-09-13',
-                                                                             '2016-09-13',
-                                                                             MOH_UID)
+        BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=52)
+
+        value = BesMiddlewareCore.objects.first()
+        self.data_element_values_validation.send_validation_for_each_disease(value, MOH_UID)
 
         self.assertEqual(False, self.data_element_values_validation.alert_should_be_sent['measles'])
 
@@ -200,12 +202,14 @@ class ValidateDataElementValuesServiceTest(TestCase):
         before_08th = self.data_element_values_validation.change_date_to_days_before('2016-08-13', FOUR_WEEKS_DAYS)
         self.assertEqual(before_08th, '2016-07-17')
 
+    @patch('datetime.date', FakeDate)
     @patch.object(DataElementValuesValidationService, 'send_request_to_dhis')
     def test_should_be_true_if_mismatch_rule(self, mock_get):
         mock_get.return_value = MagicMock(status_code=HTTP_200_OK, text='Validation passed successfully')
-        self.data_element_values_validation.send_validation_for_each_disease('2016-09-13',
-                                                                             '2016-09-13',
-                                                                             MOH_UID)
+        BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=52)
+
+        value = BesMiddlewareCore.objects.first()
+        self.data_element_values_validation.send_validation_for_each_disease(value, MOH_UID)
 
         self.assertEqual(True, self.data_element_values_validation.alert_should_be_sent['pfa'])
 
