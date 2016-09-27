@@ -21,7 +21,8 @@ from dsd.services.bes_middleware_core_service import is_data_element_belongs_to_
 from dsd.services.dhis2_remote_service import post_organization_units, post_elements, \
     build_data_set_request_body_as_dict, build_data_element_values_request_body_as_dict, \
     build_category_options_request_body_as_dict, build_categories_request_body_as_dict, \
-    build_category_combinations_request_body_as_dict, construct_get_element_values_request_query_params
+    build_category_combinations_request_body_as_dict, construct_get_element_values_request_query_params, \
+    build_org_level_dict
 from dsd.test.factories.bes_middleware_core_factory import BesMiddlewareCoreFactory
 from dsd.test.factories.category_combination_factory import CategoryCombinationFactory
 from dsd.test.factories.category_factory import CategoryFactory
@@ -40,6 +41,12 @@ logger = logging.getLogger(__name__)
 class DHIS2RemoteServiceTest(TestCase):
     def setUp(self):
         self.empty_request_body_dict = {}
+
+    @patch('dsd.repositories.dhis2_remote_repository.post_to_set_org_level')
+    def test_should_set_org_unit_level(self, mock_post_to_set_org_level):
+        mock_post_to_set_org_level.return_value = MagicMock(status_code=HTTP_201_CREATED)
+        dhis2_remote_service.set_org_unit_level()
+        mock_post_to_set_org_level.assert_called_once_with(json.dumps(build_org_level_dict()))
 
     @patch('datetime.date', FakeDate)
     @patch('dsd.util.id_generator.generate_id')

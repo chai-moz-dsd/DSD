@@ -1,7 +1,11 @@
+import logging
+
 from dsd.models import SyncRecord
-from dsd.repositories.dhis2_oauth_token import *
+from dsd.repositories.dhis2_oauth_token import initial_access_token
 from dsd.scheduler import sync_remote_data_to_local
-from dsd.services.dhis2_remote_service import *
+from dsd.services.dhis2_remote_service import post_attributes, post_organization_units, post_category_options, \
+    post_categories, post_category_combinations, post_elements, post_data_set, assign_all_org_to_user, \
+    set_org_unit_level
 from dsd.services.sync_cocid_service import set_coc_id
 
 logger = logging.getLogger(__name__)

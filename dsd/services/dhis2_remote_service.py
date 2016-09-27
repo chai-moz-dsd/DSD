@@ -63,7 +63,7 @@ def assign_all_org_to_user():
 
 
 def set_org_unit_level():
-    dhis2_remote_repository.post_to_set_org_level(build_org_level_dict())
+    dhis2_remote_repository.post_to_set_org_level(json.dumps(build_org_level_dict()))
 
 
 def post_category_options():
@@ -91,7 +91,7 @@ def post_data_set():
 def post_data_element_values(date_element_values):
     for data_element in date_element_values:
         json_dumps = json.dumps(build_data_element_values_request_body_as_dict(data_element))
-        logger.info('post request body = %s '%json_dumps)
+        logger.info('post request body = %s ' % json_dumps)
         dhis2_remote_repository.post_data_elements_value(json_dumps)
 
 
