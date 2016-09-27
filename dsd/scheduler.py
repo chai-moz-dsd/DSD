@@ -30,7 +30,7 @@ def post_data_element_values_to_dhis2():
     logger.info('Post data values, length = %s' % len(data_element_values))
     post_data_element_values(data_element_values)
 
-    # DataElementValuesValidationService().validate_values(data_element_values)
+    DataElementValuesValidationService().validate_values(data_element_values)
 
 
 def sync_remote_data_to_local():
