@@ -1,13 +1,11 @@
-from rest_framework.renderers import JSONRenderer
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 
-class SyncStatusList(APIView):
-
-    renderer_classes = (JSONRenderer, )
-
-    def get(self, request):
+@csrf_exempt
+def sync_status(request):
+    if request.method == 'GET':
         message = {'message': 'Test message'}
 
-        return Response(data=message, status=200)
+        return JsonResponse(message)
+
