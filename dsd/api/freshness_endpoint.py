@@ -3,8 +3,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 @csrf_exempt
-def sync_status(request):
+def freshness_status(request):
     if request.method == 'GET':
-        message = {'message': 'sync_status'}
+        message = {'message': 'freshness_status'}
 
         return JsonResponse(message)
