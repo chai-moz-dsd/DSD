@@ -8,4 +8,3 @@ def sync_status(request):
         message = {'message': 'Test message'}
 
         return JsonResponse(message)
-
