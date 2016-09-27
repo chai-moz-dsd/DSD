@@ -11,6 +11,7 @@ from dsd.services import sender_middleware_core_service
 from dsd.services.bes_middleware_core_service import fetch_updated_data_element_values
 from dsd.services.dhis2_remote_service import post_data_element_values
 from dsd.services.dhis2_send_email_service import dhis2_send_email
+from dsd.services.validate_data_element_values_service import DataElementValuesValidationService
 
 logger = logging.getLogger(__name__)
 
