@@ -166,7 +166,7 @@ class DataElementValuesValidationService(object):
         for value in date_element_values:
             self.send_validation_for_each_disease(value, MOH_UID)
 
-            # self.send_validation_for_sarampo_in_a_month(value, MOH_UID)
+            self.send_validation_for_sarampo_in_a_month(value, MOH_UID)
             # self.send_validation_for_meningitis_every_two_weeks(value, MOH_UID)
             # self.send_validation_malaria_five_years_average(value, MOH_UID)
             # self.send_validation_diarrhea_fiveyears_average(value, MOH_UID)
@@ -221,13 +221,17 @@ class DataElementValuesValidationService(object):
 
     @staticmethod
     def fetch_disease_in_year_weeks(organisation_id, disease_code, period_weeks):
-        element_ids = [Element.objects.filter(code=disease_code).first().id]
+        element_ids = DataElementValuesValidationService.element_id_in_database(disease_code)
         query_params = construct_get_element_values_request_query_params(
             organisation_unit_id=organisation_id,
             element_ids=element_ids,
             period_weeks=period_weeks
         )
         return int(float(dhis2_remote_repository.get_data_element_values(query_params).json().get('rows')[0][2]))
+
+    @staticmethod
+    def element_id_in_database(disease_code):
+        return [Element.objects.filter(code=disease_code).first().id]
 
     @staticmethod
     def fetch_same_period_in_recent_five_years(current_year, week_num, organisation_id):
