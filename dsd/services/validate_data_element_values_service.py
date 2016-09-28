@@ -166,7 +166,7 @@ class DataElementValuesValidationService(object):
         for value in date_element_values:
             self.send_validation_for_each_disease(value, MOH_UID)
 
-            self.send_validation_for_sarampo_in_a_month(value, MOH_UID)
+            # self.send_validation_for_sarampo_in_a_month(value, MOH_UID)
             # self.send_validation_for_meningitis_every_two_weeks(value, MOH_UID)
             # self.send_validation_malaria_five_years_average(value, MOH_UID)
             # self.send_validation_diarrhea_fiveyears_average(value, MOH_UID)
