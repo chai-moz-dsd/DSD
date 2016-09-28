@@ -1,6 +1,7 @@
 # DHIS2 configuration
 import os
 
+# URL config
 VERSION = 24
 DHIS2_1_ENV_DOCKERCLOUD_SERVICE_FQDN = os.environ.get('DHIS2_1_ENV_DOCKERCLOUD_SERVICE_FQDN', '52.32.36.132')
 DHIS2_BASE_URL = 'http://%s:%s/' % (DHIS2_1_ENV_DOCKERCLOUD_SERVICE_FQDN, '80')
@@ -16,6 +17,9 @@ KEY_POST_CATEGORY_COMBINATIONS = '_post_category_combinations'
 KEY_SET_ORG_LEVEL = '_set_org_level'
 KEY_GET_SELF_PROFILE = '_get_self_profile'
 KEY_GET_DATA_ELEMENT_VALUES = '_get_data_element_values'
+KEY_GET_VALIDATION_RULES = '_key_get_validation_rules'
+KEY_GET_VALIDATION_RULE_GROUPS = '_key_get_validation_rule_groups'
+KEY_RUN_VALIDATION_ACTION = '_key_run_validation_action'
 
 OAUTH2_TOKEN = 'oauth2_token'
 OAUTH2_CREATE = 'oauth2_create'
@@ -32,8 +36,11 @@ DHIS2_STATIC_URLS = {
     KEY_SET_ORG_LEVEL: '%sapi/%s/filledOrganisationUnitLevels' % (DHIS2_BASE_URL, VERSION),
     KEY_GET_SELF_PROFILE: '%sapi/%s/me' % (DHIS2_BASE_URL, VERSION),
     KEY_GET_DATA_ELEMENT_VALUES: '%sapi/%s/analytics' % (DHIS2_BASE_URL, VERSION),
+    KEY_GET_VALIDATION_RULES: '%sapi/%s/validationRules' % (DHIS2_BASE_URL, VERSION),
     OAUTH2_TOKEN: '%suaa/oauth/token' % DHIS2_BASE_URL,
     OAUTH2_CREATE: '%sapi/oAuth2Clients' % DHIS2_BASE_URL,
+    KEY_GET_VALIDATION_RULE_GROUPS: '%sdhis-web-validationrule/validationRuleGroup.action' % DHIS2_BASE_URL,
+    KEY_RUN_VALIDATION_ACTION: '%sdhis-web-validationrule/runValidationAction.action' % DHIS2_BASE_URL,
 }
 
 DATA_SET_ID = 'TTLoO39Scy9'
@@ -59,6 +66,16 @@ DISEASE_I18N_MAP = {
     'cholera': 'C&Oacute;LERA',
     'plague': 'PESTE',
     'meningitis': 'MENINGITE',
+}
+
+MEASLES_CASES_IN_RECENT_MONTHS = '_measles_cases_in_recent_months'
+MALARIA_CASES_SURPASS_AVERAGE_BY_YEARS = '_malaria_cases_surpass_average_by_years'
+MENINGITIS_CASES_INCREASES_BY_TIMES_IN_LAST_WEEKS = '_meningitis_cases_increases_by_times_in_last_weeks'
+
+CUSTOMIZED_VALIDATION_RULE_TYPE = {
+    MEASLES_CASES_IN_RECENT_MONTHS: 'measles_cases_in_recent_months',
+    MALARIA_CASES_SURPASS_AVERAGE_BY_YEARS: 'malaria_cases_surpass_average_by_years',
+    MENINGITIS_CASES_INCREASES_BY_TIMES_IN_LAST_WEEKS: 'meningitis_cases_increases_by_times_in_last_weeks',
 }
 
 

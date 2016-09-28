@@ -21,8 +21,9 @@ DATABASES = {
     'chai': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'mBES',
-        'USER': 'chai',
-        'HOST': '52.42.224.43',
+        'USER': 'thoughtworks_s',
+        'PASSWORD': 'ybtigloccicus.76C',
+        'HOST': '52.77.118.49',
         'PORT': '5432',
         'OPTIONS': {
             'isolation_level': psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE,

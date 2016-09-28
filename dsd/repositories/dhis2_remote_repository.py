@@ -52,8 +52,23 @@ def post_to_set_org_level(request_body):
     return __post_request(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_SET_ORG_LEVEL), data=request_body)
 
 
+def get_all_rule_groups():
+    return requests.get(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_VALIDATION_RULE_GROUPS),
+                        headers=get_oauth_header())
+
+
+def get_validation_results(params):
+    url = '%s?%s' % (dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_RUN_VALIDATION_ACTION), params)
+    return requests.get(url=url, headers=get_oauth_header())
+
+
 def get_data_element_values(query_params):
     url = '%s?%s' % (dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_DATA_ELEMENT_VALUES), query_params)
+    return requests.get(url=url, headers=get_oauth_header())
+
+
+def get_validation_rules(query_params):
+    url = '%s?%s' % (dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_VALIDATION_RULES), query_params)
     return requests.get(url=url, headers=get_oauth_header())
 
 

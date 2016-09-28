@@ -1,19 +1,15 @@
 import datetime
-import json
 import logging
 import re
 from statistics import mean, stdev
 
-import requests
 from rest_framework.status import HTTP_200_OK
 
-from chai import settings
-from dsd.config.dhis2_config import DISEASE_I18N_MAP, DHIS2_BASE_URL, FOUR_WEEKS_DAYS, SARAMPO_IN_A_MONTH_THRESHOLD, \
+from dsd.config.dhis2_config import DISEASE_I18N_MAP, FOUR_WEEKS_DAYS, SARAMPO_IN_A_MONTH_THRESHOLD, \
     THREE_WEEKS_DAYS, FIVE_WEEKS_DAYS
 from dsd.models import Element
 from dsd.models.moh import MOH_UID
 from dsd.repositories import dhis2_remote_repository
-from dsd.repositories.dhis2_remote_repository import get_oauth_header
 from dsd.services.dhis2_remote_service import construct_get_element_values_request_query_params
 
 logger = logging.getLogger(__name__)
@@ -40,20 +36,13 @@ class DataElementValuesValidationService(object):
     @staticmethod
     def format_validation_request_url(organisation_id, start_date, end_date, rule_group_id, alert_should_be_sent):
         alert_flag = 'true' if alert_should_be_sent else 'false'
-        validate_request = '%sdhis-web-validationrule/runValidationAction.action?organisationUnitId=%s&startDate=%s&endDate=%s&validationRuleGroupId=%s&sendAlerts=%s' % \
-                           (DHIS2_BASE_URL,
-                            organisation_id,
-                            start_date,
-                            end_date,
-                            rule_group_id,
-                            alert_flag)
-        return validate_request
-
-    @staticmethod
-    def send_request_to_dhis(dhis2_request):
-        return requests.get(dhis2_request,
-                            headers=get_oauth_header(),
-                            verify=settings.DHIS2_SSL_VERIFY)
+        validate_params = 'organisationUnitId=%s&startDate=%s&endDate=%s&validationRuleGroupId=%s&sendAlerts=%s' % \
+                          (organisation_id,
+                           start_date,
+                           end_date,
+                           rule_group_id,
+                           alert_flag)
+        return validate_params
 
     @staticmethod
     def fetch_validation_rule_groups_from_html(html_text):
@@ -74,9 +63,7 @@ class DataElementValuesValidationService(object):
         return before_date.strftime("%Y-%m-%d")
 
     def fetch_all_rule_groups(self):
-        rule_groups_url = '%sdhis-web-validationrule/validationRuleGroup.action' % DHIS2_BASE_URL
-        response = self.send_request_to_dhis(rule_groups_url)
-
+        response = dhis2_remote_repository.get_all_rule_groups()
         return response.status_code, self.fetch_validation_rule_groups_from_html(response.text)
 
     def get_rule_group_id(self, element_name):
@@ -105,11 +92,11 @@ class DataElementValuesValidationService(object):
                 logger.critical('validate request failed.')
                 pass
 
-    def send_validation_request(self, rule_group_id, start, end, organisation_id, alert_should_be_sent):
-        validate_request = self.format_validation_request_url(organisation_id, start, end, rule_group_id,
-                                                              alert_should_be_sent)
-        response = self.send_request_to_dhis(validate_request)
-        return response
+    def send_validation_request(self, rule_group_id, start_date, end_date, organisation_id, alert_should_be_sent):
+        validate_params = DataElementValuesValidationService.format_validation_request_url(organisation_id, start_date,
+                                                                                           end_date, rule_group_id,
+                                                                                           alert_should_be_sent)
+        return dhis2_remote_repository.get_validation_results(validate_params)
 
     def send_validation_malaria_five_years_average(self, value, organisation_id):
         current_year, _, _ = value.bes_year.isocalendar()
@@ -271,11 +258,6 @@ class DataElementValuesValidationService(object):
 
     @staticmethod
     def fetch_customized_rules():
-        fields = 'fields=%s&'.join(['id', 'additionalRuleType', 'additionalRule'])
+        fields = 'fields=%s&'.join(['additionalRuleType', 'additionalRule'])
         params = '%sfilter=additionalRuleType:ne:Default' % fields
-
-        rules_api = dhis2_remote_repository.get_validation_rules(params)
-        rules_json = DataElementValuesValidationService.send_request_to_dhis(rules_api)
-
-        logger.info(rules_json)
-        return json.loads(rules_json)
+        return dhis2_remote_repository.get_validation_rules(params)
