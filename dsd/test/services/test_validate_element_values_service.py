@@ -25,9 +25,11 @@ fetch_disease_in_year_weeks_result = Mock(return_value=10)
 
 
 class ValidateDataElementValuesServiceTest(TestCase):
+    @patch.object(DataElementValuesValidationService, 'fetch_customized_rules')
     @patch.object(DataElementValuesValidationService, 'send_request_to_dhis')
-    def setUp(self, mock_send_request_to_dhis):
+    def setUp(self, mock_send_request_to_dhis, mock_fetch_customized_rules):
         mock_send_request_to_dhis.return_value = MagicMock(status_code=HTTP_200_OK, text=REAL_HTML_RESPONSE)
+        mock_fetch_customized_rules = {}
         self.data_element_values_validation = DataElementValuesValidationService()
 
     @patch.object(DataElementValuesValidationService, 'fetch_disease_in_year_weeks', fetch_disease_in_year_weeks_result)
@@ -78,7 +80,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
         BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=29)
 
         value = BesMiddlewareCore.objects.first()
-        start, end, _ = self.data_element_values_validation.fetch_info_from_updated_data(value)
+        start, end = self.data_element_values_validation.fetch_info_from_updated_data(value)
         self.assertEqual(start, '2016-07-17')
         self.assertEqual(end, '2016-07-23')
 
@@ -87,7 +89,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
         BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=52)
 
         value = BesMiddlewareCore.objects.first()
-        start, end, _ = self.data_element_values_validation.fetch_info_from_updated_data(value)
+        start, end = self.data_element_values_validation.fetch_info_from_updated_data(value)
         self.assertEqual(start, '2016-12-25')
         self.assertEqual(end, '2016-12-31')
 
@@ -95,7 +97,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
     def test_should_fetch_info_from_updated_data_when_on_year_start(self):
         uri = uuid.uuid4()
         BesMiddlewareCoreFactory(uri=uri, bes_year=datetime.datetime.today(), bes_number=1)
-        start, end, _ = self.data_element_values_validation.fetch_info_from_updated_data(
+        start, end = self.data_element_values_validation.fetch_info_from_updated_data(
             BesMiddlewareCore.objects.get(uri=uri))
         self.assertEqual(start, '2016-01-03')
         self.assertEqual(end, '2016-01-09')
@@ -278,6 +280,14 @@ class ValidateDataElementValuesServiceTest(TestCase):
             'http://52.32.36.132:80/dhis-web-validationrule/runValidationAction.action' \
             '?organisationUnitId=MOH12345678&startDate=2016-06-19&endDate=2016-06-25' \
             '&validationRuleGroupId=1689&sendAlerts=true')
+
+    # @patch.object(DataElementValuesValidationService, 'send_request_to_dhis')
+    # def test_should_fetch_rules_element_parameter(self, mock_send_request_to_dhis):
+    #     rules_json = '{"pager":{"page":1,"pageCount":1,"total":1,"pageSize":50},"validationRules":[{"name":"Sarampo caso em um mês >= 5","id":"bHrsicedhVg","additionalRule":"mês: 1\r\nlimite: 5","operator":"equal_to","additionalRuleType":"SarampoCaseInOneMonth","leftSide":{"expression":"0","description":"null","missingValueStrategy":"SKIP_IF_ANY_VALUE_MISSING","dataElements":[],"sampleElements":[]},"rightSide":{"expression":"0","description":"null","missingValueStrategy":"SKIP_IF_ANY_VALUE_MISSING","dataElements":[],"sampleElements":[]}}]}'
+    #
+    #     mock_send_request_to_dhis.return_value = rules_json
+    #     rules = self.data_element_values_validation.fetch_customized_rules()
+
 
 
 REAL_HTML_RESPONSE = '''

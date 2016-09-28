@@ -1,4 +1,5 @@
 import datetime
+import json
 import logging
 import re
 from statistics import mean, stdev
@@ -24,17 +25,17 @@ class DataElementValuesValidationService(object):
     def __init__(self):
         self.alert_should_be_sent = {}.fromkeys(DISEASE_I18N_MAP.keys(), True)
         _, self.rule_group_name_id_map = self.fetch_all_rule_groups()
+        self.customized_rules = self.fetch_customized_rules()
 
     @staticmethod
     def fetch_info_from_updated_data(value):
-        organisation_id = MOH_UID
         year, _, _ = value.bes_year.isocalendar()
         week_time = '%s-W%s' % (year, value.bes_number)
 
         date_week_start = datetime.datetime.strptime('%s-0' % week_time, '%Y-W%U-%w').strftime('%Y-%m-%d')
         date_week_end = datetime.datetime.strptime('%s-6' % week_time, '%Y-W%U-%w').strftime('%Y-%m-%d')
 
-        return date_week_start, date_week_end, organisation_id
+        return date_week_start, date_week_end
 
     @staticmethod
     def format_validation_request_url(organisation_id, start_date, end_date, rule_group_id, alert_should_be_sent):
@@ -82,7 +83,7 @@ class DataElementValuesValidationService(object):
         return self.rule_group_name_id_map.get('%s GROUP' % DISEASE_I18N_MAP.get(element_name))
 
     def send_validation_for_each_disease(self, value, organisation_id):
-        start, end, organisation_id = self.fetch_info_from_updated_data(value)
+        start, end = self.fetch_info_from_updated_data(value)
         for element_name in DISEASE_I18N_MAP.keys():
 
             alert_should_be_sent = self.alert_should_be_sent.get(element_name, True)
@@ -120,7 +121,7 @@ class DataElementValuesValidationService(object):
         average_five_years_malaria = mean(five_years_malaria)
         std_dev_five_years_malaria = stdev(five_years_malaria)
 
-        _, data_week_end, _ = self.fetch_info_from_updated_data(value)
+        _, data_week_end = self.fetch_info_from_updated_data(value)
         start = self.change_date_to_days_before(data_week_end, FIVE_WEEKS_DAYS)
 
         if malaria_last_five_weeks > average_five_years_malaria + 2 * std_dev_five_years_malaria:
@@ -139,7 +140,7 @@ class DataElementValuesValidationService(object):
         average_five_years_diarrhea = mean(diarrhea_five_years_same_week)
         std_dev_five_years_diarrhea = stdev(diarrhea_five_years_same_week)
 
-        data_week_start, data_week_end, _ = self.fetch_info_from_updated_data(value)
+        data_week_start, data_week_end = self.fetch_info_from_updated_data(value)
 
         if diarrhea_in_current_week > average_five_years_diarrhea + 2 * std_dev_five_years_diarrhea:
             rule_group_id = self.rule_group_name_id_map.get(
@@ -149,7 +150,7 @@ class DataElementValuesValidationService(object):
     def send_validation_for_sarampo_in_a_month(self, value, organisation_id):
         current_year, _, _ = value.bes_year.isocalendar()
         week_num = value.bes_number
-        start, end, _ = self.fetch_info_from_updated_data(value)
+        start, end = self.fetch_info_from_updated_data(value)
 
         month_start = self.change_date_to_days_before(start, FOUR_WEEKS_DAYS)
 
@@ -166,7 +167,7 @@ class DataElementValuesValidationService(object):
         if self.is_meningitis_increasement_rule_match(current_year, week_num, organisation_id):
             rule_group_id = self.rule_group_name_id_map.get(
                 '%s INCREASEMENT GROUP' % DISEASE_I18N_MAP.get('meningitis'))
-            _, data_week_end, _ = self.fetch_info_from_updated_data(value)
+            _, data_week_end = self.fetch_info_from_updated_data(value)
 
             start_before = self.change_date_to_days_before(data_week_end, THREE_WEEKS_DAYS)
 
@@ -267,3 +268,14 @@ class DataElementValuesValidationService(object):
                                                                                                   organisation_id)
             five_years_diarrhea.append(diarrhea)
         return five_years_diarrhea
+
+    @staticmethod
+    def fetch_customized_rules():
+        fields = 'fields=%s&'.join(['id', 'additionalRuleType', 'additionalRule'])
+        params = '%sfilter=additionalRuleType:ne:Default' % fields
+
+        rules_api = dhis2_remote_repository.get_validation_rules(params)
+        rules_json = DataElementValuesValidationService.send_request_to_dhis(rules_api)
+
+        logger.info(rules_json)
+        return json.loads(rules_json)
