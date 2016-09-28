@@ -215,20 +215,20 @@ class ValidateDataElementValuesServiceTest(TestCase):
             'organisationUnitId=MOH12345678&startDate=2016-05-30&endDate=2016-06-26' \
             '&validationRuleGroupId=1677&sendAlerts=true')
 
-    # @patch.object(DataElementValuesValidationService, 'is_meningitis_increasement_rule_match')
-    # @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
-    # def test_should_validate_meningitis_every_two_weeks(self,
-    #                                                     mock_get_validation_results,
-    #                                                     mock_is_meningitis_increasement_rule_match):
-    #     mock_get_validation_results.return_value = (HTTP_200_OK, {})
-    #     mock_is_meningitis_increasement_rule_match.return_value = True
-    #     data_element_values = BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
-    #
-    #     self.data_element_values_validation.send_validation_for_meningitis_every_two_weeks(data_element_values,
-    #                                                                                        MOH_UID)
-    #     mock_get_validation_results.assert_called_once_with(
-    #         'organisationUnitId=MOH12345678&startDate=2016-06-05&endDate=2016-06-26' \
-    #         '&validationRuleGroupId=1922&sendAlerts=true')
+    @patch.object(DataElementValuesValidationService, 'is_meningitis_increasement_rule_match')
+    @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
+    def test_should_validate_meningitis_every_two_weeks(self,
+                                                        mock_get_validation_results,
+                                                        mock_is_meningitis_increasement_rule_match):
+        mock_get_validation_results.return_value = (HTTP_200_OK, {})
+        mock_is_meningitis_increasement_rule_match.return_value = True
+        data_element_values = BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
+
+        self.data_element_values_validation.send_validation_for_meningitis_every_two_weeks(data_element_values,
+                                                                                           MOH_UID)
+        mock_get_validation_results.assert_called_once_with(
+            'organisationUnitId=MOH12345678&startDate=2016-06-05&endDate=2016-06-26' \
+            '&validationRuleGroupId=1922&sendAlerts=true')
 
     @patch.object(DataElementValuesValidationService, 'fetch_malaria_by_year_two_weeks_wrapped')
     @patch.object(DataElementValuesValidationService, 'fetch_malaria_last_five_weeks')
