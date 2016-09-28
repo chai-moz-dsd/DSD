@@ -28,8 +28,11 @@ class DataElementValuesValidationService(object):
         year, _, _ = value.bes_year.isocalendar()
         week_time = '%s-W%s' % (year, value.bes_number)
 
-        date_week_start = datetime.datetime.strptime('%s-0' % week_time, '%Y-W%U-%w').strftime('%Y-%m-%d')
-        date_week_end = datetime.datetime.strptime('%s-6' % week_time, '%Y-W%U-%w').strftime('%Y-%m-%d')
+        # date_week_start = datetime.datetime.strptime('%s-0' % week_time, '%Y-W%U-%w').strftime('%Y-%m-%d')
+        # date_week_end = datetime.datetime.strptime('%s-6' % week_time, '%Y-W%U-%w').strftime('%Y-%m-%d')
+
+        date_week_start = datetime.datetime.strptime('%s-1' % week_time, '%Y-W%W-%w').strftime('%Y-%m-%d')
+        date_week_end = datetime.datetime.strptime('%s-0' % week_time, '%Y-W%W-%w').strftime('%Y-%m-%d')
 
         return date_week_start, date_week_end
 
@@ -139,7 +142,7 @@ class DataElementValuesValidationService(object):
         week_num = value.bes_number
         start, end = self.fetch_info_from_updated_data(value)
 
-        month_start = self.change_date_to_days_before(start, FOUR_WEEKS_DAYS)
+        month_start = self.change_date_to_days_before(start, THREE_WEEKS_DAYS)
 
         sarampo_in_a_month = self.fetch_sarampo_in_a_month(current_year, week_num, organisation_id)
 

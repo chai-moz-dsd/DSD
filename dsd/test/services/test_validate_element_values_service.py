@@ -80,8 +80,8 @@ class ValidateDataElementValuesServiceTest(TestCase):
 
         value = BesMiddlewareCore.objects.first()
         start, end = self.data_element_values_validation.fetch_info_from_updated_data(value)
-        self.assertEqual(start, '2016-07-17')
-        self.assertEqual(end, '2016-07-23')
+        self.assertEqual(start, '2016-07-18')
+        self.assertEqual(end, '2016-07-24')
 
     @patch('datetime.date', FakeDate)
     def test_should_fetch_info_from_updated_data_when_on_year_end(self):
@@ -89,8 +89,8 @@ class ValidateDataElementValuesServiceTest(TestCase):
 
         value = BesMiddlewareCore.objects.first()
         start, end = self.data_element_values_validation.fetch_info_from_updated_data(value)
-        self.assertEqual(start, '2016-12-25')
-        self.assertEqual(end, '2016-12-31')
+        self.assertEqual(start, '2016-12-26')
+        self.assertEqual(end, '2017-01-01')
 
     @patch('datetime.date', FakeDate)
     def test_should_fetch_info_from_updated_data_when_on_year_start(self):
@@ -98,8 +98,8 @@ class ValidateDataElementValuesServiceTest(TestCase):
         BesMiddlewareCoreFactory(uri=uri, bes_year=datetime.datetime.today(), bes_number=1)
         start, end = self.data_element_values_validation.fetch_info_from_updated_data(
             BesMiddlewareCore.objects.get(uri=uri))
-        self.assertEqual(start, '2016-01-03')
-        self.assertEqual(end, '2016-01-09')
+        self.assertEqual(start, '2016-01-04')
+        self.assertEqual(end, '2016-01-10')
 
     def test_should_format_validate_request(self):
         expected_validate_request_param = 'organisationUnitId=MOH12345678&startDate=2016-09-13&endDate=2016-09-13' \
@@ -212,7 +212,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
         self.data_element_values_validation.send_validation_for_sarampo_in_a_month(data_element_values, MOH_UID)
 
         mock_get_validation_results.assert_called_once_with(
-            'organisationUnitId=MOH12345678&startDate=2016-05-23&endDate=2016-06-25' \
+            'organisationUnitId=MOH12345678&startDate=2016-05-30&endDate=2016-06-26' \
             '&validationRuleGroupId=1677&sendAlerts=true')
 
     @patch.object(DataElementValuesValidationService, 'is_meningitis_increasement_rule_match')
@@ -227,7 +227,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
         self.data_element_values_validation.send_validation_for_meningitis_every_two_weeks(data_element_values,
                                                                                            MOH_UID)
         mock_get_validation_results.assert_called_once_with(
-            'organisationUnitId=MOH12345678&startDate=2016-06-05&endDate=2016-06-25' \
+            'organisationUnitId=MOH12345678&startDate=2016-06-05&endDate=2016-06-26' \
             '&validationRuleGroupId=1922&sendAlerts=true')
 
     @patch.object(DataElementValuesValidationService, 'fetch_malaria_by_year_two_weeks_wrapped')
@@ -244,7 +244,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
         self.data_element_values_validation.send_validation_malaria_five_years_average(data_element_values,
                                                                                        MOH_UID)
         mock_get_validation_results.assert_called_once_with(
-            'organisationUnitId=MOH12345678&startDate=2016-05-22&endDate=2016-06-25' \
+            'organisationUnitId=MOH12345678&startDate=2016-05-23&endDate=2016-06-26' \
             '&validationRuleGroupId=1988&sendAlerts=true')
 
     @patch.object(DataElementValuesValidationService, 'fetch_diarrhea_same_week_in_recent_five_years')
@@ -262,8 +262,8 @@ class ValidateDataElementValuesServiceTest(TestCase):
                                                                                        MOH_UID)
 
         mock_get_validation_results.assert_called_once_with(
-            'organisationUnitId=MOH12345678&startDate=2016-06-19'
-            '&endDate=2016-06-25&validationRuleGroupId=1689&sendAlerts=true')
+            'organisationUnitId=MOH12345678&startDate=2016-06-20'
+            '&endDate=2016-06-26&validationRuleGroupId=1689&sendAlerts=true')
 
 
 REAL_HTML_RESPONSE = '''
