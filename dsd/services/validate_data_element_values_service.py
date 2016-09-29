@@ -27,7 +27,7 @@ class DataElementValuesValidationService(object):
     def __init__(self):
         self.alert_should_be_sent = {}.fromkeys(DISEASE_I18N_MAP.keys(), True)
         _, self.rule_group_name_id_map = self.fetch_all_rule_groups()
-        self.customized_rules = self.fetch_customized_rules()
+        self.customized_rules = self.extract_params_from_customize_rules()
 
     @staticmethod
     def fetch_info_from_updated_data(value):
@@ -84,6 +84,9 @@ class DataElementValuesValidationService(object):
 
             alert_should_be_sent = self.alert_should_be_sent.get(element_name, True)
             rule_group_id = self.get_rule_group_id(element_name)
+            if not rule_group_id:
+                return
+
             response = self.send_validation_request(rule_group_id,
                                                     start,
                                                     end,
@@ -163,6 +166,8 @@ class DataElementValuesValidationService(object):
         threshold = self.customized_rules.get(CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES)).get('threshold')
         sarampo_in_a_month = self.fetch_sarampo_in_a_month(current_year, week_num, week_offset, organisation_id)
 
+        logger.critical('@' * 80)
+        logger.critical(sarampo_in_a_month)
         if sarampo_in_a_month >= threshold:
             month_start = self.change_date_to_days_before(start, THREE_WEEKS_DAYS)
             rule_group_id = self.rule_group_name_id_map.get('%s MONTH GROUP' % DISEASE_I18N_MAP.get('measles'))
@@ -299,9 +304,9 @@ class DataElementValuesValidationService(object):
     @staticmethod
     def fetch_customized_rules():
         result = {}
-        response_json = dhis2_remote_repository.get_validation_rules(FETCH_CUSTOMIZED_RULES_REQUEST_PARAMS).json()
+        response = dhis2_remote_repository.get_validation_rules(FETCH_CUSTOMIZED_RULES_REQUEST_PARAMS)
+        response_json = response.json()
         for rule in response_json.get('validationRules'):
-
             result.update({rule.get('additionalRuleType'): rule.get('additionalRule')})
 
         return result
@@ -311,7 +316,9 @@ class DataElementValuesValidationService(object):
         customized_rules = DataElementValuesValidationService.fetch_customized_rules()
         result = {}
         for rule_type, rule in customized_rules.items():
+
             result.update({rule_type: DataElementValuesValidationService.parse_rule_params(rule_type, rule)})
+
         return result
 
     @staticmethod

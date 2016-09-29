@@ -34,24 +34,10 @@ class ValidateDataElementValuesServiceTest(TestCase):
     def setUp(self, mock_get_all_rule_groups, mock_fetch_customized_rules):
         mock_get_all_rule_groups.return_value = MagicMock(status_code=HTTP_200_OK, text=REAL_HTML_RESPONSE)
         mock_fetch_customized_rules.return_value = {
-            CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES): {
-                'recent_weeks': 4,
-                'threshold': 5
-            },
-            CUSTOMIZED_VALIDATION_RULE_TYPE.get(MENINGITIS_CASES): {
-                'recent_weeks': 3,
-                'times': 2
-            },
-            CUSTOMIZED_VALIDATION_RULE_TYPE.get(DYSENTERY_CASES): {
-                'recent_years': 5,
-                'std_dev': 2
-            },
-            CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES): {
-                'weeks_before': 2,
-                'weeks_after': 2,
-                'recent_years': 5,
-                'std_dev': 2
-            }
+            CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES): 'A: 4\r\n B: 5',
+            CUSTOMIZED_VALIDATION_RULE_TYPE.get(MENINGITIS_CASES): 'A: 3\r\n B: 2',
+            CUSTOMIZED_VALIDATION_RULE_TYPE.get(DYSENTERY_CASES): 'A: 5\r\n B: 2',
+            CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES): 'A: 2\r\nB: 2\r\nC:5 \r\nD:2'
         }
         self.data_element_values_validation_service = DataElementValuesValidationService()
 
@@ -270,115 +256,115 @@ class ValidateDataElementValuesServiceTest(TestCase):
             'organisationUnitId=MOH12345678&startDate=2016-06-05&endDate=2016-06-26' \
             '&validationRuleGroupId=1922&sendAlerts=true')
 
-    @patch.object(DataElementValuesValidationService, 'fetch_malaria_by_year_and_weeks_range')
-    @patch.object(DataElementValuesValidationService, 'fetch_malaria_in_previous_weeks')
-    @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
-    def test_should_validate_malaria_five_years_average(self, mock_get_validation_results,
-                                                        mock_fetch_malaria_in_previous_weeks,
-                                                        mock_fetch_malaria_by_year_and_weeks_range):
-        mock_get_validation_results.return_value = (HTTP_200_OK, {})
-        mock_fetch_malaria_in_previous_weeks.return_value = 2
-        mock_fetch_malaria_by_year_and_weeks_range.return_value = 1
-        data_element_values = BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
+        @patch.object(DataElementValuesValidationService, 'fetch_malaria_by_year_and_weeks_range')
+        @patch.object(DataElementValuesValidationService, 'fetch_malaria_in_previous_weeks')
+        @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
+        def test_should_validate_malaria_five_years_average(self, mock_get_validation_results,
+                                                            mock_fetch_malaria_in_previous_weeks,
+                                                            mock_fetch_malaria_by_year_and_weeks_range):
+            mock_get_validation_results.return_value = (HTTP_200_OK, {})
+            mock_fetch_malaria_in_previous_weeks.return_value = 2
+            mock_fetch_malaria_by_year_and_weeks_range.return_value = 1
+            data_element_values = BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
 
-        self.data_element_values_validation_service.send_validation_malaria_in_recent_years_average(data_element_values,
-                                                                                                    MOH_UID)
-        mock_get_validation_results.assert_called_once_with(
-            'organisationUnitId=MOH12345678&startDate=2016-05-23&endDate=2016-06-26' \
-            '&validationRuleGroupId=1988&sendAlerts=true')
+            self.data_element_values_validation_service.send_validation_malaria_in_recent_years_average(data_element_values,
+                                                                                                        MOH_UID)
+            mock_get_validation_results.assert_called_once_with(
+                'organisationUnitId=MOH12345678&startDate=2016-05-23&endDate=2016-06-26' \
+                '&validationRuleGroupId=1988&sendAlerts=true')
 
-    @patch.object(DataElementValuesValidationService, 'fetch_diarrhea_same_week_in_recent_five_years')
-    @patch.object(DataElementValuesValidationService, 'fetch_diarrhea_in_week_num')
-    @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
-    def test_should_validate_diarrhea_fiveyears_average(self, mock_get_validation_results,
-                                                        mock_fetch_diarrhea_in_week_num,
-                                                        mock_fetch_diarrhea_same_week_in_recent_five_years):
-        mock_get_validation_results.return_value = (HTTP_200_OK, {})
-        mock_fetch_diarrhea_in_week_num.return_value = 2
-        mock_fetch_diarrhea_same_week_in_recent_five_years.return_value = [1, 1, 1, 1, 1]
-        data_element_values = BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
+        @patch.object(DataElementValuesValidationService, 'fetch_diarrhea_same_week_in_recent_five_years')
+        @patch.object(DataElementValuesValidationService, 'fetch_diarrhea_in_week_num')
+        @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
+        def test_should_validate_diarrhea_fiveyears_average(self, mock_get_validation_results,
+                                                            mock_fetch_diarrhea_in_week_num,
+                                                            mock_fetch_diarrhea_same_week_in_recent_five_years):
+            mock_get_validation_results.return_value = (HTTP_200_OK, {})
+            mock_fetch_diarrhea_in_week_num.return_value = 2
+            mock_fetch_diarrhea_same_week_in_recent_five_years.return_value = [1, 1, 1, 1, 1]
+            data_element_values = BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
 
-        self.data_element_values_validation_service.send_validation_diarrhea_recent_years_average(data_element_values,
-                                                                                                  MOH_UID)
+            self.data_element_values_validation_service.send_validation_diarrhea_recent_years_average(data_element_values,
+                                                                                                      MOH_UID)
 
-        mock_get_validation_results.assert_called_once_with(
-            'organisationUnitId=MOH12345678&startDate=2016-06-20'
-            '&endDate=2016-06-26&validationRuleGroupId=1689&sendAlerts=true')
+            mock_get_validation_results.assert_called_once_with(
+                'organisationUnitId=MOH12345678&startDate=2016-06-20'
+                '&endDate=2016-06-26&validationRuleGroupId=1689&sendAlerts=true')
 
-    @patch('dsd.repositories.dhis2_remote_repository.get_validation_rules')
-    def test_should_fetch_all_customized_rules(self, mock_get_validation_rules):
-        rules = {
-            'validationRules': [
-                {
-                    'name': 'Sarampo: Cases in recent ( A ) EPI week(s) > ( B )',
-                    'additionalRule': 'A: 1\r\nB: 5',
-                    'additionalRuleType': CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES),
-                },
-                {
-                    'name': 'Meningite: Cases increases by ( A ) times in recent ( B ) consecutive weeks',
-                    'additionalRule': 'A: 1\r\nB: 5',
-                    'additionalRuleType': CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES),
-                },
-                {
-                    'name': 'Disenteria: Cases > average for same week in last ( A ) years + ( B ) * std dev',
-                    'additionalRule': 'A: 1\r\nB: 5',
-                    'additionalRuleType': CUSTOMIZED_VALIDATION_RULE_TYPE.get(
-                        MENINGITIS_CASES),
-                },
-                {
-                    'name': 'Malária: Cases > average from current week + ( A ) earlier weeks to current week - ( B ) later weeks in past ( C ) years + ( D ) * std dev',
-                    'additionalRule': 'A: 1\r\nB: 5',
-                    'additionalRuleType': CUSTOMIZED_VALIDATION_RULE_TYPE.get(
-                        DYSENTERY_CASES),
-                }
-            ]
-        }
-        mock_get_validation_rules.return_value = MagicMock(json=MagicMock(return_value=rules), status_code=HTTP_200_OK)
-        result = self.data_element_values_validation_service.fetch_customized_rules()
+        @patch('dsd.repositories.dhis2_remote_repository.get_validation_rules')
+        def test_should_fetch_all_customized_rules(self, mock_get_validation_rules):
+            rules = {
+                'validationRules': [
+                    {
+                        'name': 'Sarampo: Cases in recent ( A ) EPI week(s) > ( B )',
+                        'additionalRule': 'A: 1\r\nB: 5',
+                        'additionalRuleType': CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES),
+                    },
+                    {
+                        'name': 'Meningite: Cases increases by ( A ) times in recent ( B ) consecutive weeks',
+                        'additionalRule': 'A: 1\r\nB: 5',
+                        'additionalRuleType': CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES),
+                    },
+                    {
+                        'name': 'Disenteria: Cases > average for same week in last ( A ) years + ( B ) * std dev',
+                        'additionalRule': 'A: 1\r\nB: 5',
+                        'additionalRuleType': CUSTOMIZED_VALIDATION_RULE_TYPE.get(
+                            MENINGITIS_CASES),
+                    },
+                    {
+                        'name': 'Malária: Cases > average from current week + ( A ) earlier weeks to current week - ( B ) later weeks in past ( C ) years + ( D ) * std dev',
+                        'additionalRule': 'A: 1\r\nB: 5',
+                        'additionalRuleType': CUSTOMIZED_VALIDATION_RULE_TYPE.get(
+                            DYSENTERY_CASES),
+                    }
+                ]
+            }
+            mock_get_validation_rules.return_value = MagicMock(json=MagicMock(return_value=rules), status_code=HTTP_200_OK)
+            result = self.data_element_values_validation_service.fetch_customized_rules()
 
-        self.assertEqual(len(result), 4)
-        mock_get_validation_rules.assert_called_once_with(FETCH_CUSTOMIZED_RULES_REQUEST_PARAMS)
+            self.assertEqual(len(result), 4)
+            mock_get_validation_rules.assert_called_once_with(FETCH_CUSTOMIZED_RULES_REQUEST_PARAMS)
 
-    def test_should_parse_params_from_measles_cases_rule(self):
-        rule_type = CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES)
-        rule = ' B : 8  \r \n  A : 3 '
-        result = self.data_element_values_validation_service.parse_rule_params(rule_type, rule)
-        self.assertEqual(len(result), 2)
-        self.assertEqual(result.get('recent_weeks'), 3)
-        self.assertEqual(result.get('threshold'), 8)
+        def test_should_parse_params_from_measles_cases_rule(self):
+            rule_type = CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES)
+            rule = ' B : 8  \r \n  A : 3 '
+            result = self.data_element_values_validation_service.parse_rule_params(rule_type, rule)
+            self.assertEqual(len(result), 2)
+            self.assertEqual(result.get('recent_weeks'), 3)
+            self.assertEqual(result.get('threshold'), 8)
 
-    @patch.object(DataElementValuesValidationService, 'fetch_customized_rules')
-    def test_should_extract_params_from_customize_rules(self, mock_fetch_customized_rules):
-        rule1 = CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES)
-        rule2 = CUSTOMIZED_VALIDATION_RULE_TYPE.get(MENINGITIS_CASES)
-        rule3 = CUSTOMIZED_VALIDATION_RULE_TYPE.get(DYSENTERY_CASES)
-        rule4 = CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES)
+        @patch.object(DataElementValuesValidationService, 'fetch_customized_rules')
+        def test_should_extract_params_from_customize_rules(self, mock_fetch_customized_rules):
+            rule1 = CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES)
+            rule2 = CUSTOMIZED_VALIDATION_RULE_TYPE.get(MENINGITIS_CASES)
+            rule3 = CUSTOMIZED_VALIDATION_RULE_TYPE.get(DYSENTERY_CASES)
+            rule4 = CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES)
 
-        mock_fetch_customized_rules.return_value = {
-            rule1: 'A:4\r\nB:5',
-            rule2: 'A:2\r\nB:3',
-            rule3: 'A:5\r\nB:2',
-            rule4: 'A:2\r\nB:2\r\nC:5\r\nD:2',
-        }
-        result = self.data_element_values_validation_service.extract_params_from_customize_rules()
-        logger.critical(result)
-        self.assertEqual(len(result.get(rule1)), 2)
-        self.assertEqual(result.get(rule1).get('recent_weeks'), 4)
-        self.assertEqual(result.get(rule1).get('threshold'), 5)
+            mock_fetch_customized_rules.return_value = {
+                rule1: 'A:4\r\nB:5',
+                rule2: 'A:2\r\nB:3',
+                rule3: 'A:5\r\nB:2',
+                rule4: 'A:2\r\nB:2\r\nC:5\r\nD:2',
+            }
+            result = self.data_element_values_validation_service.extract_params_from_customize_rules()
+            logger.critical(result)
+            self.assertEqual(len(result.get(rule1)), 2)
+            self.assertEqual(result.get(rule1).get('recent_weeks'), 4)
+            self.assertEqual(result.get(rule1).get('threshold'), 5)
 
-        self.assertEqual(len(result.get(rule2)), 2)
-        self.assertEqual(result.get(rule2).get('recent_weeks'), 3)
-        self.assertEqual(result.get(rule2).get('times'), 2)
+            self.assertEqual(len(result.get(rule2)), 2)
+            self.assertEqual(result.get(rule2).get('recent_weeks'), 3)
+            self.assertEqual(result.get(rule2).get('times'), 2)
 
-        self.assertEqual(len(result.get(rule3)), 2)
-        self.assertEqual(result.get(rule3).get('recent_years'), 5)
-        self.assertEqual(result.get(rule3).get('std_dev'), 2)
+            self.assertEqual(len(result.get(rule3)), 2)
+            self.assertEqual(result.get(rule3).get('recent_years'), 5)
+            self.assertEqual(result.get(rule3).get('std_dev'), 2)
 
-        self.assertEqual(len(result.get(rule4)), 4)
-        self.assertEqual(result.get(rule4).get('weeks_before'), 2)
-        self.assertEqual(result.get(rule4).get('weeks_after'), 2)
-        self.assertEqual(result.get(rule4).get('recent_years'), 5)
-        self.assertEqual(result.get(rule4).get('std_dev'), 2)
+            self.assertEqual(len(result.get(rule4)), 4)
+            self.assertEqual(result.get(rule4).get('weeks_before'), 2)
+            self.assertEqual(result.get(rule4).get('weeks_after'), 2)
+            self.assertEqual(result.get(rule4).get('recent_years'), 5)
+            self.assertEqual(result.get(rule4).get('std_dev'), 2)
 
 
 REAL_HTML_RESPONSE = '''
