@@ -4,12 +4,12 @@ import logging
 import re
 from statistics import mean, stdev
 
+from rest_framework.status import HTTP_200_OK
+
 from dsd.config.dhis2_config import DISEASE_I18N_MAP, THREE_WEEKS_DAYS, FIVE_WEEKS_DAYS, \
     CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS_REGEX, \
     CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS_REPLACEMENT, CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS, MEASLES_CASES, \
-    CUSTOMIZED_VALIDATION_RULE_TYPE
-from rest_framework.status import HTTP_200_OK
-
+    CUSTOMIZED_VALIDATION_RULE_TYPE, MENINGITIS_CASES, MALARIA_CASES
 from dsd.models import Element
 from dsd.models.moh import MOH_UID
 from dsd.repositories import dhis2_remote_repository
@@ -110,8 +110,16 @@ class DataElementValuesValidationService(object):
         current_year, _, _ = value.bes_year.isocalendar()
         week_num = value.bes_number
 
-        malaria_last_five_weeks = self.fetch_malaria_last_five_weeks(current_year, week_num, organisation_id)
-        five_years_malaria = self.fetch_same_period_in_recent_five_years(current_year, week_num, organisation_id)
+        rule_type = CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES)
+        weeks_before = self.customized_rules.get(rule_type).get('weeks_before')
+        weeks_after = self.customized_rules.get(rule_type).get('weeks_after')
+        recent_years = self.customized_rules.get(rule_type).get('recent_years')
+        std_dev = self.customized_rules.get(rule_type).get('std_dev')
+
+        malaria_last_five_weeks = self.fetch_malaria_in_previous_weeks(current_year, week_num,
+                                                                       weeks_before + weeks_after, organisation_id)
+        five_years_malaria = self.fetch_same_period_in_recent_years(current_year, recent_years, week_num, weeks_before,
+                                                                    weeks_after,organisation_id)
 
         average_five_years_malaria = mean(five_years_malaria)
         std_dev_five_years_malaria = stdev(five_years_malaria)
@@ -119,7 +127,7 @@ class DataElementValuesValidationService(object):
         _, data_week_end = self.fetch_info_from_updated_data(value)
         start = self.change_date_to_days_before(data_week_end, FIVE_WEEKS_DAYS)
 
-        if malaria_last_five_weeks > average_five_years_malaria + 2 * std_dev_five_years_malaria:
+        if malaria_last_five_weeks > average_five_years_malaria + std_dev * std_dev_five_years_malaria:
             rule_group_id = self.rule_group_name_id_map.get(
                 '%s FIVEYEAR AVAERAGE GROUP' % DISEASE_I18N_MAP.get('malaria'))
             self.send_validation_request(rule_group_id, start, data_week_end, organisation_id, True)
@@ -160,8 +168,12 @@ class DataElementValuesValidationService(object):
         current_year, _, _ = value.bes_year.isocalendar()
         week_num = value.bes_number
 
-        increased_times = 2
-        if self.is_meningitis_increasement_rule_match(current_year, week_num, organisation_id, increased_times):
+        recent_weeks = self.customized_rules.get(CUSTOMIZED_VALIDATION_RULE_TYPE.get(MENINGITIS_CASES)).get(
+            'recent_weeks')
+        increased_times = self.customized_rules.get(CUSTOMIZED_VALIDATION_RULE_TYPE.get(MENINGITIS_CASES)).get('times')
+
+        if self.is_meningitis_increasement_rule_match(current_year, week_num, organisation_id, increased_times,
+                                                      recent_weeks):
             rule_group_id = self.rule_group_name_id_map.get(
                 '%s INCREASEMENT GROUP' % DISEASE_I18N_MAP.get('meningitis'))
             _, data_week_end = self.fetch_info_from_updated_data(value)
@@ -176,23 +188,27 @@ class DataElementValuesValidationService(object):
 
             self.send_validation_for_sarampo_in_a_month(value, MOH_UID)
             self.send_validation_for_meningitis_every_two_weeks(value, MOH_UID)
-            # self.send_validation_malaria_five_years_average(value, MOH_UID)
+            self.send_validation_malaria_five_years_average(value, MOH_UID)
             # self.send_validation_diarrhea_fiveyears_average(value, MOH_UID)
 
     @staticmethod
-    def is_meningitis_increasement_rule_match(year, week, organisation_id, increased_times):
-        meningitis_third_week = DataElementValuesValidationService.fetch_meningitis(year, week, organisation_id)
+    def is_meningitis_increasement_rule_match(year, week, organisation_id, increased_times, week_offset):
+        current_year, current_week = DataElementValuesValidationService.calculate_year_week_by_offset(year, week, 0)
 
-        target_year, target_week = DataElementValuesValidationService.calculate_year_week_by_offset(year, week, -1)
-        meningitis_second_week = DataElementValuesValidationService.fetch_meningitis(target_year, target_week,
-                                                                                     organisation_id)
-        if meningitis_third_week < meningitis_second_week * increased_times:
-            return False
+        meningitis_cases_current_week = DataElementValuesValidationService.fetch_meningitis(current_year,
+                                                                                            current_week,
+                                                                                            organisation_id)
+        for offset in range(0, -week_offset, -1):
+            previous_year, previous_week = DataElementValuesValidationService.calculate_year_week_by_offset(year, week,
+                                                                                                            offset - 1)
+            meningitis_cases_previous_week = DataElementValuesValidationService.fetch_meningitis(previous_year,
+                                                                                                 previous_week,
+                                                                                                 organisation_id)
+            if meningitis_cases_current_week < meningitis_cases_previous_week * increased_times:
+                return False
+            meningitis_cases_current_week = meningitis_cases_previous_week
 
-        target_year, target_week = DataElementValuesValidationService.calculate_year_week_by_offset(year, week, -2)
-        meningitis_first_week = DataElementValuesValidationService.fetch_meningitis(target_year, target_week,
-                                                                                    organisation_id)
-        return meningitis_second_week >= meningitis_first_week * increased_times
+        return True
 
     @staticmethod
     def calculate_year_week_by_offset(current_year, current_week, offset_weeks):
@@ -214,16 +230,16 @@ class DataElementValuesValidationService(object):
                                                                               period_weeks)
 
     @staticmethod
-    def fetch_malaria_last_five_weeks(year, week_num, organisation_id):
+    def fetch_malaria_in_previous_weeks(year, week_num, week_offset, organisation_id):
         period_weeks = ['%sW%s' % (DataElementValuesValidationService.calculate_year_week_by_offset(year, week_num, i))
-                        for i in range(-4, 1)]
+                        for i in range(-week_offset, 1)]
         return DataElementValuesValidationService.fetch_disease_in_year_weeks(organisation_id, 'MALARIA_084',
                                                                               period_weeks)
 
     @staticmethod
-    def fetch_malaria_by_year_two_weeks_wrapped(year, week_num, organisation_id):
+    def fetch_malaria_by_year_and_weeks_range(year, week_num, weeks_before, after_weeks, organisation_id):
         period_weeks = ['%sW%s' % (DataElementValuesValidationService.calculate_year_week_by_offset(year, week_num, i))
-                        for i in range(-2, 3)]
+                        for i in range(-weeks_before, after_weeks + 1)]
         return DataElementValuesValidationService.fetch_disease_in_year_weeks(organisation_id, 'MALARIA_084',
                                                                               period_weeks)
 
@@ -245,12 +261,14 @@ class DataElementValuesValidationService(object):
         return [Element.objects.filter(code=disease_code).first().id]
 
     @staticmethod
-    def fetch_same_period_in_recent_five_years(current_year, week_num, organisation_id):
+    def fetch_same_period_in_recent_years(current_year, year_offset, week_num, weeks_before, weeks_after,
+                                          organisation_id):
         five_years_malaria = []
-        for year in range(current_year - 5, current_year):
-            malaria = DataElementValuesValidationService.fetch_malaria_by_year_two_weeks_wrapped('%s' % year,
-                                                                                                 week_num,
-                                                                                                 organisation_id)
+        for year in range(current_year - year_offset, current_year):
+            malaria = DataElementValuesValidationService.fetch_malaria_by_year_and_weeks_range('%s' % year,
+                                                                                               week_num, weeks_before,
+                                                                                               weeks_after,
+                                                                                               organisation_id)
             five_years_malaria.append(malaria)
 
         return five_years_malaria
@@ -267,9 +285,9 @@ class DataElementValuesValidationService(object):
         five_years_diarrhea = []
 
         for year in range(current_year - 5, current_year):
-            diarrhea = DataElementValuesValidationService.fetch_malaria_by_year_two_weeks_wrapped('%s' % year,
-                                                                                                  week_num,
-                                                                                                  organisation_id)
+            diarrhea = DataElementValuesValidationService.fetch_malaria_by_year_and_weeks_range('%s' % year,
+                                                                                                week_num, 1, 1,
+                                                                                                organisation_id)
             five_years_diarrhea.append(diarrhea)
         return five_years_diarrhea
 

@@ -37,13 +37,27 @@ class ValidateDataElementValuesServiceTest(TestCase):
             CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES): {
                 'recent_weeks': 4,
                 'threshold': 5
+            },
+            CUSTOMIZED_VALIDATION_RULE_TYPE.get(MENINGITIS_CASES): {
+                'recent_weeks': 3,
+                'times': 2
+            },
+            CUSTOMIZED_VALIDATION_RULE_TYPE.get(DYSENTERY_CASES): {
+                'recent_years': 5,
+                'std_dev': 2
+            },
+            CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES): {
+                'weeks_before': 2,
+                'weeks_after': 2,
+                'recent_years': 5,
+                'std_dev': 2
             }
         }
         self.data_element_values_validation_service = DataElementValuesValidationService()
 
     @patch.object(DataElementValuesValidationService, 'fetch_disease_in_year_weeks', fetch_disease_in_year_weeks_result)
     def test_should_fetch_malaria_by_year_two_weeks_wrapped(self):
-        self.data_element_values_validation_service.fetch_malaria_by_year_two_weeks_wrapped(2016, 25, MOH_UID)
+        self.data_element_values_validation_service.fetch_malaria_by_year_and_weeks_range(2016, 25, 2, 2, MOH_UID)
         fetch_disease_in_year_weeks_result.assert_called_with(MOH_UID, 'MALARIA_084',
                                                               ['2016W23', '2016W24', '2016W25', '2016W26', '2016W27'])
 
@@ -73,7 +87,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
         mock_get_data_element_values.return_value = MagicMock(json=MagicMock(return_value=response),
                                                               status_code=HTTP_200_OK)
 
-        result = DataElementValuesValidationService.fetch_malaria_last_five_weeks(2016, 25, MOH_UID)
+        result = DataElementValuesValidationService.fetch_malaria_in_previous_weeks(2016, 25, 4, MOH_UID)
 
         self.assertEqual(result, 15)
 
@@ -145,18 +159,18 @@ class ValidateDataElementValuesServiceTest(TestCase):
 
     @patch.object(DataElementValuesValidationService, 'fetch_diarrhea_in_week_num')
     @patch.object(DataElementValuesValidationService, 'fetch_sarampo_in_a_month')
-    @patch.object(DataElementValuesValidationService, 'fetch_malaria_by_year_two_weeks_wrapped')
+    @patch.object(DataElementValuesValidationService, 'fetch_malaria_by_year_and_weeks_range')
     @patch.object(DataElementValuesValidationService, 'fetch_meningitis')
-    @patch.object(DataElementValuesValidationService, 'fetch_malaria_last_five_weeks')
+    @patch.object(DataElementValuesValidationService, 'fetch_malaria_in_previous_weeks')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
     def test_should_validate_data_element_values(self, mock_get_validation_results,
-                                                 mock_fetch_malaria_last_five_weeks, mock_fetch_meningitis,
-                                                 mock_fetch_malaria_by_year_two_weeks_wrapped,
+                                                 mock_fetch_malaria_in_previous_weeks, mock_fetch_meningitis,
+                                                 mock_fetch_malaria_by_year_and_weeks_range,
                                                  mock_fetch_sarampo_in_a_month,
                                                  mock_fetch_diarrhea_in_week_num):
-        mock_fetch_malaria_last_five_weeks.return_value = 50
+        mock_fetch_malaria_in_previous_weeks.return_value = 50
         mock_fetch_meningitis.return_value = 10
-        mock_fetch_malaria_by_year_two_weeks_wrapped.return_value = 10
+        mock_fetch_malaria_by_year_and_weeks_range.return_value = 10
         mock_fetch_sarampo_in_a_month.return_value = 10
         mock_fetch_diarrhea_in_week_num.return_value = 10
 
@@ -253,15 +267,15 @@ class ValidateDataElementValuesServiceTest(TestCase):
             'organisationUnitId=MOH12345678&startDate=2016-06-05&endDate=2016-06-26' \
             '&validationRuleGroupId=1922&sendAlerts=true')
 
-    @patch.object(DataElementValuesValidationService, 'fetch_malaria_by_year_two_weeks_wrapped')
-    @patch.object(DataElementValuesValidationService, 'fetch_malaria_last_five_weeks')
+    @patch.object(DataElementValuesValidationService, 'fetch_malaria_by_year_and_weeks_range')
+    @patch.object(DataElementValuesValidationService, 'fetch_malaria_in_previous_weeks')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
     def test_should_validate_malaria_five_years_average(self, mock_get_validation_results,
-                                                        mock_fetch_malaria_last_five_weeks,
-                                                        mock_fetch_malaria_by_year_two_weeks_wrapped):
+                                                        mock_fetch_malaria_in_previous_weeks,
+                                                        mock_fetch_malaria_by_year_and_weeks_range):
         mock_get_validation_results.return_value = (HTTP_200_OK, {})
-        mock_fetch_malaria_last_five_weeks.return_value = 2
-        mock_fetch_malaria_by_year_two_weeks_wrapped.return_value = 1
+        mock_fetch_malaria_in_previous_weeks.return_value = 2
+        mock_fetch_malaria_by_year_and_weeks_range.return_value = 1
         data_element_values = BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
 
         self.data_element_values_validation_service.send_validation_malaria_five_years_average(data_element_values,
