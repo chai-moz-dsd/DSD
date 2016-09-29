@@ -10,6 +10,7 @@ python manage.py loaddata dsd/fixtures/categories.json
 python manage.py loaddata dsd/fixtures/category_combinations.json
 python manage.py loaddata dsd/fixtures/data_elements.json
 python manage.py loaddata dsd/fixtures/coc_relations.json
+python manage.py loaddata dsd/fixtures/historical_coc_relations.json
 python manage.py createcachetable dsd_cache
 
 echo "post organisation units and attributes to dhis2"
