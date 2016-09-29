@@ -20,14 +20,15 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.CRITICAL)
 
 FETCH_CUSTOMIZED_RULES_REQUEST_PARAMS = '%sfilter=additionalRuleType:ne:Default' % (
-    'fields=%s&'.join(['additionalRuleType', 'additionalRule']))
+    'fields='.join(['', 'additionalRuleType&', 'additionalRule&']))
 
 
 class DataElementValuesValidationService(object):
     def __init__(self):
         self.alert_should_be_sent = {}.fromkeys(DISEASE_I18N_MAP.keys(), True)
         _, self.rule_group_name_id_map = self.fetch_all_rule_groups()
-        self.customized_rules = self.fetch_customized_rules()
+        # self.customized_rules = self.fetch_customized_rules()
+        self.customized_rules = self.extract_params_from_customize_rules()
 
     @staticmethod
     def fetch_info_from_updated_data(value):
@@ -157,14 +158,19 @@ class DataElementValuesValidationService(object):
             self.send_validation_request(rule_group_id, data_week_start, data_week_end, organisation_id, True)
 
     def send_validation_for_sarampo_in_recent_weeks(self, value, organisation_id):
+        logger.critical('send_validation_for_sarampo_in_recent_weeks')
         current_year, _, _ = value.bes_year.isocalendar()
         week_num = value.bes_number
         start, end = self.fetch_info_from_updated_data(value)
 
+        logger.critical('*-*' * 10)
+        logger.critical(self.customized_rules)
+        logger.critical(CUSTOMIZED_VALIDATION_RULE_TYPE)
         week_offset = self.customized_rules.get(CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES)).get('recent_weeks')
         threshold = self.customized_rules.get(CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES)).get('threshold')
         sarampo_in_a_month = self.fetch_sarampo_in_a_month(current_year, week_num, week_offset, organisation_id)
 
+        logger.critical('sarampo_in_a_month >= threshold %s' % sarampo_in_a_month)
         if sarampo_in_a_month >= threshold:
             month_start = self.change_date_to_days_before(start, THREE_WEEKS_DAYS)
             rule_group_id = self.rule_group_name_id_map.get('%s MONTH GROUP' % DISEASE_I18N_MAP.get('measles'))
@@ -193,9 +199,9 @@ class DataElementValuesValidationService(object):
             self.send_validation_for_each_disease(value, MOH_UID)
 
             self.send_validation_for_sarampo_in_recent_weeks(value, MOH_UID)
-            self.send_validation_for_meningitis_every_two_weeks(value, MOH_UID)
-            self.send_validation_malaria_in_recent_years_average(value, MOH_UID)
-            self.send_validation_diarrhea_recent_years_average(value, MOH_UID)
+            # self.send_validation_for_meningitis_every_two_weeks(value, MOH_UID)
+            # self.send_validation_malaria_in_recent_years_average(value, MOH_UID)
+            # self.send_validation_diarrhea_recent_years_average(value, MOH_UID)
 
     @staticmethod
     def is_meningitis_increasement_rule_match(year, week, organisation_id, increased_times, week_offset):
@@ -257,9 +263,11 @@ class DataElementValuesValidationService(object):
             element_ids=element_ids,
             period_weeks=period_weeks
         )
+
         element_datas = dhis2_remote_repository.get_data_element_values(query_params).json().get('rows')
-        if not element_ids:
+        if not element_datas:
             return 0
+
         return int(float(element_datas[0][2]))
 
     @staticmethod
@@ -301,7 +309,9 @@ class DataElementValuesValidationService(object):
         result = {}
         response_json = dhis2_remote_repository.get_validation_rules(FETCH_CUSTOMIZED_RULES_REQUEST_PARAMS).json()
         for rule in response_json.get('validationRules'):
+
             result.update({rule.get('additionalRuleType'): rule.get('additionalRule')})
+
         return result
 
     @staticmethod
