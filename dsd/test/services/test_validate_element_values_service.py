@@ -230,8 +230,6 @@ class ValidateDataElementValuesServiceTest(TestCase):
         data_element_values = BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
         self.data_element_values_validation_service.send_validation_for_sarampo_in_a_month(data_element_values, MOH_UID)
 
-        self.data_element_values_validation_service.send_validation_for_sarampo_in_a_month(data_element_values, MOH_UID)
-
         mock_get_validation_results.assert_called_once_with(
             'organisationUnitId=MOH12345678&startDate=2016-05-30&endDate=2016-06-26' \
             '&validationRuleGroupId=1677&sendAlerts=true')
