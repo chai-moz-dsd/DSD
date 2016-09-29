@@ -224,15 +224,9 @@ class ValidateDataElementValuesServiceTest(TestCase):
     @patch.object(DataElementValuesValidationService, 'element_id_in_database')
     @patch.object(dhis2_remote_repository, 'get_data_element_values')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
-<<<<<<< Updated upstream
     def test_should_validate_sarampo_in_a_month(self, mock_get_validation_results,
                                                 mock_get_data_element_values,
                                                 mock_element_id_in_database):
-=======
-    def should_validate_sarampo_in_a_month(self, mock_get_validation_results,
-                                           mock_get_data_element_values,
-                                           mock_element_id_in_database):
->>>>>>> Stashed changes
         mock_get_validation_results.return_value = (HTTP_200_OK, {})
         mock_get_data_element_values.return_value = MagicMock(json=MagicMock(return_value=API_DATA_ELEMENT_RESPONSE),
                                                               status_code=HTTP_200_OK)

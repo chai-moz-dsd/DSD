@@ -4,12 +4,12 @@ import logging
 import re
 from statistics import mean, stdev
 
-from rest_framework.status import HTTP_200_OK
-
 from dsd.config.dhis2_config import DISEASE_I18N_MAP, THREE_WEEKS_DAYS, FIVE_WEEKS_DAYS, \
     CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS_REGEX, \
     CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS_REPLACEMENT, CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS, MEASLES_CASES, \
     CUSTOMIZED_VALIDATION_RULE_TYPE
+from rest_framework.status import HTTP_200_OK
+
 from dsd.models import Element
 from dsd.models.moh import MOH_UID
 from dsd.repositories import dhis2_remote_repository
@@ -146,9 +146,11 @@ class DataElementValuesValidationService(object):
         current_year, _, _ = value.bes_year.isocalendar()
         week_num = value.bes_number
         start, end = self.fetch_info_from_updated_data(value)
-        sarampo_in_a_month = self.fetch_sarampo_in_a_month(current_year, week_num, organisation_id)
 
+        week_offset = self.customized_rules.get(CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES)).get('recent_weeks')
         threshold = self.customized_rules.get(CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES)).get('threshold')
+        sarampo_in_a_month = self.fetch_sarampo_in_a_month(current_year, week_num, week_offset, organisation_id)
+
         if sarampo_in_a_month >= threshold:
             month_start = self.change_date_to_days_before(start, THREE_WEEKS_DAYS)
             rule_group_id = self.rule_group_name_id_map.get('%s MONTH GROUP' % DISEASE_I18N_MAP.get('measles'))
@@ -158,7 +160,8 @@ class DataElementValuesValidationService(object):
         current_year, _, _ = value.bes_year.isocalendar()
         week_num = value.bes_number
 
-        if self.is_meningitis_increasement_rule_match(current_year, week_num, organisation_id):
+        increased_times = 2
+        if self.is_meningitis_increasement_rule_match(current_year, week_num, organisation_id, increased_times):
             rule_group_id = self.rule_group_name_id_map.get(
                 '%s INCREASEMENT GROUP' % DISEASE_I18N_MAP.get('meningitis'))
             _, data_week_end = self.fetch_info_from_updated_data(value)
@@ -172,24 +175,24 @@ class DataElementValuesValidationService(object):
             self.send_validation_for_each_disease(value, MOH_UID)
 
             self.send_validation_for_sarampo_in_a_month(value, MOH_UID)
-            # self.send_validation_for_meningitis_every_two_weeks(value, MOH_UID)
+            self.send_validation_for_meningitis_every_two_weeks(value, MOH_UID)
             # self.send_validation_malaria_five_years_average(value, MOH_UID)
             # self.send_validation_diarrhea_fiveyears_average(value, MOH_UID)
 
     @staticmethod
-    def is_meningitis_increasement_rule_match(year, week, organisation_id):
+    def is_meningitis_increasement_rule_match(year, week, organisation_id, increased_times):
         meningitis_third_week = DataElementValuesValidationService.fetch_meningitis(year, week, organisation_id)
 
         target_year, target_week = DataElementValuesValidationService.calculate_year_week_by_offset(year, week, -1)
         meningitis_second_week = DataElementValuesValidationService.fetch_meningitis(target_year, target_week,
                                                                                      organisation_id)
-        if meningitis_third_week < meningitis_second_week * 2:
+        if meningitis_third_week < meningitis_second_week * increased_times:
             return False
 
         target_year, target_week = DataElementValuesValidationService.calculate_year_week_by_offset(year, week, -2)
         meningitis_first_week = DataElementValuesValidationService.fetch_meningitis(target_year, target_week,
                                                                                     organisation_id)
-        return meningitis_second_week >= meningitis_first_week * 2
+        return meningitis_second_week >= meningitis_first_week * increased_times
 
     @staticmethod
     def calculate_year_week_by_offset(current_year, current_week, offset_weeks):
