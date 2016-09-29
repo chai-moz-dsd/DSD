@@ -28,7 +28,6 @@ class DataElementValuesValidationService(object):
         self.alert_should_be_sent = {}.fromkeys(DISEASE_I18N_MAP.keys(), True)
         _, self.rule_group_name_id_map = self.fetch_all_rule_groups()
         self.customized_rules = self.fetch_customized_rules()
-        # self.customized_rules = self.extract_params_from_customize_rules()
 
     @staticmethod
     def fetch_info_from_updated_data(value):
@@ -127,8 +126,6 @@ class DataElementValuesValidationService(object):
         std_dev_in_recent_years_malaria = stdev(recent_years_malaria)
 
         _, data_week_end = self.fetch_info_from_updated_data(value)
-        logger.critical('*' * 10)
-        logger.critical('data_week_end=%s' % data_week_end)
         start = self.change_date_to_days_before(data_week_end, (weeks_before + weeks_after + 1) * ONE_WEEK_DAYS - 1)
 
         if malaria_last_five_weeks > average_malaria_in_recent_years_ + std_dev * std_dev_in_recent_years_malaria:
@@ -158,19 +155,14 @@ class DataElementValuesValidationService(object):
             self.send_validation_request(rule_group_id, data_week_start, data_week_end, organisation_id, True)
 
     def send_validation_for_sarampo_in_recent_weeks(self, value, organisation_id):
-        logger.critical('send_validation_for_sarampo_in_recent_weeks')
         current_year, _, _ = value.bes_year.isocalendar()
         week_num = value.bes_number
         start, end = self.fetch_info_from_updated_data(value)
 
-        logger.critical('*-*' * 10)
-        logger.critical(self.customized_rules)
-        logger.critical(CUSTOMIZED_VALIDATION_RULE_TYPE)
         week_offset = self.customized_rules.get(CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES)).get('recent_weeks')
         threshold = self.customized_rules.get(CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES)).get('threshold')
         sarampo_in_a_month = self.fetch_sarampo_in_a_month(current_year, week_num, week_offset, organisation_id)
 
-        logger.critical('sarampo_in_a_month >= threshold %s' % sarampo_in_a_month)
         if sarampo_in_a_month >= threshold:
             month_start = self.change_date_to_days_before(start, THREE_WEEKS_DAYS)
             rule_group_id = self.rule_group_name_id_map.get('%s MONTH GROUP' % DISEASE_I18N_MAP.get('measles'))
@@ -198,7 +190,7 @@ class DataElementValuesValidationService(object):
         for value in date_element_values:
             self.send_validation_for_each_disease(value, MOH_UID)
 
-            # self.send_validation_for_sarampo_in_recent_weeks(value, MOH_UID)
+            self.send_validation_for_sarampo_in_recent_weeks(value, MOH_UID)
             # self.send_validation_for_meningitis_every_two_weeks(value, MOH_UID)
             # self.send_validation_malaria_in_recent_years_average(value, MOH_UID)
             # self.send_validation_diarrhea_recent_years_average(value, MOH_UID)
@@ -332,5 +324,5 @@ class DataElementValuesValidationService(object):
         params = json.loads(re.sub(rule_regex, rule_replacement, cleaned_rule))
         for key, value in extracted_params.items():
             result.update({key: params.get(value)})
-        logger.critical(result)
+
         return result

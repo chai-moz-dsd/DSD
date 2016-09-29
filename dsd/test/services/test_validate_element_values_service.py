@@ -235,6 +235,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
 
         self.assertEqual(True, self.data_element_values_validation_service.alert_should_be_sent['pfa'])
 
+    @patch('datetime.date', FakeDate)
     @patch.object(DataElementValuesValidationService, 'element_id_in_database')
     @patch.object(dhis2_remote_repository, 'get_data_element_values')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
@@ -253,6 +254,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
             'organisationUnitId=MOH12345678&startDate=2016-05-30&endDate=2016-06-26' \
             '&validationRuleGroupId=1677&sendAlerts=true')
 
+    @patch('datetime.date', FakeDate)
     @patch.object(DataElementValuesValidationService, 'is_meningitis_increasement_rule_match')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
     def test_should_validate_meningitis_every_two_weeks(self,
