@@ -246,7 +246,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
                                                               status_code=HTTP_200_OK)
         mock_element_id_in_database.return_value = ['1111']
         data_element_values = BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
-        self.data_element_values_validation_service.send_validation_for_sarampo_in_a_month(data_element_values, MOH_UID)
+        self.data_element_values_validation_service.send_validation_for_sarampo_in_recent_weeks(data_element_values, MOH_UID)
 
         mock_get_validation_results.assert_called_once_with(
             'organisationUnitId=MOH12345678&startDate=2016-05-30&endDate=2016-06-26' \
@@ -278,8 +278,8 @@ class ValidateDataElementValuesServiceTest(TestCase):
         mock_fetch_malaria_by_year_and_weeks_range.return_value = 1
         data_element_values = BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
 
-        self.data_element_values_validation_service.send_validation_malaria_five_years_average(data_element_values,
-                                                                                               MOH_UID)
+        self.data_element_values_validation_service.send_validation_malaria_in_recent_years_average(data_element_values,
+                                                                                                    MOH_UID)
         mock_get_validation_results.assert_called_once_with(
             'organisationUnitId=MOH12345678&startDate=2016-05-23&endDate=2016-06-26' \
             '&validationRuleGroupId=1988&sendAlerts=true')
@@ -295,8 +295,8 @@ class ValidateDataElementValuesServiceTest(TestCase):
         mock_fetch_diarrhea_same_week_in_recent_five_years.return_value = [1, 1, 1, 1, 1]
         data_element_values = BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
 
-        self.data_element_values_validation_service.send_validation_diarrhea_fiveyears_average(data_element_values,
-                                                                                               MOH_UID)
+        self.data_element_values_validation_service.send_validation_diarrhea_recent_years_average(data_element_values,
+                                                                                                  MOH_UID)
 
         mock_get_validation_results.assert_called_once_with(
             'organisationUnitId=MOH12345678&startDate=2016-06-20'
