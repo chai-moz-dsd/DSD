@@ -80,7 +80,6 @@ def get_self_profile():
     return response.text
 
 
-@staticmethod
 def get_data_element_values(query_params):
     url = '%s?%s' % (dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_DATA_ELEMENT_VALUES), query_params)
     return requests.get(url=url, headers=get_oauth_header())
