@@ -195,7 +195,7 @@ class DHIS2RemoteServiceTest(TestCase):
         self.assertEqual(request_body_dict.get('name'), dhis2_config.DATA_SET_NAME)
         self.assertEqual(request_body_dict.get('shortName'), dhis2_config.DATA_SET_NAME)
 
-        self.assertEqual(len(request_body_dict.get('organisationUnits')), 2)
+        self.assertEqual(len(request_body_dict.get('organisationUnits')), 4)
         self.assertEqual(request_body_dict.get('organisationUnits')[0].get('id'), facility1.uid)
         self.assertEqual(request_body_dict.get('organisationUnits')[1].get('id'), facility2.uid)
 
@@ -211,7 +211,7 @@ class DHIS2RemoteServiceTest(TestCase):
 
         self.assertEqual(request_body_dict.get('id'), option_id)
         self.assertEqual(request_body_dict.get('name'), option_name)
-        self.assertEqual(len(request_body_dict.get('organisationUnits')), 2)
+        self.assertEqual(len(request_body_dict.get('organisationUnits')), 4)
         self.assertEqual(request_body_dict.get('organisationUnits')[0].get('id'), facility1.uid)
         self.assertEqual(request_body_dict.get('organisationUnits')[1].get('id'), facility2.uid)
 

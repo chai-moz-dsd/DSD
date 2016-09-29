@@ -10,5 +10,6 @@ class AddElementRequestTemplate(DictTemplate):
         'shortName': '${short_name}',
         'domainType': '${domain_type}',
         'aggregationType': '${aggregation_type}',
+        'zeroIsSignificant': True,
         'categoryCombo': {'id': '${category_combo}'}
     }

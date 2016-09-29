@@ -99,6 +99,7 @@ function seed {
     python manage.py loaddata dsd/fixtures/category_combinations.json --settings=chai.settings_dev
     python manage.py loaddata dsd/fixtures/data_elements.json --settings=chai.settings_dev
     python manage.py loaddata dsd/fixtures/coc_relations.json --settings=chai.settings_dev
+    python manage.py loaddata dsd/fixtures/historical_coc_relations.json.json --settings=chai.settings_dev
     python manage.py createcachetable --settings=chai.settings_dev dsd_cache
 }
 

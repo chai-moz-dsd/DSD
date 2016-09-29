@@ -10,6 +10,7 @@ from dsd.models import CategoryCombination
 from dsd.models import CategoryOption
 from dsd.models import Element
 from dsd.models import Facility
+from dsd.models import District
 from dsd.models.moh import MoH, MOH_UID
 from dsd.repositories import dhis2_remote_repository
 from dsd.repositories.dhis2_remote_repository import post_attribute
@@ -99,7 +100,7 @@ def build_data_element_values_request_body_as_dict(bes_middleware_core):
     coc_relations = COCRelation.objects.all()
     data_values = []
     for coc_relation in coc_relations:
-        if getattr(bes_middleware_core, coc_relation.name_in_bes) > 0:
+        if getattr(bes_middleware_core, coc_relation.name_in_bes) >= 0:
             data_values.append({
                 'dataElement': coc_relation.element_id,
                 'value': getattr(bes_middleware_core, coc_relation.name_in_bes),
@@ -109,24 +110,24 @@ def build_data_element_values_request_body_as_dict(bes_middleware_core):
         year = bes_middleware_core.bes_year
     else:
         year = datetime.datetime.now()
-    start_week = "%sW%s" % (year.isocalendar()[0], str(bes_middleware_core.bes_number))
+    start_week = "%sW%s" % (str(year)[:4], str(bes_middleware_core.bes_number))
     return {
         'dataSet': dhis2_config.DATA_SET_ID,
         'completeData': str(bes_middleware_core.submission_date),
-        'period': str(start_week),
+        'period': start_week,
         'orgUnit': Facility.objects.get(device_serial=bes_middleware_core.device_id).uid,
         'dataValues': data_values
     }
 
 
 def build_data_set_request_body_as_dict():
-    facilities = Facility.objects.all()
-    elements = Element.objects.all()
-    facility_ids_list = []
+    organisation_units = []
     element_ids_list = []
-    for facility in facilities:
-        facility_ids_list.append({'id': facility.uid})
-    for element in elements:
+    for facility in Facility.objects.all():
+        organisation_units.append({'id': facility.uid})
+    for district in District.objects.all():
+        organisation_units.append({'id': district.uid})
+    for element in Element.objects.all():
         element_ids_list.append({'id': element.id})
     return {
         'dataElements': element_ids_list,
@@ -137,7 +138,7 @@ def build_data_set_request_body_as_dict():
         'id': dhis2_config.DATA_SET_ID,
         'name': dhis2_config.DATA_SET_NAME,
         'openFuturePeriods': 0,
-        'organisationUnits': facility_ids_list,
+        'organisationUnits': organisation_units,
         'periodType': dhis2_config.DATA_SET_PERIOD_TYPES,
         'shortName': dhis2_config.DATA_SET_NAME,
         'timelyDays': 15
@@ -165,6 +166,8 @@ def build_category_options_request_body_as_dict(category_option):
     organisation_units = []
     for facility in Facility.objects.all():
         organisation_units.append({'id': facility.uid})
+    for district in District.objects.all():
+        organisation_units.append({'id': district.uid})
     return {
         'id': category_option.id,
         'name': category_option.name,
@@ -211,8 +214,10 @@ def user_update_body(surname, first_name):
 
 def build_org_level_dict():
     return {'organisationUnitLevels':
-                [{'name': 'MoH', 'level': 1, 'offlineLevels': 1},
-                 {'name': 'Province', 'level': 2, 'offlineLevels': 2},
-                 {'name': 'District', 'level': 3, 'offlineLevels': 3},
-                 {'name': 'Facility', 'level': 4, 'offlineLevels': 4}]
+                [
+                    {'name': 'MoH', 'level': 1, 'offlineLevels': 1},
+                    {'name': 'Province', 'level': 2, 'offlineLevels': 2},
+                    {'name': 'District', 'level': 3, 'offlineLevels': 3},
+                    {'name': 'Facility', 'level': 4, 'offlineLevels': 4}
+                ]
             }

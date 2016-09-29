@@ -11,6 +11,7 @@ from dsd.models.category_option import CategoryOption
 from dsd.models.category import Category
 from dsd.models.category_combination import CategoryCombination
 from dsd.models.coc_relation import COCRelation
+from dsd.models.historical_coc_relation import HistoricalCOCRelation
 
 
 __all__ = [
@@ -27,4 +28,5 @@ __all__ = [
     'Category',
     'CategoryCombination',
     'COCRelation',
+    'HistoricalCOCRelation',
 ]

@@ -1,0 +1,192 @@
+[
+  {
+    "model": "dsd.historicalcocrelation",
+    "fields": {
+      "disease_id": 1,
+      "disease_name": "COLERA",
+      "disease_uid": "rf040c9a7ab",
+      "cases_coc_id": 23,
+      "deaths_coc_id": 24
+    }
+  },
+  {
+    "model": "dsd.historicalcocrelation",
+    "fields": {
+      "disease_id": 2,
+      "disease_name": "DIARREIA_0_4",
+      "disease_uid": "ef8817e929c",
+      "cases_coc_id": 1,
+      "deaths_coc_id": 2
+    }
+  },
+  {
+    "model": "dsd.historicalcocrelation",
+    "fields": {
+      "disease_id": 3,
+      "disease_name": "DIARREIA_15",
+      "disease_uid": "ef8817e929c",
+      "cases_coc_id": 5,
+      "deaths_coc_id": 6
+    }
+  },
+  {
+    "model": "dsd.historicalcocrelation",
+    "fields": {
+      "disease_id": 4,
+      "disease_name": "DIARREIA_5_14",
+      "disease_uid": "ef8817e929c",
+      "cases_coc_id": 3,
+      "deaths_coc_id": 4
+    }
+  },
+  {
+    "model": "dsd.historicalcocrelation",
+    "fields": {
+      "disease_id": 5,
+      "disease_name": "DISENTERIA",
+      "disease_uid": "ma97d9c69c5",
+      "cases_coc_id": 29,
+      "deaths_coc_id": 30
+    }
+  },
+  {
+    "model": "dsd.historicalcocrelation",
+    "fields": {
+      "disease_id": 6,
+      "disease_name": "MALARIA_0_4",
+      "disease_uid": "fa48b98506d",
+      "cases_coc_id": 31,
+      "deaths_coc_id": 32
+    }
+  },
+  {
+    "model": "dsd.historicalcocrelation",
+    "fields": {
+      "disease_id": 7,
+      "disease_name": "MALARIA_5",
+      "disease_uid": "fa48b98506d",
+      "cases_coc_id": 33,
+      "deaths_coc_id": 34
+    }
+  },
+  {
+    "model": "dsd.historicalcocrelation",
+    "fields": {
+      "disease_id": 8,
+      "disease_name": "MALARIA_CLINICA_0_4",
+      "disease_uid": "r56d98c351d",
+      "cases_coc_id": 35,
+      "deaths_coc_id": 36
+    }
+  },
+  {
+    "model": "dsd.historicalcocrelation",
+    "fields": {
+      "disease_id": 9,
+      "disease_name": "MALARIA_CLINICA_5",
+      "disease_uid": "r56d98c351d",
+      "cases_coc_id": 37,
+      "deaths_coc_id": 38
+    }
+  },
+  {
+    "model": "dsd.historicalcocrelation",
+    "fields": {
+      "disease_id": 10,
+      "disease_name": "MENINGITE_0_4",
+      "disease_uid": "m9fe3ae729c",
+      "cases_coc_id": 15,
+      "deaths_coc_id": 16
+    }
+  },
+  {
+    "model": "dsd.historicalcocrelation",
+    "fields": {
+      "disease_id": 11,
+      "disease_name": "MENINGITE_5",
+      "disease_uid": "m9fe3ae729c",
+      "cases_coc_id": 17,
+      "deaths_coc_id": 18
+    }
+  },
+  {
+    "model": "dsd.historicalcocrelation",
+    "fields": {
+      "disease_id": 12,
+      "disease_name": "PESTE",
+      "disease_uid": "h550ca50708",
+      "cases_coc_id": 27,
+      "deaths_coc_id": 28
+    }
+  },
+  {
+    "model": "dsd.historicalcocrelation",
+    "fields": {
+      "disease_id": 13,
+      "disease_name": "PFA",
+      "disease_uid": "ee4aa11fd69",
+      "cases_coc_id": 19,
+      "deaths_coc_id": 20
+    }
+  },
+  {
+    "model": "dsd.historicalcocrelation",
+    "fields": {
+      "disease_id": 14,
+      "disease_name": "RAIVA",
+      "disease_uid": "ta8c710e735",
+      "cases_coc_id": 21,
+      "deaths_coc_id": 22
+    }
+  },
+  {
+    "model": "dsd.historicalcocrelation",
+    "fields": {
+      "disease_id": 15,
+      "disease_name": "SARAMPO_24",
+      "disease_uid": "af47c3c71d0",
+      "cases_coc_id": 13,
+      "deaths_coc_id": 14
+    }
+  },
+  {
+    "model": "dsd.historicalcocrelation",
+    "fields": {
+      "disease_id": 16,
+      "disease_name": "SARAMPO_9",
+      "disease_uid": "af47c3c71d0",
+      "cases_coc_id": 7,
+      "deaths_coc_id": 8
+    }
+  },
+  {
+    "model": "dsd.historicalcocrelation",
+    "fields": {
+      "disease_id": 17,
+      "disease_name": "SARAMPO_NV_9_23",
+      "disease_uid": "af47c3c71d0",
+      "cases_coc_id": 9,
+      "deaths_coc_id": 10
+    }
+  },
+  {
+    "model": "dsd.historicalcocrelation",
+    "fields": {
+      "disease_id": 18,
+      "disease_name": "SARAMPO_V_9_23",
+      "disease_uid": "af47c3c71d0",
+      "cases_coc_id": 11,
+      "deaths_coc_id": 12
+    }
+  },
+  {
+    "model": "dsd.historicalcocrelation",
+    "fields": {
+      "disease_id": 19,
+      "disease_name": "TETANO",
+      "disease_uid": "c85cd6ce5d8",
+      "cases_coc_id": 25,
+      "deaths_coc_id": 26
+    }
+  }
+]
