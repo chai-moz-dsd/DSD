@@ -44,9 +44,12 @@ def set_access_token():
 
 def set_refresh_token():
     body = {'grant_type': 'password', 'username': USERNAME, 'password': PASSWORD}
+    logger.critical(body)
     response = __post_request(dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.OAUTH2_TOKEN), body,
                               (OAUTH2_UID, OAUTH2_SECRET), HEADER_OAUTH)
+    logger.critical(OAUTH2_UID)
     json_data = json.loads(response.text)
+    logger.critical(json_data)
     cache.set(REFRESH_TOKEN, json_data[REFRESH_TOKEN], EXPIRES_TIME)
 
 

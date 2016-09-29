@@ -232,7 +232,10 @@ class DataElementValuesValidationService(object):
             element_ids=element_ids,
             period_weeks=period_weeks
         )
-        return int(float(dhis2_remote_repository.get_data_element_values(query_params).json().get('rows')[0][2]))
+        element_datas = dhis2_remote_repository.get_data_element_values(query_params).json().get('rows')
+        if not element_ids:
+            return 0
+        return int(float(element_datas[0][2]))
 
     @staticmethod
     def element_id_in_database(disease_code):
