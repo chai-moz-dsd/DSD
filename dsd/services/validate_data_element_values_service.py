@@ -27,8 +27,8 @@ class DataElementValuesValidationService(object):
     def __init__(self):
         self.alert_should_be_sent = {}.fromkeys(DISEASE_I18N_MAP.keys(), True)
         _, self.rule_group_name_id_map = self.fetch_all_rule_groups()
-        # self.customized_rules = self.fetch_customized_rules()
-        self.customized_rules = self.extract_params_from_customize_rules()
+        self.customized_rules = self.fetch_customized_rules()
+        # self.customized_rules = self.extract_params_from_customize_rules()
 
     @staticmethod
     def fetch_info_from_updated_data(value):
@@ -198,7 +198,7 @@ class DataElementValuesValidationService(object):
         for value in date_element_values:
             self.send_validation_for_each_disease(value, MOH_UID)
 
-            self.send_validation_for_sarampo_in_recent_weeks(value, MOH_UID)
+            # self.send_validation_for_sarampo_in_recent_weeks(value, MOH_UID)
             # self.send_validation_for_meningitis_every_two_weeks(value, MOH_UID)
             # self.send_validation_malaria_in_recent_years_average(value, MOH_UID)
             # self.send_validation_diarrhea_recent_years_average(value, MOH_UID)
