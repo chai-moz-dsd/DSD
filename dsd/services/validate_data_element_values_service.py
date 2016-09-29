@@ -1,4 +1,5 @@
 import datetime
+import json
 import logging
 import re
 from statistics import mean, stdev
@@ -6,7 +7,8 @@ from statistics import mean, stdev
 from rest_framework.status import HTTP_200_OK
 
 from dsd.config.dhis2_config import DISEASE_I18N_MAP, FOUR_WEEKS_DAYS, SARAMPO_IN_A_MONTH_THRESHOLD, \
-    THREE_WEEKS_DAYS, FIVE_WEEKS_DAYS
+    THREE_WEEKS_DAYS, FIVE_WEEKS_DAYS, CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS_REGEX, \
+    CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS_REPLACEMENT, CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS
 from dsd.models import Element
 from dsd.models.moh import MOH_UID
 from dsd.repositories import dhis2_remote_repository
@@ -15,6 +17,9 @@ from dsd.services.dhis2_remote_service import construct_get_element_values_reque
 logger = logging.getLogger(__name__)
 
 logger.setLevel(logging.CRITICAL)
+
+FETCH_CUSTOMIZED_RULES_REQUEST_PARAMS = '%sfilter=additionalRuleType:ne:Default' % (
+    'fields=%s&'.join(['additionalRuleType', 'additionalRule']))
 
 
 class DataElementValuesValidationService(object):
@@ -145,7 +150,7 @@ class DataElementValuesValidationService(object):
 
         sarampo_in_a_month = self.fetch_sarampo_in_a_month(current_year, week_num, organisation_id)
 
-        if sarampo_in_a_month > SARAMPO_IN_A_MONTH_THRESHOLD:
+        if sarampo_in_a_month >= SARAMPO_IN_A_MONTH_THRESHOLD:
             rule_group_id = self.rule_group_name_id_map.get('%s MONTH GROUP' % DISEASE_I18N_MAP.get('measles'))
             self.send_validation_request(rule_group_id, month_start, end, organisation_id, True)
 
@@ -264,6 +269,29 @@ class DataElementValuesValidationService(object):
 
     @staticmethod
     def fetch_customized_rules():
-        fields = 'fields=%s&'.join(['additionalRuleType', 'additionalRule'])
-        params = '%sfilter=additionalRuleType:ne:Default' % fields
-        return dhis2_remote_repository.get_validation_rules(params)
+        result = {}
+        response_json = dhis2_remote_repository.get_validation_rules(FETCH_CUSTOMIZED_RULES_REQUEST_PARAMS).json()
+        for rule in response_json.get('validationRules'):
+            result.update({rule.get('additionalRuleType'): rule.get('additionalRule')})
+        return result
+
+    @staticmethod
+    def extract_params_from_customize_rules():
+        customized_rules = DataElementValuesValidationService.fetch_customized_rules()
+        result = {}
+        for rule_type, rule in customized_rules.items():
+            result.update({rule_type: DataElementValuesValidationService.parse_rule_params(rule_type, rule)})
+        return result
+
+    @staticmethod
+    def parse_rule_params(rule_type, rule):
+        cleaned_rule = rule.replace('\r', '').replace('\n', '').replace(' ', '')
+        rule_regex = CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS_REGEX.get(rule_type)
+        rule_replacement = CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS_REPLACEMENT.get(rule_type)
+        extracted_params = CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS.get(rule_type)
+        result = {}
+        params = json.loads(re.sub(rule_regex, rule_replacement, cleaned_rule))
+        for key, value in extracted_params.items():
+            result.update({key: params.get(value)})
+        logger.critical(result)
+        return result

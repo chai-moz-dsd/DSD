@@ -68,14 +68,38 @@ DISEASE_I18N_MAP = {
     'meningitis': 'MENINGITE',
 }
 
-MEASLES_CASES_IN_RECENT_MONTHS = '_measles_cases_in_recent_months'
-MALARIA_CASES_SURPASS_AVERAGE_BY_YEARS = '_malaria_cases_surpass_average_by_years'
-MENINGITIS_CASES_INCREASES_BY_TIMES_IN_LAST_WEEKS = '_meningitis_cases_increases_by_times_in_last_weeks'
+MEASLES_CASES = '_measles_cases_in_recent_epi_weeks'
+MENINGITIS_CASES = '_meningitis_cases_increases_by_times_in_recent_consecutive_weeks'
+DYSENTERY_CASES = '_dysentery_cases_surpass_average_for_same_week_in_last_years_by_std_dev'
+MALARIA_CASES = '_malaria_cases_surpass_average_from_current_week_earlier_weeks_to_later_weeks_in_past_years_by_std_dev'
 
 CUSTOMIZED_VALIDATION_RULE_TYPE = {
-    MEASLES_CASES_IN_RECENT_MONTHS: 'measles_cases_in_recent_months',
-    MALARIA_CASES_SURPASS_AVERAGE_BY_YEARS: 'malaria_cases_surpass_average_by_years',
-    MENINGITIS_CASES_INCREASES_BY_TIMES_IN_LAST_WEEKS: 'meningitis_cases_increases_by_times_in_last_weeks',
+    MEASLES_CASES: 'measles_cases_in_recent_months',
+    MENINGITIS_CASES: 'meningitis_cases_increases_by_times_in_last_weeks',
+    DYSENTERY_CASES: 'dysentery_cases_surpass_average_for_same_week_in_last',
+    MALARIA_CASES: 'malaria_cases_surpass_average_by_years',
+}
+
+CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS_REGEX = {
+    CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES): r'([A-B]):(\d+)([A-B]):(\d+)',
+    CUSTOMIZED_VALIDATION_RULE_TYPE.get(MENINGITIS_CASES): r'([A-B]):(\d+)([A-B]):(\d+)',
+    CUSTOMIZED_VALIDATION_RULE_TYPE.get(DYSENTERY_CASES): r'([A-B]):(\d+)([A-B]):(\d+)',
+    CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES): r'([A-D]):(\d+)([A-D]):(\d+)([A-D]):(\d+)([A-D]):(\d+)',
+}
+
+CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS_REPLACEMENT = {
+    CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES): '{\"\\1\":\\2,\"\\3\":\\4}',
+    CUSTOMIZED_VALIDATION_RULE_TYPE.get(MENINGITIS_CASES): '{\"\\1\":\\2,\"\\3\":\\4}',
+    CUSTOMIZED_VALIDATION_RULE_TYPE.get(DYSENTERY_CASES): '{\"\\1\":\\2,\"\\3\":\\4}',
+    CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES): '{\"\\1\":\\2,\"\\3\":\\4,\"\\5\":\\6,\"\\7\":\\8}',
+}
+
+CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS = {
+    CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES): {'recent_weeks': 'A', 'threshold': 'B'},
+    CUSTOMIZED_VALIDATION_RULE_TYPE.get(MENINGITIS_CASES): {'times': 'A', 'recent_weeks': 'B'},
+    CUSTOMIZED_VALIDATION_RULE_TYPE.get(DYSENTERY_CASES): {'recent_years': 'A', 'std_dev': 'B'},
+    CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES): {'weeks_before': 'A', 'weeks_after': 'B', 'recent_years': 'C',
+                                                         'std_dev': 'D'},
 }
 
 
