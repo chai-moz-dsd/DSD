@@ -100,7 +100,6 @@ def build_data_element_values_request_body_as_dict(bes_middleware_core):
     coc_relations = COCRelation.objects.all()
     data_values = []
     for coc_relation in coc_relations:
-        logger.info('%scoc_relation.name_in_bes=%s' % ('*' * 20, coc_relation.name_in_bes))
         value = getattr(bes_middleware_core, coc_relation.name_in_bes)
         if isinstance(value, int) and value >= 0:
             data_values.append({
