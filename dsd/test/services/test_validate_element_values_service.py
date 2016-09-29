@@ -246,7 +246,8 @@ class ValidateDataElementValuesServiceTest(TestCase):
                                                               status_code=HTTP_200_OK)
         mock_element_id_in_database.return_value = ['1111']
         data_element_values = BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
-        self.data_element_values_validation_service.send_validation_for_sarampo_in_recent_weeks(data_element_values, MOH_UID)
+        self.data_element_values_validation_service.send_validation_for_sarampo_in_recent_weeks(data_element_values,
+                                                                                                MOH_UID)
 
         mock_get_validation_results.assert_called_once_with(
             'organisationUnitId=MOH12345678&startDate=2016-05-30&endDate=2016-06-26' \

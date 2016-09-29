@@ -8,9 +8,9 @@ from dsd.models import COCRelation
 from dsd.models import Category
 from dsd.models import CategoryCombination
 from dsd.models import CategoryOption
+from dsd.models import District
 from dsd.models import Element
 from dsd.models import Facility
-from dsd.models import District
 from dsd.models.moh import MoH, MOH_UID
 from dsd.repositories import dhis2_remote_repository
 from dsd.repositories.dhis2_remote_repository import post_attribute
@@ -100,10 +100,12 @@ def build_data_element_values_request_body_as_dict(bes_middleware_core):
     coc_relations = COCRelation.objects.all()
     data_values = []
     for coc_relation in coc_relations:
-        if getattr(bes_middleware_core, coc_relation.name_in_bes) >= 0:
+        logger.info('%scoc_relation.name_in_bes=%s' % ('*' * 20, coc_relation.name_in_bes))
+        value = getattr(bes_middleware_core, coc_relation.name_in_bes)
+        if isinstance(value, int) and value >= 0:
             data_values.append({
                 'dataElement': coc_relation.element_id,
-                'value': getattr(bes_middleware_core, coc_relation.name_in_bes),
+                'value': value,
                 'categoryOptionCombo': coc_relation.coc_id,
             })
     if bes_middleware_core.bes_year:
@@ -214,10 +216,10 @@ def user_update_body(surname, first_name):
 
 def build_org_level_dict():
     return {'organisationUnitLevels':
-                [
-                    {'name': 'MoH', 'level': 1, 'offlineLevels': 1},
-                    {'name': 'Province', 'level': 2, 'offlineLevels': 2},
-                    {'name': 'District', 'level': 3, 'offlineLevels': 3},
-                    {'name': 'Facility', 'level': 4, 'offlineLevels': 4}
-                ]
-            }
+        [
+            {'name': 'MoH', 'level': 1, 'offlineLevels': 1},
+            {'name': 'Province', 'level': 2, 'offlineLevels': 2},
+            {'name': 'District', 'level': 3, 'offlineLevels': 3},
+            {'name': 'Facility', 'level': 4, 'offlineLevels': 4}
+        ]
+    }

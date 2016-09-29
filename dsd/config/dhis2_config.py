@@ -3,8 +3,8 @@ import os
 
 # URL config
 VERSION = 24
-DHIS2_1_ENV_DOCKERCLOUD_SERVICE_FQDN = os.environ.get('DHIS2_1_ENV_DOCKERCLOUD_SERVICE_FQDN', '52.32.36.132')
-DHIS2_BASE_URL = 'http://%s:%s/' % (DHIS2_1_ENV_DOCKERCLOUD_SERVICE_FQDN, '80')
+DHIS2_1_ENV_DOCKERCLOUD_SERVICE_FQDN = os.environ.get('DHIS2_1_ENV_DOCKERCLOUD_SERVICE_FQDN', '10.29.2.141')
+DHIS2_BASE_URL = 'http://%s:%s/' % (DHIS2_1_ENV_DOCKERCLOUD_SERVICE_FQDN, '8080')
 
 KEY_POST_ATTRIBUTE = '_post_attribute'
 KEY_POST_ELEMENT = '_post_element'
@@ -74,10 +74,10 @@ DYSENTERY_CASES = '_dysentery_cases_surpass_average_for_same_week_in_last_years_
 MALARIA_CASES = '_malaria_cases_surpass_average_from_current_week_earlier_weeks_to_later_weeks_in_past_years_by_std_dev'
 
 CUSTOMIZED_VALIDATION_RULE_TYPE = {
-    MEASLES_CASES: 'measles_cases_in_recent_months',
-    MENINGITIS_CASES: 'meningitis_cases_increases_by_times_in_last_weeks',
-    DYSENTERY_CASES: 'dysentery_cases_surpass_average_for_same_week_in_last',
-    MALARIA_CASES: 'malaria_cases_surpass_average_by_years',
+    MEASLES_CASES: 'SarampoCaseInMonths',
+    MENINGITIS_CASES: 'MeningiteIncreasedInWeeks',
+    DYSENTERY_CASES: 'DiarrieaCaseInYears',
+    MALARIA_CASES: 'MalariaCaseInYears',
 }
 
 CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS_REGEX = {
