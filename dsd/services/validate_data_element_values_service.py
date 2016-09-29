@@ -6,9 +6,10 @@ from statistics import mean, stdev
 
 from rest_framework.status import HTTP_200_OK
 
-from dsd.config.dhis2_config import DISEASE_I18N_MAP, FOUR_WEEKS_DAYS, SARAMPO_IN_A_MONTH_THRESHOLD, \
-    THREE_WEEKS_DAYS, FIVE_WEEKS_DAYS, CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS_REGEX, \
-    CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS_REPLACEMENT, CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS
+from dsd.config.dhis2_config import DISEASE_I18N_MAP, THREE_WEEKS_DAYS, FIVE_WEEKS_DAYS, \
+    CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS_REGEX, \
+    CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS_REPLACEMENT, CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS, MEASLES_CASES, \
+    CUSTOMIZED_VALIDATION_RULE_TYPE
 from dsd.models import Element
 from dsd.models.moh import MOH_UID
 from dsd.repositories import dhis2_remote_repository
@@ -145,12 +146,11 @@ class DataElementValuesValidationService(object):
         current_year, _, _ = value.bes_year.isocalendar()
         week_num = value.bes_number
         start, end = self.fetch_info_from_updated_data(value)
-
-        month_start = self.change_date_to_days_before(start, THREE_WEEKS_DAYS)
-
         sarampo_in_a_month = self.fetch_sarampo_in_a_month(current_year, week_num, organisation_id)
 
-        if sarampo_in_a_month >= SARAMPO_IN_A_MONTH_THRESHOLD:
+        threshold = self.customized_rules.get(CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES)).get('threshold')
+        if sarampo_in_a_month >= threshold:
+            month_start = self.change_date_to_days_before(start, THREE_WEEKS_DAYS)
             rule_group_id = self.rule_group_name_id_map.get('%s MONTH GROUP' % DISEASE_I18N_MAP.get('measles'))
             self.send_validation_request(rule_group_id, month_start, end, organisation_id, True)
 
@@ -204,9 +204,9 @@ class DataElementValuesValidationService(object):
                                                                               period_weeks)
 
     @staticmethod
-    def fetch_sarampo_in_a_month(year, week_num, organisation_id):
+    def fetch_sarampo_in_a_month(year, week_num, week_offset, organisation_id):
         period_weeks = ['%sW%s' % (DataElementValuesValidationService.calculate_year_week_by_offset(year, week_num, i))
-                        for i in range(-3, 1)]
+                        for i in range(-week_offset + 1, 1)]
         return DataElementValuesValidationService.fetch_disease_in_year_weeks(organisation_id, 'SARAMPO_055',
                                                                               period_weeks)
 

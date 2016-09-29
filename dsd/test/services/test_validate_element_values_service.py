@@ -1,5 +1,4 @@
 import datetime
-import json
 import logging
 import uuid
 
@@ -32,8 +31,14 @@ fetch_disease_in_year_weeks_result = Mock(return_value=10)
 class ValidateDataElementValuesServiceTest(TestCase):
     @patch.object(DataElementValuesValidationService, 'fetch_customized_rules')
     @patch('dsd.repositories.dhis2_remote_repository.get_all_rule_groups')
-    def setUp(self, mock_send_request_to_dhis, mock_fetch_customized_rules):
-        mock_send_request_to_dhis.return_value = MagicMock(status_code=HTTP_200_OK, text=REAL_HTML_RESPONSE)
+    def setUp(self, mock_get_all_rule_groups, mock_fetch_customized_rules):
+        mock_get_all_rule_groups.return_value = MagicMock(status_code=HTTP_200_OK, text=REAL_HTML_RESPONSE)
+        mock_fetch_customized_rules.return_value = {
+            CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES): {
+                'recent_weeks': 4,
+                'threshold': 5
+            }
+        }
         self.data_element_values_validation_service = DataElementValuesValidationService()
 
     @patch.object(DataElementValuesValidationService, 'fetch_disease_in_year_weeks', fetch_disease_in_year_weeks_result)
@@ -144,8 +149,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
     @patch.object(DataElementValuesValidationService, 'fetch_meningitis')
     @patch.object(DataElementValuesValidationService, 'fetch_malaria_last_five_weeks')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
-    @patch.object(DataElementValuesValidationService, 'send_validation_for_each_disease')
-    def test_should_validate_data_element_values(self, mock_send_validation, mock_get_validation_results,
+    def test_should_validate_data_element_values(self, mock_get_validation_results,
                                                  mock_fetch_malaria_last_five_weeks, mock_fetch_meningitis,
                                                  mock_fetch_malaria_by_year_two_weeks_wrapped,
                                                  mock_fetch_sarampo_in_a_month,
@@ -220,9 +224,15 @@ class ValidateDataElementValuesServiceTest(TestCase):
     @patch.object(DataElementValuesValidationService, 'element_id_in_database')
     @patch.object(dhis2_remote_repository, 'get_data_element_values')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
+<<<<<<< Updated upstream
     def test_should_validate_sarampo_in_a_month(self, mock_get_validation_results,
                                                 mock_get_data_element_values,
                                                 mock_element_id_in_database):
+=======
+    def should_validate_sarampo_in_a_month(self, mock_get_validation_results,
+                                           mock_get_data_element_values,
+                                           mock_element_id_in_database):
+>>>>>>> Stashed changes
         mock_get_validation_results.return_value = (HTTP_200_OK, {})
         mock_get_data_element_values.return_value = MagicMock(json=MagicMock(return_value=API_DATA_ELEMENT_RESPONSE),
                                                               status_code=HTTP_200_OK)
@@ -320,7 +330,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
 
     def test_should_parse_params_from_measles_cases_rule(self):
         rule_type = CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES)
-        rule = 'A : 3 \r \n B : 8'
+        rule = ' B : 8  \r \n  A : 3 '
         result = self.data_element_values_validation_service.parse_rule_params(rule_type, rule)
         self.assertEqual(len(result), 2)
         self.assertEqual(result.get('recent_weeks'), 3)
