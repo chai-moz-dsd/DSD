@@ -10,6 +10,7 @@ from dsd.repositories.dhis2_oauth_token import get_access_token
 CONTENT_TYPE = {'Content-Type': 'application/json'}
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.CRITICAL)
 
 
 def post_category_options(request_body):
@@ -59,6 +60,7 @@ def get_all_rule_groups():
 
 def get_validation_results(params):
     url = '%s?%s' % (dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_RUN_VALIDATION_ACTION), params)
+    logger.critical('url=%s' % url)
     return requests.get(url=url, headers=get_oauth_header())
 
 
@@ -69,6 +71,7 @@ def get_data_element_values(query_params):
 
 def get_validation_rules(query_params):
     url = '%s?%s' % (dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_VALIDATION_RULES), query_params)
+    logger.critical('meningitis_cases_previous_week url=%s' % url)
     return requests.get(url=url, headers=get_oauth_header())
 
 

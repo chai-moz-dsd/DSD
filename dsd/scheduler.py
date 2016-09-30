@@ -14,6 +14,7 @@ from dsd.services.dhis2_send_email_service import dhis2_send_email
 from dsd.services.validate_data_element_values_service import DataElementValuesValidationService
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.CRITICAL)
 
 
 def start():
@@ -28,8 +29,8 @@ def start():
 
 def post_data_element_values_to_dhis2():
     data_element_values = fetch_updated_data_element_values()
-    logger.info('Post data values, length = %s' % len(data_element_values))
     post_data_element_values(data_element_values)
+    logger.critical('data_element_values length=%s' % len(data_element_values))
     DataElementValuesValidationService().validate_values(data_element_values)
 
 

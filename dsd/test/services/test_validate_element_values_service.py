@@ -44,7 +44,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
     @patch.object(DataElementValuesValidationService, 'fetch_disease_in_year_weeks', fetch_disease_in_year_weeks_result)
     def test_should_fetch_malaria_by_year_two_weeks_wrapped(self):
         self.data_element_values_validation_service.fetch_malaria_by_year_and_weeks_range(2016, 25, 2, 2, MOH_UID)
-        fetch_disease_in_year_weeks_result.assert_called_with(MOH_UID, 'MALARIA_084',
+        fetch_disease_in_year_weeks_result.assert_called_with(MOH_UID, 'MALARIA_CONFIRMADA',
                                                               ['2016W23', '2016W24', '2016W25', '2016W26', '2016W27'])
 
     def test_should_calculate_year_week_by_offset_minus_1_when_on_year_end(self):
@@ -68,7 +68,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
     @override_settings(DHIS2_SSL_VERIFY=False)
     @patch('dsd.repositories.dhis2_remote_repository.get_data_element_values')
     def test_should_fetch_malaria_last_five_weeks(self, mock_get_data_element_values):
-        ElementFactory(code='MALARIA_084')
+        ElementFactory(code='MALARIA_CONFIRMADA')
         response = {'rows': [["rf040c9a7ab.GRIMsGFQHUc", "MOH12345678", "15.0"]]}
         mock_get_data_element_values.return_value = MagicMock(json=MagicMock(return_value=response),
                                                               status_code=HTTP_200_OK)
