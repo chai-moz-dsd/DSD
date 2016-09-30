@@ -12,9 +12,10 @@ def get_sql_command(facilities, start, end):
            get_completeness_selection() + ',' + \
            get_freshness_selection() + ',' + \
            get_submission_date_selection() + ',' + \
+           get_bes_year_selection() + ',' + \
            get_bes_number_selection() + ',' + \
            get_week_of_year_selection() + ',' + \
-           get_week_of_year_selection() + ' ' + \
+           get_day_of_week() + ' ' + \
            'FROM ' + \
            get_from_clause() + ' ' + \
            'WHERE ' + \
@@ -29,6 +30,10 @@ def get_facility_name_selection():
 
 def get_submission_date_selection():
     return '"_SUBMISSION_DATE"'
+
+
+def get_bes_year_selection():
+    return '"BES_YEAR"'
 
 
 def get_bes_number_selection():
