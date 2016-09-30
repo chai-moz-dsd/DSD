@@ -33,9 +33,7 @@ def indicator_endpoint(request):
             rows = fill_row(rows, facilities, start, end)
 
             for facility in facilities:
-                response.update({facility: [get_indicator_info(row) for row in rows]})
-
-            response.update({})
+                response.update({facility: [get_indicator_info(row) for row in rows if row[0] == facility]})
 
         return Response(response, status=status.HTTP_200_OK)
     except IllegalArgumentException as e:
@@ -112,7 +110,6 @@ def fill_row(rows, facilities, start, end):
     for facility in facilities:
         if start_year == end_year:
             for week in range(start_week, end_week + 1):
-                print('week', week)
                 res.append(get_row(facility, start_year, week))
         else:
             for week in range(start_week, MAX_WEEK + 1):
