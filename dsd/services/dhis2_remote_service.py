@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 def post_attributes():
+    logger.info('=== START SYNC ATTRIBUTES ===')
     attributes = Attribute.objects.all()
     for attribute in attributes:
         request_body_dict = convert_attribute_to_dict(attribute)
@@ -30,6 +31,7 @@ def post_attributes():
 
 
 def post_elements():
+    logger.info('=== START SYNC DATA ELEMENTS ===')
     elements = Element.objects.all()
     for element in elements:
         request_body_dict = AddElementRequestTemplate().build(id=element.id,
@@ -45,6 +47,7 @@ def post_elements():
 
 
 def post_organization_units():
+    logger.info('=== START SYNC ORGANIZATION UNITS ===')
     organization_units = MoH().get_organization_as_list()
     for organization_unit in organization_units:
         logger.info('response unit = %s' % organization_unit)
@@ -68,28 +71,33 @@ def set_org_unit_level():
 
 
 def post_category_options():
+    logger.info('=== START SYNC CATEGORY OPTIONS ===')
     for category_option in CategoryOption.objects.all():
         request_body_dict = build_category_options_request_body_as_dict(category_option)
         dhis2_remote_repository.post_category_options(json.dumps(request_body_dict))
 
 
 def post_categories():
+    logger.info('=== START SYNC CATEGORIES ===')
     for category in Category.objects.all():
         request_body_dict = build_categories_request_body_as_dict(category)
         dhis2_remote_repository.post_categories(json.dumps(request_body_dict))
 
 
 def post_category_combinations():
+    logger.info('=== START SYNC CATEGORY COMBINATIONS ===')
     for category_combination in CategoryCombination.objects.all():
         request_body_dict = build_category_combinations_request_body_as_dict(category_combination)
         dhis2_remote_repository.post_category_combinations(json.dumps(request_body_dict))
 
 
 def post_data_set():
+    logger.info('=== START SYNC DATASET ===')
     dhis2_remote_repository.post_data_set(json.dumps(build_data_set_request_body_as_dict()))
 
 
 def post_data_element_values(date_element_values):
+    logger.info('=== START SYNC DATA VALUE ===')
     for data_element in date_element_values:
         json_dumps = json.dumps(build_data_element_values_request_body_as_dict(data_element))
         dhis2_remote_repository.post_data_elements_value(json_dumps)
