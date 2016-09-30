@@ -26,59 +26,22 @@ def indicator_endpoint(request):
             # for facility in facilities:
             #     response.update({facility: [get_indicator_info() for _ in range(0, end_week - start_week + 1)]})
 
-
             with connections['chai'].cursor() as cursor:
-                cursor.execute('SELECT f.facility_name, '
-                               '(CASE WHEN "CASOS_COLERA" = -1 OR "CASOS_COLERA" IS NULL '
-                               'OR "CASOS_DIARREIA_0_4" = -1 OR "CASOS_DIARREIA_0_4" IS NULL '
-                               'OR "CASOS_DIARREIA_15" = -1 OR "CASOS_DIARREIA_15" IS NULL '
-                               'OR "CASOS_DIARREIA_5_14" = -1 OR "CASOS_DIARREIA_5_14" IS NULL '
-                               'OR "CASOS_DISENTERIA" = -1 OR "CASOS_DISENTERIA" IS NULL '
-                               'OR "CASOS_MALARIA_CLINICA_0_4" = -1 OR "CASOS_MALARIA_CLINICA_0_4" IS NULL '
-                               'OR "CASOS_MALARIA_CLINICA_5" = -1 OR "CASOS_MALARIA_CLINICA_5" IS NULL '
-                               'OR "CASOS_MALARIA_CONFIRMADA_0_4" = -1 OR "CASOS_MALARIA_CONFIRMADA_0_4" IS NULL '
-                               'OR "CASOS_MALARIA_CONFIRMADA_5" = -1 OR "CASOS_MALARIA_CONFIRMADA_5" IS NULL '
-                               'OR "CASOS_MENINGITE_0_4" = -1 OR "CASOS_MENINGITE_0_4" IS NULL '
-                               'OR "CASOS_MENINGITE_5" = -1 OR "CASOS_MENINGITE_5" IS NULL '
-                               'OR "CASOS_PESTE" = -1 OR "CASOS_PESTE" IS NULL '
-                               'OR "CASOS_PFA" = -1 OR "CASOS_PFA" IS NULL '
-                               'OR "CASOS_RAIVA" = -1 OR "CASOS_RAIVA" IS NULL '
-                               'OR "CASOS_SARAMPO_24" = -1 OR "CASOS_SARAMPO_24" IS NULL '
-                               'OR "CASOS_SARAMPO_9" = -1 OR "CASOS_SARAMPO_9" IS NULL '
-                               'OR "CASOS_SARAMPO_NV_9_23" = -1 OR "CASOS_SARAMPO_NV_9_23" IS NULL '
-                               'OR "CASOS_SARAMPO_V_9_23" = -1 OR "CASOS_SARAMPO_V_9_23" IS NULL '
-                               'OR "CASOS_TETANO" = -1 OR "CASOS_TETANO" IS NULL '
-                               'OR "OBITOS_COLERA" = 1 OR "OBITOS_COLERA" IS NULL '
-                               'OR "OBITOS_DIARREIA_0_4" = -1 OR "OBITOS_DIARREIA_0_4" IS NULL '
-                               'OR "OBITOS_DIARREIA_15" = -1 OR "OBITOS_DIARREIA_15" IS NULL '
-                               'OR "OBITOS_DIARREIA_5_14" = -1 OR "OBITOS_DIARREIA_5_14" IS NULL '
-                               'OR "OBITOS_DISENTERIA" = -1 OR "OBITOS_DISENTERIA" IS NULL '
-                               'OR "OBITOS_MALARIA_CLINICA_0_4" = -1 OR "OBITOS_MALARIA_CLINICA_0_4" IS NULL '
-                               'OR "OBITOS_MALARIA_CLINICA_5" = -1 OR "OBITOS_MALARIA_CLINICA_5" IS NULL '
-                               'OR "OBITOS_MALARIA_CONFIRMADA_0_4" = -1 OR "OBITOS_MALARIA_CONFIRMADA_0_4" IS NULL '
-                               'OR "OBITOS_MALARIA_CONFIRMADA_5" = -1 OR "OBITOS_MALARIA_CONFIRMADA_5" IS NULL '
-                               'OR "OBITOS_MENINGITE_0_4" = -1 OR "OBITOS_MENINGITE_0_4" IS NULL '
-                               'OR "OBITOS_MENINGITE_5" = -1 OR "OBITOS_MENINGITE_5" IS NULL '
-                               'OR "OBITOS_PESTE" = -1 OR "OBITOS_PESTE" IS NULL '
-                               'OR "OBITOS_PFA" = -1 OR "OBITOS_PFA" IS NULL '
-                               'OR "OBITOS_RAIVA" = -1 OR "OBITOS_RAIVA" IS NULL '
-                               'OR "OBITOS_SARAMPO_24" = -1 OR "OBITOS_SARAMPO_24" IS NULL '
-                               'OR "OBITOS_SARAMPO_9" = -1 OR "OBITOS_SARAMPO_9" IS NULL '
-                               'OR "OBITOS_SARAMPO_NV_9_23" = -1 OR "OBITOS_SARAMPO_NV_9_23" IS NULL '
-                               'OR "OBITOS_SARAMPO_V_9_23" = -1 OR "OBITOS_SARAMPO_V_9_23" IS NULL '
-                               'OR "OBITOS_TETANO" = -1 OR "OBITOS_TETANO" IS NULL '
-                               'THEN \'incompleted\' '
-                               'ELSE \'completed\' END) AS syncStatus, '
-                               '(CASE WHEN date_part(\'week\', b."_SUBMISSION_DATE") < b."BES_NUMBER" '
-                               'OR (date_part(\'week\', b."_SUBMISSION_DATE") = b."BES_NUMBER" AND date_part(\'isodow\', b."_SUBMISSION_DATE") < 7) THEN \'Early\' '
-                               'WHEN date_part(\'week\', b."_SUBMISSION_DATE") > b."BES_NUMBER" + 1 OR '
-                               '(date_part(\'week\', b."_SUBMISSION_DATE") = b."BES_NUMBER" + 1 AND date_part(\'isodow\', b."_SUBMISSION_DATE") > 2) THEN \'Later\' '
-                               'ELSE \'Normal\' END) AS freshness, '
-                               'b."_SUBMISSION_DATE", b."BES_NUMBER", date_part(\'week\', b."_SUBMISSION_DATE") as weekOfYear, '
-                               'date_part(\'isodow\', b."_SUBMISSION_DATE") AS dayOfWeek '
-                               'FROM facilities f INNER JOIN "BES_MIDDLEWARE_CORE" b ON f.device_serial = b."DEVICEID" '
-                               'WHERE f.facility_name = \'CENTRO DE SAUDE DE NGOLHOSA\' AND b."BES_YEAR" = \'2016-01-01\' AND b."BES_NUMBER" = 33 '
-                               'ORDER BY b."_SUBMISSION_DATE" DESC')
+                cursor.execute('SELECT ' +
+                               get_facility_name_selection() + ',' +
+                               get_completeness_selection() + ',' +
+                               get_freshness_selection() + ',' +
+                               get_submission_date_selection() + ',' +
+                               get_bes_number_selection() + ',' +
+                               get_week_of_year_selection() + ',' +
+                               get_week_of_year_selection() + ' ' +
+                               'FROM ' +
+                               get_from_clause() + ' ' +
+                               'WHERE ' +
+                               get_where_clause() + ' ' +
+                               'ORDER BY ' +
+                               get_order_clause() + ' ' +
+                               'DESC')
                 row = cursor.fetchall()
 
                 print(row)
@@ -120,3 +83,91 @@ def get_random_status():
 
 def get_random_version():
     return 'v1.%s' % random.randint(1, 35)
+
+
+def get_facility_name_selection():
+    return 'f.facility_name'
+
+
+def get_submission_date_selection():
+    return 'b."_SUBMISSION_DATE"'
+
+
+def get_bes_number_selection():
+    return 'b."BES_NUMBER"'
+
+
+def get_week_of_year_selection():
+    return 'date_part(\'week\', b."_SUBMISSION_DATE") as weekOfYear'
+
+
+def get_day_of_week():
+    return 'date_part(\'isodow\', b."_SUBMISSION_DATE") AS dayOfWeek'
+
+
+def get_completeness_selection():
+    return '(CASE WHEN "CASOS_COLERA" = -1 OR "CASOS_COLERA" IS NULL ' \
+           'OR "CASOS_DIARREIA_0_4" = -1 OR "CASOS_DIARREIA_0_4" IS NULL ' \
+           'OR "CASOS_DIARREIA_15" = -1 OR "CASOS_DIARREIA_15" IS NULL ' \
+           'OR "CASOS_DIARREIA_5_14" = -1 OR "CASOS_DIARREIA_5_14" IS NULL ' \
+           'OR "CASOS_DISENTERIA" = -1 OR "CASOS_DISENTERIA" IS NULL ' \
+           'OR "CASOS_MALARIA_CLINICA_0_4" = -1 OR "CASOS_MALARIA_CLINICA_0_4" IS NULL ' \
+           'OR "CASOS_MALARIA_CLINICA_5" = -1 OR "CASOS_MALARIA_CLINICA_5" IS NULL ' \
+           'OR "CASOS_MALARIA_CONFIRMADA_0_4" = -1 OR "CASOS_MALARIA_CONFIRMADA_0_4" IS NULL ' \
+           'OR "CASOS_MALARIA_CONFIRMADA_5" = -1 OR "CASOS_MALARIA_CONFIRMADA_5" IS NULL ' \
+           'OR "CASOS_MENINGITE_0_4" = -1 OR "CASOS_MENINGITE_0_4" IS NULL ' \
+           'OR "CASOS_MENINGITE_5" = -1 OR "CASOS_MENINGITE_5" IS NULL ' \
+           'OR "CASOS_PESTE" = -1 OR "CASOS_PESTE" IS NULL ' \
+           'OR "CASOS_PFA" = -1 OR "CASOS_PFA" IS NULL ' \
+           'OR "CASOS_RAIVA" = -1 OR "CASOS_RAIVA" IS NULL ' \
+           'OR "CASOS_SARAMPO_24" = -1 OR "CASOS_SARAMPO_24" IS NULL ' \
+           'OR "CASOS_SARAMPO_9" = -1 OR "CASOS_SARAMPO_9" IS NULL ' \
+           'OR "CASOS_SARAMPO_NV_9_23" = -1 OR "CASOS_SARAMPO_NV_9_23" IS NULL ' \
+           'OR "CASOS_SARAMPO_V_9_23" = -1 OR "CASOS_SARAMPO_V_9_23" IS NULL ' \
+           'OR "CASOS_TETANO" = -1 OR "CASOS_TETANO" IS NULL ' \
+           'OR "OBITOS_COLERA" = 1 OR "OBITOS_COLERA" IS NULL ' \
+           'OR "OBITOS_DIARREIA_0_4" = -1 OR "OBITOS_DIARREIA_0_4" IS NULL ' \
+           'OR "OBITOS_DIARREIA_15" = -1 OR "OBITOS_DIARREIA_15" IS NULL ' \
+           'OR "OBITOS_DIARREIA_5_14" = -1 OR "OBITOS_DIARREIA_5_14" IS NULL ' \
+           'OR "OBITOS_DISENTERIA" = -1 OR "OBITOS_DISENTERIA" IS NULL ' \
+           'OR "OBITOS_MALARIA_CLINICA_0_4" = -1 OR "OBITOS_MALARIA_CLINICA_0_4" IS NULL ' \
+           'OR "OBITOS_MALARIA_CLINICA_5" = -1 OR "OBITOS_MALARIA_CLINICA_5" IS NULL ' \
+           'OR "OBITOS_MALARIA_CONFIRMADA_0_4" = -1 OR "OBITOS_MALARIA_CONFIRMADA_0_4" IS NULL ' \
+           'OR "OBITOS_MALARIA_CONFIRMADA_5" = -1 OR "OBITOS_MALARIA_CONFIRMADA_5" IS NULL ' \
+           'OR "OBITOS_MENINGITE_0_4" = -1 OR "OBITOS_MENINGITE_0_4" IS NULL ' \
+           'OR "OBITOS_MENINGITE_5" = -1 OR "OBITOS_MENINGITE_5" IS NULL ' \
+           'OR "OBITOS_PESTE" = -1 OR "OBITOS_PESTE" IS NULL ' \
+           'OR "OBITOS_PFA" = -1 OR "OBITOS_PFA" IS NULL ' \
+           'OR "OBITOS_RAIVA" = -1 OR "OBITOS_RAIVA" IS NULL ' \
+           'OR "OBITOS_SARAMPO_24" = -1 OR "OBITOS_SARAMPO_24" IS NULL ' \
+           'OR "OBITOS_SARAMPO_9" = -1 OR "OBITOS_SARAMPO_9" IS NULL ' \
+           'OR "OBITOS_SARAMPO_NV_9_23" = -1 OR "OBITOS_SARAMPO_NV_9_23" IS NULL ' \
+           'OR "OBITOS_SARAMPO_V_9_23" = -1 OR "OBITOS_SARAMPO_V_9_23" IS NULL ' \
+           'OR "OBITOS_TETANO" = -1 OR "OBITOS_TETANO" IS NULL ' \
+           'THEN \'incompleted\' ' \
+           'ELSE \'completed\' END) AS syncStatus'
+
+
+def get_freshness_selection():
+    return '(CASE ' \
+           'WHEN date_part(\'week\', b."_SUBMISSION_DATE") < b."BES_NUMBER" ' \
+           'OR (date_part(\'week\', b."_SUBMISSION_DATE") = b."BES_NUMBER" ' \
+           'AND date_part(\'isodow\', b."_SUBMISSION_DATE") < 7) THEN \'Early\' ' \
+           'WHEN date_part(\'week\', b."_SUBMISSION_DATE") > b."BES_NUMBER" + 1 ' \
+           'OR (date_part(\'week\', b."_SUBMISSION_DATE") = b."BES_NUMBER" + 1 ' \
+           'AND date_part(\'isodow\', b."_SUBMISSION_DATE") > 2) THEN \'Later\' ' \
+           'ELSE \'Normal\' ' \
+           'END) ' \
+           'AS freshness'
+
+
+def get_from_clause():
+    return 'facilities f INNER JOIN "BES_MIDDLEWARE_CORE" b ON f.device_serial = b."DEVICEID"'
+
+
+def get_where_clause():
+    return 'f.facility_name = \'CENTRO DE SAUDE DE NGOLHOSA\' AND b."BES_YEAR" = \'2016-01-01\' AND b."BES_NUMBER" = 33 '
+
+
+def get_order_clause():
+    return 'b."_SUBMISSION_DATE"'
