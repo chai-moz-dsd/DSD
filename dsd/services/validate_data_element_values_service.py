@@ -164,7 +164,7 @@ class DataElementValuesValidationService(object):
 
         if diarrhea_in_current_week > average_five_years_diarrhea + std_dev * std_dev_five_years_diarrhea:
             rule_group_id = self.rule_group_name_id_map.get(
-                '%s FIVEYEAR AVAERAGE GROUP' % DISEASE_I18N_MAP.get('diarrhea'))
+                '%s FIVEYEAR AVAERAGE GROUP' % DISEASE_I18N_MAP.get('dysentery'))
             self.send_validation_request(rule_group_id, data_week_start, data_week_end, organisation_id, True)
 
     def send_validation_for_sarampo_in_recent_weeks(self, value, organisation_id):
