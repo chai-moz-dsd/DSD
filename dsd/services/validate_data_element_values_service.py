@@ -92,6 +92,8 @@ class DataElementValuesValidationService(object):
 
             alert_should_be_sent = self.alert_should_be_sent.get(element_name, True)
             rule_group_id = self.get_rule_group_id(element_name)
+            logger.critical('rule_group_id = %s' % rule_group_id)
+
             if not rule_group_id:
                 return
 
@@ -126,22 +128,25 @@ class DataElementValuesValidationService(object):
         recent_years = self.customized_rules.get(rule_type).get('recent_years')
         std_dev = self.customized_rules.get(rule_type).get('std_dev')
 
-        malaria_last_five_weeks = self.fetch_malaria_in_previous_weeks(current_year, week_num,
-                                                                       weeks_before + weeks_after, organisation_id)
-        recent_years_malaria = self.fetch_same_period_in_recent_years(current_year, recent_years, week_num,
-                                                                      weeks_before,
-                                                                      weeks_after, organisation_id)
+        malaria_case_in_last_five_weeks = self.fetch_malaria_in_previous_weeks(current_year, week_num,
+                                                                               weeks_before + weeks_after,
+                                                                               organisation_id)
+        malaria_case_in_same_period_of_recent_years = self.fetch_same_period_in_recent_years(current_year, recent_years,
+                                                                                             week_num,
+                                                                                             weeks_before,
+                                                                                             weeks_after,
+                                                                                             organisation_id)
 
-        average_malaria_in_recent_years = mean(recent_years_malaria)
-        std_dev_in_recent_years_malaria = stdev(recent_years_malaria)
+        average_malaria_in_recent_years = mean(malaria_case_in_same_period_of_recent_years)
+        std_dev_in_recent_years_malaria = stdev(malaria_case_in_same_period_of_recent_years)
 
         _, data_week_end = self.fetch_info_from_updated_data(value)
         start = self.change_date_to_days_before(data_week_end, (weeks_before + weeks_after + 1) * ONE_WEEK_DAYS - 1)
         logger.critical(
-            'malaria_last_five_weeks=%s,average_malaria_in_recent_years=%s,std_dev_in_recent_years_malaria=%s' % (
-                malaria_last_five_weeks, average_malaria_in_recent_years, std_dev_in_recent_years_malaria))
+            'malaria_case_in_last_five_weeks=%s,average_malaria_in_recent_years=%s,std_dev_in_recent_years_malaria=%s' % (
+                malaria_case_in_last_five_weeks, average_malaria_in_recent_years, std_dev_in_recent_years_malaria))
 
-        if malaria_last_five_weeks > average_malaria_in_recent_years + std_dev * std_dev_in_recent_years_malaria:
+        if malaria_case_in_last_five_weeks > average_malaria_in_recent_years + std_dev * std_dev_in_recent_years_malaria:
             rule_group_id = self.rule_group_name_id_map.get(
                 '%s FIVEYEAR AVAERAGE GROUP' % DISEASE_I18N_MAP.get('malaria'))
             self.send_validation_request(rule_group_id, start, data_week_end, organisation_id, True)
@@ -161,6 +166,9 @@ class DataElementValuesValidationService(object):
         std_dev_five_years_diarrhea = stdev(diarrhea_five_years_same_week)
 
         data_week_start, data_week_end = self.fetch_info_from_updated_data(value)
+        logger.critical('data_week_start=%s, data_week_end=%s' % (data_week_start, data_week_end))
+        logger.critical('average_five_years_diarrhea=%s,std_dev_five_years_diarrhea=%s' % (
+            average_five_years_diarrhea, std_dev_five_years_diarrhea))
 
         if diarrhea_in_current_week > average_five_years_diarrhea + std_dev * std_dev_five_years_diarrhea:
             rule_group_id = self.rule_group_name_id_map.get(
