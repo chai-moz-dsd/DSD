@@ -4,12 +4,14 @@ import logging
 import re
 from statistics import mean, stdev
 
+from django.db.models import Q
 from rest_framework.status import HTTP_200_OK
 
 from dsd.config.dhis2_config import DISEASE_I18N_MAP, THREE_WEEKS_DAYS, \
     CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS_REGEX, \
     CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS_REPLACEMENT, CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS, MEASLES_CASES, \
     CUSTOMIZED_VALIDATION_RULE_TYPE, MENINGITIS_CASES, MALARIA_CASES, DYSENTERY_CASES, ONE_WEEK_DAYS
+from dsd.models import COCRelation
 from dsd.models import Element
 from dsd.models.moh import MOH_UID
 from dsd.repositories import dhis2_remote_repository
@@ -241,7 +243,8 @@ class DataElementValuesValidationService(object):
     @staticmethod
     def fetch_meningitis(year, week_num, organisation_id):
         period_weeks = ['%sW%s' % (year, week_num)]
-        element_ids = DataElementValuesValidationService.get_element_ids('MENINGITE_036')
+        element_ids = DataElementValuesValidationService.get_element_ids(disease_code='MENINGITE_036',
+                                                                         query_name_prefix='cases_meningitis_')
         return DataElementValuesValidationService.fetch_disease_in_year_weeks(organisation_id, element_ids,
                                                                               period_weeks)
 
@@ -249,7 +252,11 @@ class DataElementValuesValidationService(object):
     def fetch_sarampo_in_a_month(year, week_num, week_offset, organisation_id):
         period_weeks = ['%sW%s' % (DataElementValuesValidationService.calculate_year_week_by_offset(year, week_num, i))
                         for i in range(-week_offset + 1, 1)]
-        element_ids = DataElementValuesValidationService.get_element_ids('SARAMPO_055')
+        element_ids = DataElementValuesValidationService.get_element_ids(disease_code='SARAMPO_055',
+                                                                         query_name_prefix='cases_measles_')
+        special_element_ids = DataElementValuesValidationService.get_element_ids(disease_code='SARAMPO_055',
+                                                                                 query_name_prefix='cases_nv_measles')
+        element_ids.extend(special_element_ids)
         return DataElementValuesValidationService.fetch_disease_in_year_weeks(organisation_id, element_ids,
                                                                               period_weeks)
 
@@ -257,7 +264,9 @@ class DataElementValuesValidationService(object):
     def fetch_malaria_in_previous_weeks(year, week_num, week_offset, organisation_id):
         period_weeks = ['%sW%s' % (DataElementValuesValidationService.calculate_year_week_by_offset(year, week_num, i))
                         for i in range(-week_offset, 1)]
-        element_ids = DataElementValuesValidationService.get_element_ids('MALARIA_CONFIRMADA')
+
+        element_ids = DataElementValuesValidationService.get_element_ids(disease_code='MALARIA_CONFIRMADA',
+                                                                         query_name_prefix='cases_malaria_')
         return DataElementValuesValidationService.fetch_disease_in_year_weeks(organisation_id, element_ids,
                                                                               period_weeks)
 
@@ -265,7 +274,8 @@ class DataElementValuesValidationService(object):
     def fetch_malaria_by_year_and_weeks_range(year, week_num, weeks_before, after_weeks, organisation_id):
         period_weeks = ['%sW%s' % (DataElementValuesValidationService.calculate_year_week_by_offset(year, week_num, i))
                         for i in range(-weeks_before, after_weeks + 1)]
-        element_ids = DataElementValuesValidationService.get_element_ids('MALARIA_CONFIRMADA')
+        element_ids = DataElementValuesValidationService.get_element_ids(disease_code='MALARIA_CONFIRMADA',
+                                                                         query_name_prefix='cases_malaria_')
         return DataElementValuesValidationService.fetch_disease_in_year_weeks(organisation_id, element_ids,
                                                                               period_weeks)
 
@@ -280,8 +290,12 @@ class DataElementValuesValidationService(object):
         return int(float(element_data[0][2])) if element_data else 0
 
     @staticmethod
-    def get_element_ids(disease_code):
-        return [Element.objects.filter(code=disease_code).first().id]
+    def get_element_ids(disease_code, query_name_prefix):
+        result = []
+        element_id = Element.objects.filter(code=disease_code).first().id
+        for coc in COCRelation.objects.filter(Q(name_in_bes__startswith=query_name_prefix), Q(element_id=element_id)):
+            result.append('%s.%s' % (element_id, coc.coc_id))
+        return result
 
     @staticmethod
     def fetch_same_period_in_recent_years(current_year, year_offset, week_num, weeks_before, weeks_after,
