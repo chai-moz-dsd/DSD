@@ -98,8 +98,8 @@ class DataElementValuesValidationService(object):
                 return
 
             logger.critical(
-                'each: disease_name = %s: should_alert = %s, rule_group_id = %s, start = %s, end = %s ' % (
-                    element_name, should_alert, rule_group_id, date_week_start, date_week_end))
+                'each: device_id = %s, disease_name = %s: should_alert = %s, rule_group_id = %s, start = %s, end = %s ' % (
+                    value.device_id, element_name, should_alert, rule_group_id, date_week_start, date_week_end))
 
             response = self.send_validation_request(rule_group_id, date_week_start, date_week_end, organisation_id,
                                                     should_alert)
