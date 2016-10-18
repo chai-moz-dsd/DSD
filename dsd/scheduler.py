@@ -72,3 +72,10 @@ def sync_data_to_local(last_successfully_sync_time):
 def send_msg_when_error_happened(content, receivers):
     dhis2_send_email('Error happens when element data was syn to dhis2.', content, settings.DEFAULT_FROM_EMAIL,
                      receivers)
+
+
+def test():
+    reset_cache()
+    sync_remote_data_to_local()
+    set_coc_id()
+    post_and_validate_data_element()

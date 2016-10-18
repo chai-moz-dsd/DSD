@@ -28,6 +28,9 @@ logging.getLogger().setLevel(logging.CRITICAL)
 
 fetch_disease_in_year_weeks_result = Mock(return_value=10)
 
+should_alert_return_value = Mock(return_value=True)
+update_alert_status_by_facility_and_disease_return_value = Mock()
+
 
 class ValidateDataElementValuesServiceTest(TestCase):
     @patch.object(DataElementValuesValidationService, 'fetch_customized_rules')
@@ -227,12 +230,14 @@ class ValidateDataElementValuesServiceTest(TestCase):
     def test_should_be_false_if_match_rule(self, mock_get_validation_results):
         mock_get_validation_results.return_value = MagicMock(status_code=HTTP_200_OK,
                                                              text='<div id="validationResults">')
-        BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=52)
+        device_id = '356670060310976'
+        BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=52, device_id=device_id)
 
         value = BesMiddlewareCore.objects.first()
         self.data_element_values_validation_service.send_validation_for_each_disease(value, MOH_UID)
 
-        self.assertEqual(False, self.data_element_values_validation_service.alert_should_be_sent['measles'])
+        self.assertEqual(False,
+                         self.data_element_values_validation_service.should_alert_by_facility[device_id]['measles'])
 
     def test_should_get_four_weeks_before_date(self):
         before_20th = self.data_element_values_validation_service.change_date_to_days_before('2016-09-20',
@@ -248,14 +253,18 @@ class ValidateDataElementValuesServiceTest(TestCase):
     def test_should_be_true_if_mismatch_rule(self, mock_get_validation_results):
         mock_get_validation_results.return_value = MagicMock(status_code=HTTP_200_OK,
                                                              text='Validation passed successfully')
-        BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=52)
+        device_id = '356670060310976'
+        BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=52, device_id=device_id)
 
         value = BesMiddlewareCore.objects.first()
         self.data_element_values_validation_service.send_validation_for_each_disease(value, MOH_UID)
 
-        self.assertEqual(True, self.data_element_values_validation_service.alert_should_be_sent['pfa'])
+        self.assertEqual(True, self.data_element_values_validation_service.should_alert_by_facility[device_id]['pfa'])
 
     @patch('datetime.date', FakeDate)
+    @patch.object(DataElementValuesValidationService, 'should_alert', should_alert_return_value)
+    @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_disease',
+                  update_alert_status_by_facility_and_disease_return_value)
     @patch.object(DataElementValuesValidationService, 'get_element_ids')
     @patch.object(dhis2_remote_repository, 'get_data_element_values')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
@@ -275,6 +284,9 @@ class ValidateDataElementValuesServiceTest(TestCase):
             '&validationRuleGroupId=1677&sendAlerts=true')
 
     @patch('datetime.date', FakeDate)
+    @patch.object(DataElementValuesValidationService, 'should_alert', should_alert_return_value)
+    @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_disease',
+                  update_alert_status_by_facility_and_disease_return_value)
     @patch.object(DataElementValuesValidationService, 'is_meningitis_increasement_rule_match')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
     def test_should_validate_meningitis_every_two_weeks(self,
@@ -290,6 +302,9 @@ class ValidateDataElementValuesServiceTest(TestCase):
             'organisationUnitId=MOH12345678&startDate=2016-06-05&endDate=2016-06-26' \
             '&validationRuleGroupId=1922&sendAlerts=true')
 
+    @patch.object(DataElementValuesValidationService, 'should_alert', should_alert_return_value)
+    @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_disease',
+                  update_alert_status_by_facility_and_disease_return_value)
     @patch.object(DataElementValuesValidationService, 'fetch_malaria_by_year_and_weeks_range')
     @patch.object(DataElementValuesValidationService, 'fetch_malaria_in_previous_weeks')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
@@ -308,6 +323,9 @@ class ValidateDataElementValuesServiceTest(TestCase):
             'organisationUnitId=MOH12345678&startDate=2016-05-23&endDate=2016-06-26' \
             '&validationRuleGroupId=1988&sendAlerts=true')
 
+    @patch.object(DataElementValuesValidationService, 'should_alert', should_alert_return_value)
+    @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_disease',
+                  update_alert_status_by_facility_and_disease_return_value)
     @patch.object(DataElementValuesValidationService, 'fetch_dysentery_same_week_in_recent_five_years')
     @patch.object(DataElementValuesValidationService, 'fetch_dysentery_in_week_num')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
