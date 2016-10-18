@@ -97,7 +97,9 @@ class DataElementValuesValidationService(object):
             if not rule_group_id:
                 return
 
-            logger.critical('for each: rule_group_id = %s, should_alert = %s' % (rule_group_id, should_alert))
+            logger.critical(
+                'for each: should_alert = %s, rule_group_id = %s, start = %s, end = %s, disease_name = %s, ' % (
+                    should_alert, rule_group_id, date_week_start, date_week_end, element_name,))
 
             response = self.send_validation_request(rule_group_id, date_week_start, date_week_end, organisation_id,
                                                     should_alert)
@@ -124,10 +126,12 @@ class DataElementValuesValidationService(object):
         return 'Validation passed successfully' in response.text
 
     @staticmethod
-    def send_validation_request(rule_group_id, start_date, end_date, organisation_id, alert_should_be_sent):
+    def send_validation_request(rule_group_id, start_date, end_date, organisation_id, should_alert):
         validate_params = DataElementValuesValidationService.format_validation_request_url(organisation_id, start_date,
                                                                                            end_date, rule_group_id,
-                                                                                           alert_should_be_sent)
+                                                                                           should_alert)
+        if should_alert:
+            logger.critical('validate_params = %s' % validate_params)
         return dhis2_remote_repository.get_validation_results(validate_params)
 
     def send_validation_malaria_in_recent_years_average(self, value, organisation_id):
