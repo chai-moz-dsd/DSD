@@ -98,8 +98,8 @@ class DataElementValuesValidationService(object):
                 return
 
             logger.critical(
-                'for each: should_alert = %s, rule_group_id = %s, start = %s, end = %s, disease_name = %s, ' % (
-                    should_alert, rule_group_id, date_week_start, date_week_end, element_name,))
+                'disease_name = %s: should_alert = %s, rule_group_id = %s, start = %s, end = %s ' % (
+                    element_name, should_alert, rule_group_id, date_week_start, date_week_end))
 
             response = self.send_validation_request(rule_group_id, date_week_start, date_week_end, organisation_id,
                                                     should_alert)
@@ -160,7 +160,7 @@ class DataElementValuesValidationService(object):
         date_week_start = self.change_date_to_days_before(date_week_end,
                                                           (weeks_before + weeks_after + 1) * ONE_WEEK_DAYS - 1)
         logger.critical(
-            'malaria_case_in_last_five_weeks=%s,average_malaria_in_recent_years=%s,std_dev_in_recent_years_malaria=%s' % (
+            'malaria: case_in_last_five_weeks=%s,average_in_recent_years=%s,std_dev_in_recent_years=%s' % (
                 malaria_case_in_last_five_weeks, average_malaria_in_recent_years, std_dev_in_recent_years_malaria))
 
         if malaria_case_in_last_five_weeks > average_malaria_in_recent_years + std_dev * std_dev_in_recent_years_malaria:
@@ -186,9 +186,9 @@ class DataElementValuesValidationService(object):
         std_dev_five_years_dysentery = stdev(dysentery_five_years_same_week)
 
         data_week_start, data_week_end = self.fetch_info_from_updated_data(value)
-        logger.critical('data_week_start=%s, data_week_end=%s' % (data_week_start, data_week_end))
-        logger.critical('average_five_years_dysentery=%s,std_dev_five_years_dysentery=%s' % (
-            average_five_years_dysentery, std_dev_five_years_dysentery))
+        logger.critical(
+            'dysentery: start=%s, end=%s, average_five_years_dysentery=%s, std_dev_five_years_dysentery=%s' % (
+                data_week_start, data_week_end, average_five_years_dysentery, std_dev_five_years_dysentery))
 
         if dysentery_in_current_week > average_five_years_dysentery + std_dev * std_dev_five_years_dysentery:
             rule_group_id = self.rule_group_name_id_map.get(
@@ -228,7 +228,7 @@ class DataElementValuesValidationService(object):
         is_rule_matched = self.is_meningitis_increasement_rule_match(current_year, week_num, organisation_id,
                                                                      increased_times,
                                                                      recent_weeks)
-        logger.critical('is_rule_matched = %s' % is_rule_matched, )
+        logger.critical('meningitis : is_rule_matched = %s' % is_rule_matched)
         if is_rule_matched:
             rule_group_id = self.rule_group_name_id_map.get(
                 '%s INCREASEMENT GROUP' % DISEASE_I18N_MAP.get('meningitis'))
@@ -253,7 +253,7 @@ class DataElementValuesValidationService(object):
             meningitis_cases_previous_week = DataElementValuesValidationService.fetch_meningitis(previous_year,
                                                                                                  previous_week,
                                                                                                  organisation_id)
-            logger.critical('meningitis_cases_current_week = %s,meningitis_cases_previous_week=%s' % (
+            logger.critical('****************meningitis_cases_current_week = %s,meningitis_cases_previous_week=%s' % (
                 meningitis_cases_current_week, meningitis_cases_previous_week))
             if meningitis_cases_previous_week == 0 or meningitis_cases_current_week < meningitis_cases_previous_week * increased_times:
                 logger.critical('**********************Don not match***************************')
