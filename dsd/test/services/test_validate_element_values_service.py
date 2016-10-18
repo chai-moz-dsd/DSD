@@ -48,9 +48,38 @@ class ValidateDataElementValuesServiceTest(TestCase):
         element_ids = ['c94kfjsodj.8492jklfda']
         mock_get_element_ids.return_value = element_ids
         self.data_element_values_validation_service.fetch_malaria_by_year_and_weeks_range(2016, 25, 2, 2, MOH_UID)
-        mock_get_element_ids.assert_called_with(disease_code='MALARIA_CONFIRMADA', query_name_prefix='cases_malaria_')
+        mock_get_element_ids.assert_called_with(disease_code='MALARIA_CONFIRMADA', query_name_prefix='cases_malaria')
         fetch_disease_in_year_weeks_result.assert_called_with(MOH_UID, element_ids,
                                                               ['2016W23', '2016W24', '2016W25', '2016W26', '2016W27'])
+
+    @patch.object(DataElementValuesValidationService, 'get_element_ids')
+    @patch.object(DataElementValuesValidationService, 'fetch_disease_in_year_weeks', fetch_disease_in_year_weeks_result)
+    def test_should_fetch_dysentery_in_week_num(self, mock_get_element_ids):
+        element_ids = ['m9fe3ae729c.CHRTnkKLoT0', 'm9fe3ae729c.NhNIHmO1Loe']
+        mock_get_element_ids.return_value = element_ids
+        self.data_element_values_validation_service.fetch_meningitis(2016, 25, MOH_UID)
+        mock_get_element_ids.assert_called_with(disease_code='MENINGITE_036', query_name_prefix='cases_meningitis')
+        fetch_disease_in_year_weeks_result.assert_called_with(MOH_UID, element_ids, ['2016W25'])
+
+    @patch.object(DataElementValuesValidationService, 'get_element_ids')
+    @patch.object(DataElementValuesValidationService, 'fetch_disease_in_year_weeks', fetch_disease_in_year_weeks_result)
+    def test_should_fetch_meningitis(self, mock_get_element_ids):
+        element_ids = ['ma97d9c69c5.pkXzTOZk3en']
+        mock_get_element_ids.return_value = element_ids
+        self.data_element_values_validation_service.fetch_dysentery_in_week_num(2016, 25, MOH_UID)
+        mock_get_element_ids.assert_called_with(disease_code='009.2_DISENTERIA', query_name_prefix='cases_dysentery')
+        fetch_disease_in_year_weeks_result.assert_called_with(MOH_UID, element_ids, ['2016W25'])
+
+    @patch.object(DataElementValuesValidationService, 'get_element_ids')
+    @patch.object(DataElementValuesValidationService, 'fetch_disease_in_year_weeks', fetch_disease_in_year_weeks_result)
+    def test_should_fetch_sarampo_by_period(self, mock_get_element_ids):
+        element_ids = ['af47c3c71d0.AydeKcrXuvd', 'af47c3c71d0.Sp0atPEQ2mC', 'af47c3c71d0.IuXBeihH6EO',
+                       'af47c3c71d0.ObNYpW9xyGx']
+        mock_get_element_ids.return_value = element_ids
+        self.data_element_values_validation_service.fetch_sarampo_by_period(2016, 23, 4, MOH_UID)
+        mock_get_element_ids.assert_called_with(query_name_prefix='cases_nv_measles', disease_code='SARAMPO_055')
+        fetch_disease_in_year_weeks_result.assert_called_with(MOH_UID, element_ids,
+                                                              ['2016W20', '2016W21', '2016W22', '2016W23'])
 
     def test_should_calculate_year_week_by_offset_minus_1_when_on_year_end(self):
         target_year, target_week = self.data_element_values_validation_service.calculate_year_week_by_offset(2015, 52,
@@ -84,7 +113,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
 
     @override_settings(DHIS2_SSL_VERIFY=False)
     @patch('dsd.repositories.dhis2_remote_repository.get_data_element_values')
-    def test_should_fetch_meningitis(self, mock_get_data_element_values):
+    def test_should_fetch_remote_meningitis(self, mock_get_data_element_values):
         ElementFactory(code='MENINGITE_036')
         response = {'rows': [["rf040c9a7ab.GRIMsGFQHUc", "MOH12345678", "10.0"]]}
         mock_get_data_element_values.return_value = MagicMock(json=MagicMock(return_value=response),
@@ -149,7 +178,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
                              self.data_element_values_validation_service.get_rule_group_id(rule_name))
 
     @patch.object(DataElementValuesValidationService, 'fetch_dysentery_in_week_num')
-    @patch.object(DataElementValuesValidationService, 'fetch_sarampo_in_a_month')
+    @patch.object(DataElementValuesValidationService, 'fetch_sarampo_by_period')
     @patch.object(DataElementValuesValidationService, 'fetch_malaria_by_year_and_weeks_range')
     @patch.object(DataElementValuesValidationService, 'fetch_meningitis')
     @patch.object(DataElementValuesValidationService, 'fetch_malaria_in_previous_weeks')
@@ -157,12 +186,12 @@ class ValidateDataElementValuesServiceTest(TestCase):
     def test_should_validate_data_element_values(self, mock_get_validation_results,
                                                  mock_fetch_malaria_in_previous_weeks, mock_fetch_meningitis,
                                                  mock_fetch_malaria_by_year_and_weeks_range,
-                                                 mock_fetch_sarampo_in_a_month,
+                                                 mock_fetch_sarampo_by_period,
                                                  mock_fetch_dysentery_in_week_num):
         mock_fetch_malaria_in_previous_weeks.return_value = 50
         mock_fetch_meningitis.return_value = 10
         mock_fetch_malaria_by_year_and_weeks_range.return_value = 10
-        mock_fetch_sarampo_in_a_month.return_value = 10
+        mock_fetch_sarampo_by_period.return_value = 10
         mock_fetch_dysentery_in_week_num.return_value = 10
 
         device_serial1 = '356670060315512'
@@ -230,9 +259,9 @@ class ValidateDataElementValuesServiceTest(TestCase):
     @patch.object(DataElementValuesValidationService, 'get_element_ids')
     @patch.object(dhis2_remote_repository, 'get_data_element_values')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
-    def test_should_validate_sarampo_in_a_month(self, mock_get_validation_results,
-                                                mock_get_data_element_values,
-                                                mock_get_element_ids):
+    def test_should_validate_sarampo_by_period(self, mock_get_validation_results,
+                                               mock_get_data_element_values,
+                                               mock_get_element_ids):
         mock_get_validation_results.return_value = (HTTP_200_OK, {})
         mock_get_data_element_values.return_value = MagicMock(json=MagicMock(return_value=API_DATA_ELEMENT_RESPONSE),
                                                               status_code=HTTP_200_OK)
