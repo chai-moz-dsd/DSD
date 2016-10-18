@@ -98,7 +98,7 @@ class DataElementValuesValidationService(object):
                 return
 
             logger.critical(
-                'disease_name = %s: should_alert = %s, rule_group_id = %s, start = %s, end = %s ' % (
+                'each: disease_name = %s: should_alert = %s, rule_group_id = %s, start = %s, end = %s ' % (
                     element_name, should_alert, rule_group_id, date_week_start, date_week_end))
 
             response = self.send_validation_request(rule_group_id, date_week_start, date_week_end, organisation_id,
@@ -159,14 +159,15 @@ class DataElementValuesValidationService(object):
         _, date_week_end = self.fetch_info_from_updated_data(value)
         date_week_start = self.change_date_to_days_before(date_week_end,
                                                           (weeks_before + weeks_after + 1) * ONE_WEEK_DAYS - 1)
-        logger.critical(
-            'malaria: case_in_last_five_weeks=%s,average_in_recent_years=%s,std_dev_in_recent_years=%s' % (
-                malaria_case_in_last_five_weeks, average_malaria_in_recent_years, std_dev_in_recent_years_malaria))
 
         if malaria_case_in_last_five_weeks > average_malaria_in_recent_years + std_dev * std_dev_in_recent_years_malaria:
             rule_group_id = self.rule_group_name_id_map.get(
                 '%s FIVEYEAR AVAERAGE GROUP' % DISEASE_I18N_MAP.get('malaria'))
             should_alert = self.should_alert(value.device_id, 'malaria')
+
+            logger.critical('malaria: rule_group_id = %s, case_in_last_five_weeks=%s,average_in_recent_years=%s' % (
+                rule_group_id, malaria_case_in_last_five_weeks, average_malaria_in_recent_years))
+
             response = self.send_validation_request(rule_group_id, date_week_start, date_week_end, organisation_id,
                                                     should_alert)
             self.update_alert_status_by_facility_and_disease(value.device_id, 'malaria', response)
@@ -186,15 +187,15 @@ class DataElementValuesValidationService(object):
         std_dev_five_years_dysentery = stdev(dysentery_five_years_same_week)
 
         data_week_start, data_week_end = self.fetch_info_from_updated_data(value)
-        logger.critical(
-            'dysentery: start=%s, end=%s, average_five_years_dysentery=%s, std_dev_five_years_dysentery=%s' % (
-                data_week_start, data_week_end, average_five_years_dysentery, std_dev_five_years_dysentery))
-
         if dysentery_in_current_week > average_five_years_dysentery + std_dev * std_dev_five_years_dysentery:
             rule_group_id = self.rule_group_name_id_map.get(
                 '%s FIVEYEAR AVAERAGE GROUP' % DISEASE_I18N_MAP.get('dysentery'))
-
             should_alert = self.should_alert(value.device_id, 'dysentery')
+
+            logger.critical(
+                'dysentery: rule_group_id = %s, start=%s, end=%s, average_five_years=%s, std_dev_five_years=%s' % (
+                    rule_group_id, data_week_start, data_week_end, average_five_years_dysentery,
+                    std_dev_five_years_dysentery))
             response = self.send_validation_request(rule_group_id, data_week_start, data_week_end, organisation_id,
                                                     should_alert)
             self.update_alert_status_by_facility_and_disease(value.device_id, 'dysentery', response)
@@ -206,11 +207,14 @@ class DataElementValuesValidationService(object):
 
         week_offset = self.customized_rules.get(CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES)).get('recent_weeks')
         threshold = self.customized_rules.get(CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES)).get('threshold')
-        sarampo_in_a_month = self.fetch_sarampo_by_period(current_year, week_num, week_offset, organisation_id)
+        sarampo_cases_in_a_month = self.fetch_sarampo_by_period(current_year, week_num, week_offset, organisation_id)
 
-        if sarampo_in_a_month >= threshold:
+        if sarampo_cases_in_a_month >= threshold:
             data_week_start = self.change_date_to_days_before(start, THREE_WEEKS_DAYS)
             rule_group_id = self.rule_group_name_id_map.get('%s MONTH GROUP' % DISEASE_I18N_MAP.get('measles'))
+
+            logger.critical('sarampo: rule_group_id = %s, start=%s, end=%s, cases_in_a_month=%s' % (
+                rule_group_id, data_week_start, data_week_end, sarampo_cases_in_a_month))
 
             should_alert = self.should_alert(value.device_id, 'measles')
             response = self.send_validation_request(rule_group_id, data_week_start, data_week_end, organisation_id,
@@ -228,7 +232,6 @@ class DataElementValuesValidationService(object):
         is_rule_matched = self.is_meningitis_increasement_rule_match(current_year, week_num, organisation_id,
                                                                      increased_times,
                                                                      recent_weeks)
-        logger.critical('meningitis : is_rule_matched = %s' % is_rule_matched)
         if is_rule_matched:
             rule_group_id = self.rule_group_name_id_map.get(
                 '%s INCREASEMENT GROUP' % DISEASE_I18N_MAP.get('meningitis'))
@@ -253,10 +256,10 @@ class DataElementValuesValidationService(object):
             meningitis_cases_previous_week = DataElementValuesValidationService.fetch_meningitis(previous_year,
                                                                                                  previous_week,
                                                                                                  organisation_id)
-            logger.critical('****************meningitis_cases_current_week = %s,meningitis_cases_previous_week=%s' % (
+            logger.critical('meningitis: cases_current_week = %s,cases_previous_week=%s' % (
                 meningitis_cases_current_week, meningitis_cases_previous_week))
             if meningitis_cases_previous_week == 0 or meningitis_cases_current_week < meningitis_cases_previous_week * increased_times:
-                logger.critical('**********************Don not match***************************')
+                logger.critical('meningitis : ********Don not match******')
                 return False
             meningitis_cases_current_week = meningitis_cases_previous_week
 
