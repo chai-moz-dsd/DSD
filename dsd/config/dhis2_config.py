@@ -3,8 +3,8 @@ import os
 
 # URL config
 VERSION = 24
-DHIS2_1_ENV_DOCKERCLOUD_SERVICE_FQDN = os.environ.get('SERVER_IP_ADDRESS', '52.32.36.132')
-DHIS2_BASE_URL = 'http://%s:%s/' % (DHIS2_1_ENV_DOCKERCLOUD_SERVICE_FQDN, '80')
+DHIS2_1_ENV_DOCKERCLOUD_SERVICE_FQDN = os.environ.get('SERVER_IP_ADDRESS', '127.0.0.1')
+DHIS2_BASE_URL = 'http://%s:%s/' % (DHIS2_1_ENV_DOCKERCLOUD_SERVICE_FQDN, '8085')
 
 KEY_POST_ATTRIBUTE = '_post_attribute'
 KEY_POST_ELEMENT = '_post_element'
@@ -39,6 +39,7 @@ DHIS2_STATIC_URLS = {
     KEY_GET_VALIDATION_RULES: '%sapi/%s/validationRules' % (DHIS2_BASE_URL, VERSION),
     OAUTH2_TOKEN: '%suaa/oauth/token' % DHIS2_BASE_URL,
     OAUTH2_CREATE: '%sapi/oAuth2Clients' % DHIS2_BASE_URL,
+
     KEY_GET_VALIDATION_RULE_GROUPS: '%sdhis-web-validationrule/validationRuleGroup.action' % DHIS2_BASE_URL,
     KEY_RUN_VALIDATION_ACTION: '%sdhis-web-validationrule/runValidationAction.action' % DHIS2_BASE_URL,
 }

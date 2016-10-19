@@ -145,7 +145,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
     @override_settings(DHIS2_SSL_VERIFY=False)
     @patch('dsd.repositories.dhis2_remote_repository.get_access_token')
     @patch('requests.get')
-    def should_get_data_element_value_in_specific_period(self, mock_get, mock_get_access_token):
+    def test_should_get_data_element_value_in_specific_period(self, mock_get, mock_get_access_token):
         mock_get.return_value = MagicMock(status_code=HTTP_200_OK)
         mock_get_access_token.return_value = uuid.uuid4()
         HEADER_DHIS2 = get_oauth_header()
@@ -155,5 +155,20 @@ class DHIS2RemoteRepositoryTest(TestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
         url = '%s?%s' % (dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_DATA_ELEMENT_VALUES), query_params)
         requests.get.assert_called_once_with(url=url,
-                                             headers=HEADER_DHIS2,
-                                             verify=settings.DHIS2_SSL_VERIFY)
+                                             headers=HEADER_DHIS2)
+
+    @override_settings(DHIS2_SSL_VERIFY=False)
+    @patch('dsd.repositories.dhis2_remote_repository.get_access_token')
+    @patch('requests.get')
+    def test_should_get_default_customized_validation_rules(self,mock_get, mock_get_access_token):
+        mock_get.return_value = MagicMock(status_code=HTTP_200_OK)
+        mock_get_access_token.return_value = uuid.uuid4()
+        HEADER_DHIS2 = get_oauth_header()
+        query_params = 'fields=id&fields=validationRuleGroups&filter=additionalRuleType:eq:Default'
+        dhis2_remote_repository.get_validation_rules(query_params)
+
+        url = '%s?%s' % (dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_VALIDATION_RULES), query_params)
+        requests.get.assert_called_once_with(url=url, headers=HEADER_DHIS2)
+
+
+

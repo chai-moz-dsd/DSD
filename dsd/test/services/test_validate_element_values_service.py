@@ -15,7 +15,7 @@ from dsd.models.moh import MOH_UID
 from dsd.repositories import dhis2_remote_repository
 from dsd.services.bes_middleware_core_service import fetch_updated_data_element_values
 from dsd.services.validate_data_element_values_service import DataElementValuesValidationService, \
-    FETCH_CUSTOMIZED_RULES_REQUEST_PARAMS
+    FETCH_CUSTOMIZED_VALIDATION_RULES_REQUEST_PARAMS
 from dsd.test.factories.bes_middleware_core_factory import BesMiddlewareCoreFactory
 from dsd.test.factories.coc_relation_factory import COCRelationFactory
 from dsd.test.factories.element_factory import ElementFactory
@@ -29,20 +29,34 @@ logging.getLogger().setLevel(logging.CRITICAL)
 fetch_disease_in_year_weeks_result = Mock(return_value=10)
 
 should_alert_return_value = Mock(return_value=True)
-update_alert_status_by_facility_and_disease_return_value = Mock()
+update_alert_status_by_facility_and_rule_return_value = Mock()
+
+VALIDATION_GROUP_ID_MEASLES_CASES = 'xi89jfkd9o1'
+VALIDATION_GROUP_ID_MENINGITIS_CASES = 'aik9j9kd9o1'
+VALIDATION_GROUP_ID_DYSENTERY_CASES = 'li89jfkd9o1'
+VALIDATION_GROUP_ID_MALARIA_CASES = 'mi89jfkd9o1'
 
 
 class ValidateDataElementValuesServiceTest(TestCase):
-    @patch.object(DataElementValuesValidationService, 'fetch_customized_rules')
+    @patch.object(DataElementValuesValidationService, 'fetch_customized_validation_rules')
     @patch('dsd.repositories.dhis2_remote_repository.get_all_rule_groups')
-    def setUp(self, mock_get_all_rule_groups, mock_fetch_customized_rules):
+    def setUp(self, mock_get_all_rule_groups, mock_fetch_customized_validation_rules):
         mock_get_all_rule_groups.return_value = MagicMock(status_code=HTTP_200_OK, text=REAL_HTML_RESPONSE)
-        mock_fetch_customized_rules.return_value = {
-            CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES): 'A: 4\r\n B: 5',
-            CUSTOMIZED_VALIDATION_RULE_TYPE.get(MENINGITIS_CASES): 'A: 3\r\n B: 2',
-            CUSTOMIZED_VALIDATION_RULE_TYPE.get(DYSENTERY_CASES): 'A: 5\r\n B: 2',
-            CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES): 'A: 2\r\nB: 2\r\nC:5 \r\nD:2'
-        }
+        mock_fetch_customized_validation_rules.return_value = (
+            {
+                CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES): 'A: 4\r\n B: 5',
+                CUSTOMIZED_VALIDATION_RULE_TYPE.get(MENINGITIS_CASES): 'A: 3\r\n B: 2',
+                CUSTOMIZED_VALIDATION_RULE_TYPE.get(DYSENTERY_CASES): 'A: 5\r\n B: 2',
+                CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES): 'A: 2\r\nB: 2\r\nC:5 \r\nD:2'
+            },
+            {},
+            {
+                CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES): VALIDATION_GROUP_ID_MEASLES_CASES,
+                CUSTOMIZED_VALIDATION_RULE_TYPE.get(MENINGITIS_CASES): VALIDATION_GROUP_ID_MENINGITIS_CASES,
+                CUSTOMIZED_VALIDATION_RULE_TYPE.get(DYSENTERY_CASES): VALIDATION_GROUP_ID_DYSENTERY_CASES,
+                CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES): VALIDATION_GROUP_ID_MALARIA_CASES
+            }
+        )
         self.data_element_values_validation_service = DataElementValuesValidationService()
 
     @patch.object(DataElementValuesValidationService, 'get_element_ids')
@@ -226,10 +240,14 @@ class ValidateDataElementValuesServiceTest(TestCase):
         self.assertDictEqual(expected_groups, rule_groups)
 
     @patch('datetime.date', FakeDate)
+    @patch.object(DataElementValuesValidationService, 'fetch_default_validation_rules')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
-    def test_should_be_false_if_match_rule(self, mock_get_validation_results):
+    def test_should_be_false_if_match_rule(self, mock_get_validation_results, mock_fetch_default_validation_rules):
         mock_get_validation_results.return_value = MagicMock(status_code=HTTP_200_OK,
                                                              text='<div id="validationResults">')
+        mock_fetch_default_validation_rules.return_value = {
+            'eKuAVF39NpL': 'nk1ljBLyhOr'
+        }
         device_id = '356670060310976'
         BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=52, device_id=device_id)
 
@@ -237,7 +255,7 @@ class ValidateDataElementValuesServiceTest(TestCase):
         self.data_element_values_validation_service.send_validation_for_each_disease(value, MOH_UID)
 
         self.assertEqual(False,
-                         self.data_element_values_validation_service.should_alert_by_facility[device_id]['measles'])
+                         self.data_element_values_validation_service.should_alert_by_facility[device_id]['eKuAVF39NpL'])
 
     def test_should_get_four_weeks_before_date(self):
         before_20th = self.data_element_values_validation_service.change_date_to_days_before('2016-09-20',
@@ -249,8 +267,13 @@ class ValidateDataElementValuesServiceTest(TestCase):
         self.assertEqual(before_08th, '2016-07-17')
 
     @patch('datetime.date', FakeDate)
+    @patch.object(DataElementValuesValidationService, 'fetch_default_validation_rules')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
-    def test_should_be_true_if_mismatch_rule(self, mock_get_validation_results):
+    def test_should_be_true_if_mismatch_rule(self, mock_get_validation_results, mock_fetch_default_validation_rules):
+        mock_fetch_default_validation_rules.return_value = {
+            'eKuAVF39NpL': 'nk1ljBLyhOr'
+        }
+
         mock_get_validation_results.return_value = MagicMock(status_code=HTTP_200_OK,
                                                              text='Validation passed successfully')
         device_id = '356670060310976'
@@ -258,13 +281,13 @@ class ValidateDataElementValuesServiceTest(TestCase):
 
         value = BesMiddlewareCore.objects.first()
         self.data_element_values_validation_service.send_validation_for_each_disease(value, MOH_UID)
-
-        self.assertEqual(True, self.data_element_values_validation_service.should_alert_by_facility[device_id]['pfa'])
+        self.assertEqual(True,
+                         self.data_element_values_validation_service.should_alert_by_facility[device_id]['eKuAVF39NpL'])
 
     @patch('datetime.date', FakeDate)
     @patch.object(DataElementValuesValidationService, 'should_alert', should_alert_return_value)
-    @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_disease',
-                  update_alert_status_by_facility_and_disease_return_value)
+    @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_rule',
+                  update_alert_status_by_facility_and_rule_return_value)
     @patch.object(DataElementValuesValidationService, 'get_element_ids')
     @patch.object(dhis2_remote_repository, 'get_data_element_values')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
@@ -281,12 +304,12 @@ class ValidateDataElementValuesServiceTest(TestCase):
 
         mock_get_validation_results.assert_called_once_with(
             'organisationUnitId=MOH12345678&startDate=2016-05-30&endDate=2016-06-26' \
-            '&validationRuleGroupId=1677&sendAlerts=true')
+            '&validationRuleGroupId=%s&sendAlerts=true' % VALIDATION_GROUP_ID_MEASLES_CASES)
 
     @patch('datetime.date', FakeDate)
     @patch.object(DataElementValuesValidationService, 'should_alert', should_alert_return_value)
-    @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_disease',
-                  update_alert_status_by_facility_and_disease_return_value)
+    @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_rule',
+                  update_alert_status_by_facility_and_rule_return_value)
     @patch.object(DataElementValuesValidationService, 'is_meningitis_increasement_rule_match')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
     def test_should_validate_meningitis_every_two_weeks(self,
@@ -300,11 +323,11 @@ class ValidateDataElementValuesServiceTest(TestCase):
                                                                                                    MOH_UID)
         mock_get_validation_results.assert_called_once_with(
             'organisationUnitId=MOH12345678&startDate=2016-06-05&endDate=2016-06-26' \
-            '&validationRuleGroupId=1922&sendAlerts=true')
+            '&validationRuleGroupId=%s&sendAlerts=true' % VALIDATION_GROUP_ID_MENINGITIS_CASES)
 
     @patch.object(DataElementValuesValidationService, 'should_alert', should_alert_return_value)
-    @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_disease',
-                  update_alert_status_by_facility_and_disease_return_value)
+    @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_rule',
+                  update_alert_status_by_facility_and_rule_return_value)
     @patch.object(DataElementValuesValidationService, 'fetch_malaria_by_year_and_weeks_range')
     @patch.object(DataElementValuesValidationService, 'fetch_malaria_in_previous_weeks')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
@@ -321,11 +344,11 @@ class ValidateDataElementValuesServiceTest(TestCase):
             MOH_UID)
         mock_get_validation_results.assert_called_once_with(
             'organisationUnitId=MOH12345678&startDate=2016-05-23&endDate=2016-06-26' \
-            '&validationRuleGroupId=1988&sendAlerts=true')
+            '&validationRuleGroupId=%s&sendAlerts=true' % VALIDATION_GROUP_ID_MALARIA_CASES)
 
     @patch.object(DataElementValuesValidationService, 'should_alert', should_alert_return_value)
-    @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_disease',
-                  update_alert_status_by_facility_and_disease_return_value)
+    @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_rule',
+                  update_alert_status_by_facility_and_rule_return_value)
     @patch.object(DataElementValuesValidationService, 'fetch_dysentery_same_week_in_recent_five_years')
     @patch.object(DataElementValuesValidationService, 'fetch_dysentery_in_week_num')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
@@ -343,42 +366,70 @@ class ValidateDataElementValuesServiceTest(TestCase):
 
         mock_get_validation_results.assert_called_once_with(
             'organisationUnitId=MOH12345678&startDate=2016-06-20'
-            '&endDate=2016-06-26&validationRuleGroupId=1689&sendAlerts=true')
+            '&endDate=2016-06-26&validationRuleGroupId=%s&sendAlerts=true' % VALIDATION_GROUP_ID_DYSENTERY_CASES)
 
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_rules')
-    def test_should_fetch_all_customized_rules(self, mock_get_validation_rules):
+    def test_should_fetch_all_default_validation_rules(self, mock_get_validation_rules):
+        rules = {
+            "validationRules": [
+                {"id": "zGpdNR7JSqj", "validationRuleGroups": [{"id": "rzNBJgj9Li9"}]},
+                {"id": "gAKQ6qdKFxN", "validationRuleGroups": [{"id": "rzNBJgj9Li9"}]},
+                {"id": "CbneQn7QHG3", "validationRuleGroups": [{"id": "YWW6Z9IW41t"}]},
+                {"id": "CbneQn7Q8f3", "validationRuleGroups": []}
+            ]
+        }
+        mock_get_validation_rules.return_value = MagicMock(json=MagicMock(return_value=rules),
+                                                           status_code=HTTP_200_OK)
+        default_validation_rules = self.data_element_values_validation_service.fetch_default_validation_rules()
+        self.assertEquals(len(default_validation_rules), 3)
+        self.assertEquals(default_validation_rules.get('zGpdNR7JSqj'), 'rzNBJgj9Li9')
+        self.assertEquals(default_validation_rules.get('gAKQ6qdKFxN'), 'rzNBJgj9Li9')
+        self.assertEquals(default_validation_rules.get('CbneQn7QHG3'), 'YWW6Z9IW41t')
+
+    @patch('dsd.repositories.dhis2_remote_repository.get_validation_rules')
+    def test_should_fetch_all_customized_validation_rules(self, mock_get_validation_rules):
         rules = {
             'validationRules': [
                 {
+                    "id": "eKuAVF39NpL",
                     'name': 'Sarampo: Cases in recent ( A ) EPI week(s) > ( B )',
                     'additionalRule': 'A: 1\r\nB: 5',
                     'additionalRuleType': CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES),
+                    "validationRuleGroups": [{"id": "nk1ljBLyhOr"}
+                                             ]
                 },
                 {
+                    "id": "eKuALF39NpL",
                     'name': 'Meningite: Cases increases by ( A ) times in recent ( B ) consecutive weeks',
                     'additionalRule': 'A: 1\r\nB: 5',
                     'additionalRuleType': CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES),
+                    "validationRuleGroups": [{"id": "nk1ljBLyhOr"}]
                 },
                 {
+                    "id": "eKuMVF39NpL",
                     'name': 'Disenteria: Cases > average for same week in last ( A ) years + ( B ) * std dev',
                     'additionalRule': 'A: 1\r\nB: 5',
                     'additionalRuleType': CUSTOMIZED_VALIDATION_RULE_TYPE.get(
                         MENINGITIS_CASES),
+                    "validationRuleGroups": []
                 },
                 {
+                    "id": "ePuAVF39NpL",
                     'name': 'Malária: Cases > average from current week + ( A ) earlier weeks to current week - ( B ) later weeks in past ( C ) years + ( D ) * std dev',
                     'additionalRule': 'A: 1\r\nB: 5',
                     'additionalRuleType': CUSTOMIZED_VALIDATION_RULE_TYPE.get(
                         DYSENTERY_CASES),
+                    "validationRuleGroups": []
                 }
             ]
         }
         mock_get_validation_rules.return_value = MagicMock(json=MagicMock(return_value=rules),
                                                            status_code=HTTP_200_OK)
-        result = self.data_element_values_validation_service.fetch_customized_rules()
-
-        self.assertEqual(len(result), 4)
-        mock_get_validation_rules.assert_called_once_with(FETCH_CUSTOMIZED_RULES_REQUEST_PARAMS)
+        rule_type_to_addition_rules, rule_type_to_rule_ids, rule_type_to_rule_groups = self.data_element_values_validation_service.fetch_customized_validation_rules()
+        self.assertEqual(len(rule_type_to_addition_rules), 4)
+        self.assertEqual(len(rule_type_to_rule_ids), 4)
+        self.assertEqual(len(rule_type_to_rule_groups), 2)
+        mock_get_validation_rules.assert_called_once_with(FETCH_CUSTOMIZED_VALIDATION_RULES_REQUEST_PARAMS)
 
     def test_should_parse_params_from_measles_cases_rule(self):
         rule_type = CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES)
@@ -388,20 +439,18 @@ class ValidateDataElementValuesServiceTest(TestCase):
         self.assertEqual(result.get('recent_weeks'), 3)
         self.assertEqual(result.get('threshold'), 8)
 
-    @patch.object(DataElementValuesValidationService, 'fetch_customized_rules')
-    def test_should_extract_params_from_customize_rules(self, mock_fetch_customized_rules):
+    def test_should_extract_params_from_customize_rules(self):
         rule1 = CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES)
         rule2 = CUSTOMIZED_VALIDATION_RULE_TYPE.get(MENINGITIS_CASES)
         rule3 = CUSTOMIZED_VALIDATION_RULE_TYPE.get(DYSENTERY_CASES)
         rule4 = CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES)
 
-        mock_fetch_customized_rules.return_value = {
+        result = self.data_element_values_validation_service.extract_params_from_customize_rules({
             rule1: 'A:4\r\nB:5',
             rule2: 'A:2\r\nB:3',
             rule3: 'A:5\r\nB:2',
             rule4: 'A:2\r\nB:2\r\nC:5\r\nD:2',
-        }
-        result = self.data_element_values_validation_service.extract_params_from_customize_rules()
+        })
         logger.critical(result)
         self.assertEqual(len(result.get(rule1)), 2)
         self.assertEqual(result.get(rule1).get('recent_weeks'), 4)
