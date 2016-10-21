@@ -112,6 +112,9 @@ DATABASES = {
     }
 }
 
+DHIS2_SERVER_IP = config['DHIS2_SERVER']['IP']
+DHIS2_PORT = config['DHIS2_SERVER']['PORT']
+
 DATABASE_ROUTERS = ['dsd.routers.remote_router.RemoteRouter', 'dsd.routers.local_router.LocalRouter']
 
 CACHES = {
@@ -180,7 +183,7 @@ LOGGING = {
             'class': 'logging.NullHandler',
         },
         'console': {
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'class': 'logging.StreamHandler',
             'formatter': 'standard'
         },
@@ -209,7 +212,7 @@ LOGGING = {
     'loggers': {
         '': {
             'handlers': ['console', 'debug_file'],
-            'level': 'CRITICAL'
+            'level': 'DEBUG'
         },
         'django.request': {
             'handlers': ['request_file'],
@@ -239,7 +242,7 @@ CRONJOBS = (
 
 DHIS2_SSL_VERIFY = False
 
-#email configuration
+# email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
