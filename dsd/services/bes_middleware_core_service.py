@@ -34,7 +34,8 @@ def translate_remote_bes_middleware_cores(all_remote_bes_middleware_cores):
     for remote_bes_middleware_core in all_remote_bes_middleware_cores:
         remote_bes_middleware_core.__dict__.pop('_state')
         local_bes_middleware_core = BesMiddlewareCore(**remote_bes_middleware_core.__dict__)
-        all_local_bes_middleware_cores.append(local_bes_middleware_core)
+        if is_data_element_belongs_to_facility(local_bes_middleware_core):
+            all_local_bes_middleware_cores.append(local_bes_middleware_core)
 
     return all_local_bes_middleware_cores
 

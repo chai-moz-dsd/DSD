@@ -10,6 +10,7 @@ from dsd.models.remote.bes_middleware_core import BesMiddlewareCore as BesMiddle
 from dsd.services import bes_middleware_core_service
 from dsd.services.bes_middleware_core_service import is_valid
 from dsd.test.factories.bes_middleware_core_factory import BesMiddlewareCoreFactory
+from dsd.test.factories.facility_factory import FacilityFactory
 
 logger = logging.getLogger(__name__)
 
@@ -34,18 +35,23 @@ class BesMiddlewareCoreTest(TestCase):
     def test_should_sync_all_remote_bes_middleware_core(self, mock_all):
         uuid1 = str(uuid.uuid4())
         mock_all.return_value = [
-            BesMiddlewareCoreRemote(uri=uuid1, creation_date=datetime.now(), last_update_date=datetime.now(),
+            BesMiddlewareCoreRemote(device_id=FacilityFactory(device_serial='356670060315512').device_serial, uri=uuid1,
+                                    creation_date=datetime.now(), last_update_date=datetime.now(),
                                     middleware_created_date=datetime.now(), middleware_updated_date=datetime.now()),
-            BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
+            BesMiddlewareCoreRemote(device_id=FacilityFactory(device_serial='356670060315512').device_serial,
+                                    uri=str(uuid.uuid4()), creation_date=datetime.now(),
                                     last_update_date=datetime.now(), middleware_created_date=datetime.now(),
                                     middleware_updated_date=datetime.now()),
-            BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
+            BesMiddlewareCoreRemote(device_id=FacilityFactory(device_serial='356670060315512').device_serial,
+                                    uri=str(uuid.uuid4()), creation_date=datetime.now(),
                                     last_update_date=datetime.now(), middleware_created_date=datetime.now(),
                                     middleware_updated_date=datetime.now()),
-            BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
+            BesMiddlewareCoreRemote(device_id=FacilityFactory(device_serial='356670060315512').device_serial,
+                                    uri=str(uuid.uuid4()), creation_date=datetime.now(),
                                     last_update_date=datetime.now(), middleware_created_date=datetime.now(),
                                     middleware_updated_date=datetime.now()),
-            BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
+            BesMiddlewareCoreRemote(device_id=FacilityFactory(device_serial='356670060315512').device_serial,
+                                    uri=str(uuid.uuid4()), creation_date=datetime.now(),
                                     last_update_date=datetime.now(), middleware_created_date=datetime.now(),
                                     middleware_updated_date=datetime.now()),
         ]
@@ -75,10 +81,14 @@ class BesMiddlewareCoreTest(TestCase):
         ]
 
         mock_filter.return_value = [
-            BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
+            BesMiddlewareCoreRemote(device_id=FacilityFactory(device_serial='356670060315512').device_serial,
+                                    uri=str(uuid.uuid4()),
+                                    creation_date=datetime.now(),
                                     last_update_date=datetime.now(), middleware_created_date=datetime.now(),
                                     middleware_updated_date=datetime(2016, 8, 31, 3, 0, 0, 0, timezone.utc)),
-            BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
+            BesMiddlewareCoreRemote(device_id=FacilityFactory(device_serial='356670060315512').device_serial,
+                                    uri=str(uuid.uuid4()),
+                                    creation_date=datetime.now(),
                                     last_update_date=datetime.now(), middleware_created_date=datetime.now(),
                                     middleware_updated_date=datetime(2016, 8, 31, 3, 30, 0, 0, timezone.utc)),
         ]

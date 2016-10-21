@@ -26,6 +26,7 @@ def start():
         sync_metadata_to_local()
         # updated_bes_middleware_cores = fetch_updated_data_element_values()
         updated_bes_middleware_cores = sync_business_data_to_local()
+        logger.critical('updated_bes_middleware_cores = %s' % len(updated_bes_middleware_cores))
     except Exception as e:
         logger.error('Sync error: %s!' % e)
         SyncRecord.get_fail_instance().save()
@@ -37,7 +38,6 @@ def start():
 def post_and_validate_data_element(updated_bes_middleware_cores):
     reset_cache()
     post_data_element_values(updated_bes_middleware_cores)
-    logger.critical('updated_bes_middleware_cores length=%s' % len(updated_bes_middleware_cores))
 
     set_coc_id()
     DataElementValuesValidationService().validate_values(updated_bes_middleware_cores)

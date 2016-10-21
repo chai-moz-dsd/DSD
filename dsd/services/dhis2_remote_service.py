@@ -99,8 +99,11 @@ def post_data_set():
 def post_data_element_values(date_element_values):
     logger.info('=== START SYNC DATA VALUE ===')
     for data_element in date_element_values:
-        json_dumps = json.dumps(build_data_element_values_request_body_as_dict(data_element))
-        dhis2_remote_repository.post_data_elements_value(json_dumps)
+        try:
+            json_dumps = json.dumps(build_data_element_values_request_body_as_dict(data_element))
+            dhis2_remote_repository.post_data_elements_value(json_dumps)
+        except Exception as e:
+            logger.error('data element =%s ,post data element value error =  %s' % (data_element, e))
 
 
 def build_data_element_values_request_body_as_dict(bes_middleware_core):
