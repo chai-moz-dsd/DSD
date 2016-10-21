@@ -10,4 +10,5 @@ class SyncRecordFactory(factory.DjangoModelFactory):
         model = SyncRecord
 
     created = datetime.now()
+    time_start = datetime.now()
     status = 'Success'

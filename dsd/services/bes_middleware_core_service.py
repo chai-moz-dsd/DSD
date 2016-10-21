@@ -6,20 +6,23 @@ from dsd.models.remote.bes_middleware_core import BesMiddlewareCore as BesMiddle
 logger = logging.getLogger(__name__)
 
 
-def sync(last_successfully_sync_time):
-    if not last_successfully_sync_time:
+def sync(last_successfully_sync_start_time):
+    if not last_successfully_sync_start_time:
         all_remote_bes_middleware_cores = BesMiddlewareCoreRemote.objects.all()
-        logger.info('sync all bes_middleware_cores at %s' % last_successfully_sync_time)
+        logger.info('sync all bes_middleware_cores at %s' % last_successfully_sync_start_time)
     else:
         all_remote_bes_middleware_cores = BesMiddlewareCoreRemote.objects.filter(
-            last_update_date__gte=last_successfully_sync_time)
-        logger.info('sync bes_middleware_cores from %s' % last_successfully_sync_time)
+            middleware_updated_date__gte=last_successfully_sync_start_time)
+        logger.info('sync bes_middleware_cores from %s' % last_successfully_sync_start_time)
 
     all_translated_bes_middleware_cores = translate_remote_bes_middleware_cores(all_remote_bes_middleware_cores)
     all_valid_local_bes_middleware_cores = filter(is_valid, all_translated_bes_middleware_cores)
 
+    bes_middleware_cores = []
     for bes_middleware_core in all_valid_local_bes_middleware_cores:
-        save(bes_middleware_core)
+        bes_middleware_cores.append(save(bes_middleware_core))
+
+    return bes_middleware_cores
 
 
 def is_valid(bes_middleware_core):
@@ -42,6 +45,7 @@ def save(bes_middleware_core):
         existed_bes_middleware_core = result_filter.first()
         bes_middleware_core.uri = existed_bes_middleware_core.uri
     bes_middleware_core.save()
+    return bes_middleware_core
 
 
 def should_be_synced(bes_middleware_core, last_sync_success_date):

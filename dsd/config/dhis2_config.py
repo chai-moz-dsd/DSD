@@ -1,10 +1,10 @@
 # DHIS2 configuration
-import os
 
 # URL config
+from chai.settings import DHIS2_SERVER_IP, DHIS2_PORT
+
 VERSION = 24
-DHIS2_1_ENV_DOCKERCLOUD_SERVICE_FQDN = os.environ.get('SERVER_IP_ADDRESS', '52.32.36.132')
-DHIS2_BASE_URL = 'http://%s:%s/' % (DHIS2_1_ENV_DOCKERCLOUD_SERVICE_FQDN, '80')
+DHIS2_BASE_URL = 'http://%s:%s/' % (DHIS2_SERVER_IP, DHIS2_PORT)
 
 KEY_POST_ATTRIBUTE = '_post_attribute'
 KEY_POST_ELEMENT = '_post_element'
