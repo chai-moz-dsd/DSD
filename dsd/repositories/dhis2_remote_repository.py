@@ -88,7 +88,7 @@ def get_data_element_values(query_params):
 def update_user(request_body, user_id):
     return requests.put(url=dhis2_config.key_update_user(user_id),
                         data=request_body,
-                        auth=(settings.USERNAME, settings.USERNAME),
+                        auth=(settings.USERNAME, settings.PASSWORD),
                         headers={'Content-Type': 'application/json'},
                         verify=settings.DHIS2_SSL_VERIFY)
 
@@ -97,7 +97,7 @@ def __post_request(url, data):
     try:
         return requests.post(url=url,
                              data=data,
-                             auth=(settings.USERNAME, settings.USERNAME),
+                             auth=(settings.USERNAME, settings.PASSWORD),
                              headers={'Content-Type': 'application/json'},
                              verify=settings.DHIS2_SSL_VERIFY)
     except ConnectionError:
@@ -107,7 +107,7 @@ def __post_request(url, data):
 def __get_request(url):
     try:
         return requests.get(url=url,
-                            auth=(settings.USERNAME, settings.USERNAME),
+                            auth=(settings.USERNAME, settings.PASSWORD),
                             headers={'Content-Type': 'application/json'},
                             verify=settings.DHIS2_SSL_VERIFY)
     except ConnectionError:
