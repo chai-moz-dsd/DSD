@@ -16,9 +16,9 @@ USERNAME = dhis2_config.USERNAME
 PASSWORD = dhis2_config.PASSWORD
 OAUTH2_UID = dhis2_config.OAUTH2_UID
 OAUTH2_SECRET = dhis2_config.OAUTH2_SECRET
-ACCESS_TOKEN = dhis2_config.ACCESS_TOKEN
-REFRESH_TOKEN = dhis2_config.REFRESH_TOKEN
-EXPIRES_TIME = dhis2_config.EXPIRES_TIME
+ACCESS_TOKEN = 'access_token'
+REFRESH_TOKEN = 'refresh_token'
+EXPIRES_TIME = 36000
 
 
 def get_access_token():
