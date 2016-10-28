@@ -56,15 +56,12 @@ function run_functional_test {
 function run_server {
   if [ "$1" = "--prod" ]; then
     python manage.py crontab add --settings=chai.settings_prod
-    python manage.py createcachetable --settings=chai.settings_prod dsd_cache
     python manage.py runserver --settings=chai.settings_prod
   elif [ "$1" = "--ci" ]; then
     python manage.py crontab add --settings=chai.settings_ci
-    python manage.py createcachetable --settings=chai.settings_ci dsd_cache
     python manage.py runserver --settings=chai.settings_ci
   else
     python manage.py crontab add --settings=chai.settings_dev
-    python manage.py createcachetable --settings=chai.settings_dev dsd_cache
     python manage.py runserver --settings=chai.settings_dev
   fi
 }
@@ -100,7 +97,6 @@ function seed {
     python manage.py loaddata dsd/fixtures/data_elements.json --settings=chai.settings_dev
     python manage.py loaddata dsd/fixtures/coc_relations.json --settings=chai.settings_dev
     python manage.py loaddata dsd/fixtures/historical_coc_relations.json --settings=chai.settings_dev
-    python manage.py createcachetable --settings=chai.settings_dev dsd_cache
 }
 
 main $@

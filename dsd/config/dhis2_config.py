@@ -25,6 +25,7 @@ OAUTH2_TOKEN = 'oauth2_token'
 OAUTH2_CREATE = 'oauth2_create'
 
 HEADER_OAUTH = {'Accept': 'application/json'}
+POST_HEADERS = {'Content-Type': 'application/json'}
 USERNAME = settings.USERNAME
 PASSWORD = settings.PASSWORD
 OAUTH2_UID = settings.OAUTH2_UID

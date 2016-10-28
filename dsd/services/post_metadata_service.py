@@ -1,7 +1,6 @@
 import logging
 
 from dsd.models import SyncRecord
-from dsd.repositories.dhis2_oauth_token import initial_access_token
 from dsd.scheduler import sync_business_data_to_local
 from dsd.services.dhis2_remote_service import post_attributes, post_organization_units, post_category_options, \
     post_categories, post_category_combinations, post_elements, post_data_set, assign_all_org_to_user, \
@@ -21,7 +20,6 @@ def sync_metadata_with_bes():
 
 
 def sync_metadata_with_dhis2():
-    initial_access_token()
     post_attributes()
     post_organization_units()
     post_category_options()
@@ -32,7 +30,7 @@ def sync_metadata_with_dhis2():
     set_coc_id()
     assign_all_org_to_user()
     set_org_unit_level()
-    # post_historical_data_element_values_to_dhis2()
+    post_historical_data_element_values_to_dhis2()
 
 
 def need_sync_bes_data():

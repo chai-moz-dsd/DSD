@@ -14,7 +14,6 @@ from dsd.config import dhis2_config
 from dsd.models import BesMiddlewareCore
 from dsd.models.moh import MoH, MOH_UID
 from dsd.repositories import dhis2_remote_repository
-from dsd.repositories.dhis2_remote_repository import get_oauth_header
 from dsd.repositories.request_template.add_element_template import AddElementRequestTemplate
 from dsd.services import dhis2_remote_service
 from dsd.services.bes_middleware_core_service import is_data_element_belongs_to_facility
@@ -50,10 +49,9 @@ class DHIS2RemoteServiceTest(TestCase):
 
     @patch('datetime.date', FakeDate)
     @patch('dsd.util.id_generator.generate_id')
-    @patch('dsd.repositories.dhis2_remote_repository.get_access_token')
     @patch('requests.post')
     @override_settings(DHIS2_SSL_VERIFY=False)
-    def test_should_post_organization_units(self, mock_post, mock_get_access_token, mock_generate_id):
+    def test_should_post_organization_units(self, mock_post, mock_generate_id):
         mock_generate_id.side_effect = ['00000000000', '11111111111', '22222222222', '33333333333', '44444444444',
                                         '55555555555', '66666666666']
 
@@ -73,21 +71,20 @@ class DHIS2RemoteServiceTest(TestCase):
         organization_unit_list = MoH().get_organization_as_list()
 
         mock_post.return_value = MagicMock(status_code=HTTP_201_CREATED)
-        mock_get_access_token.return_value = uuid.uuid4()
 
         post_organization_units()
 
         requests.post.assert_has_calls(
             [call(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_ORGANIZATION_UNIT),
-                  headers=get_oauth_header(),
+                  headers=dhis2_config.POST_HEADERS,
+                  auth=(settings.USERNAME, settings.PASSWORD),
                   verify=settings.DHIS2_SSL_VERIFY,
                   data=json.dumps(organization_unit_list[0])
                   )])
 
     @override_settings(DHIS2_SSL_VERIFY=False)
-    @patch('dsd.repositories.dhis2_remote_repository.get_access_token')
     @patch('requests.post')
-    def test_should_post_elements(self, mock_post, mock_get_access_token):
+    def test_should_post_elements(self, mock_post):
         element = ElementFactory()
 
         request_body_dict = AddElementRequestTemplate().build(id=element.id,
@@ -99,13 +96,12 @@ class DHIS2RemoteServiceTest(TestCase):
                                                               aggregation_type=element.aggregation_type,
                                                               name=element.name)
         mock_post.return_value = MagicMock(status_code=HTTP_201_CREATED)
-        mock_get_access_token.return_value = uuid.uuid4()
-        HEADER_DHIS2 = get_oauth_header()
 
         post_elements()
 
         requests.post.assert_called_once_with(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_ELEMENT),
-                                              headers=HEADER_DHIS2,
+                                              headers=dhis2_config.POST_HEADERS,
+                                              auth=(settings.USERNAME, settings.PASSWORD),
                                               verify=settings.DHIS2_SSL_VERIFY,
                                               data=json.dumps(request_body_dict))
 

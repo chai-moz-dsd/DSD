@@ -7,7 +7,6 @@ from dsd.config.dhis2_config import key_get_cocid
 from dsd.models import CategoryCombination
 from dsd.models import COCRelation
 from dsd.models import HistoricalCOCRelation
-from dsd.repositories.dhis2_oauth_token import get_access_token
 
 
 def get_category_combo_ids():
@@ -17,7 +16,7 @@ def get_category_combo_ids():
 def get_category_option_combos(category_comb_id):
     url = key_get_cocid(category_comb_id)
     response = requests.get(url=url,
-                            headers=oauth_header(),
+                            auth=(settings.USERNAME, settings.USERNAME),
                             verify=settings.DHIS2_SSL_VERIFY)
     return json.loads(response.text)
 
@@ -40,7 +39,3 @@ def set_coc_id():
         res = get_category_option_combos(cc_id)["categoryOptionCombos"]
         for coc in res:
             update_coc_relation(cc_id, coc)
-
-
-def oauth_header():
-    return {'Authorization': 'bearer %s' % get_access_token()}

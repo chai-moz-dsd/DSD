@@ -2,10 +2,7 @@ import datetime
 import logging
 
 from django.conf import settings
-from django.core.cache import cache
-
 from dsd.models import SyncRecord
-from dsd.repositories.dhis2_oauth_token import REFRESH_TOKEN, ACCESS_TOKEN
 from dsd.services import bes_middleware_core_service
 from dsd.services import district_service
 from dsd.services import facility_service
@@ -36,7 +33,6 @@ def start():
 
 
 def post_and_validate_data_element(updated_bes_middleware_cores):
-    reset_cache()
     set_coc_id()
     post_data_element_values(updated_bes_middleware_cores)
     DataElementValuesValidationService().validate_values(updated_bes_middleware_cores)
@@ -63,18 +59,12 @@ def sync_metadata_to_local():
     logger.info('Sync meta data end...')
 
 
-def reset_cache():
-    cache.set(ACCESS_TOKEN, None)
-    cache.set(REFRESH_TOKEN, None)
-
-
 def send_msg_when_error_happened(content, receivers):
     dhis2_send_email('Error happens when element data was syn to dhis2.', content, settings.DEFAULT_FROM_EMAIL,
                      receivers)
 
 
 def test():
-    reset_cache()
     sync_business_data_to_local()
     set_coc_id()
     post_and_validate_data_element()
