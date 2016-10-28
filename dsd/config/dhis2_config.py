@@ -1,10 +1,10 @@
 # DHIS2 configuration
 
 # URL config
-from chai.settings import DHIS2_SERVER_IP, DHIS2_PORT
+from django.conf import settings
 
 VERSION = 24
-DHIS2_BASE_URL = 'http://%s:%s/' % (DHIS2_SERVER_IP, DHIS2_PORT)
+DHIS2_BASE_URL = 'http://%s:%s/' % (settings.DHIS2_SERVER_IP, settings.DHIS2_PORT)
 
 KEY_POST_ATTRIBUTE = '_post_attribute'
 KEY_POST_ELEMENT = '_post_element'
@@ -23,6 +23,15 @@ KEY_RUN_VALIDATION_ACTION = '_key_run_validation_action'
 
 OAUTH2_TOKEN = 'oauth2_token'
 OAUTH2_CREATE = 'oauth2_create'
+
+HEADER_OAUTH = {'Accept': 'application/json'}
+USERNAME = settings.USERNAME
+PASSWORD = settings.PASSWORD
+OAUTH2_UID = settings.OAUTH2_UID
+OAUTH2_SECRET = settings.OAUTH2_SECRET
+ACCESS_TOKEN = 'access_token'
+REFRESH_TOKEN = 'refresh_token'
+EXPIRES_TIME = 36000
 
 DHIS2_STATIC_URLS = {
     KEY_POST_ATTRIBUTE: '%sapi/%s/attributes' % (DHIS2_BASE_URL, VERSION),

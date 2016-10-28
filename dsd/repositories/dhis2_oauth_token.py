@@ -11,14 +11,14 @@ from dsd.exceptions.remote_request_exception import RemoteRequestException
 logger = logging.getLogger(__name__)
 
 # TODO - Put these in ini config
-HEADER_OAUTH = {'Accept': 'application/json'}
-USERNAME = 'admin'
-PASSWORD = 'district'
-OAUTH2_UID = 'moh'
-OAUTH2_SECRET = '1e6db50c-0fee-11e5-98d0-3c15c2c6caf6'
-ACCESS_TOKEN = 'access_token'
-REFRESH_TOKEN = 'refresh_token'
-EXPIRES_TIME = 36000
+HEADER_OAUTH = dhis2_config.HEADER_OAUTH
+USERNAME = dhis2_config.USERNAME
+PASSWORD = dhis2_config.PASSWORD
+OAUTH2_UID = dhis2_config.OAUTH2_UID
+OAUTH2_SECRET = dhis2_config.OAUTH2_SECRET
+ACCESS_TOKEN = dhis2_config.ACCESS_TOKEN
+REFRESH_TOKEN = dhis2_config.REFRESH_TOKEN
+EXPIRES_TIME = dhis2_config.EXPIRES_TIME
 
 
 def get_access_token():
