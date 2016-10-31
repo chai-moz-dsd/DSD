@@ -4,7 +4,8 @@
 from django.conf import settings
 
 VERSION = 24
-DHIS2_BASE_URL = 'http://%s:%s/' % (settings.DHIS2_SERVER_IP, settings.DHIS2_PORT)
+# DHIS2_BASE_URL = 'http://%s:%s/' % (settings.DHIS2_SERVER_IP, settings.DHIS2_PORT)
+DHIS2_BASE_URL = 'https://%s/' % settings.DHIS2_SERVER_IP
 
 KEY_POST_ATTRIBUTE = '_post_attribute'
 KEY_POST_ELEMENT = '_post_element'
