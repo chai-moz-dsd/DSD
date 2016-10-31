@@ -79,7 +79,7 @@ class DHIS2RemoteServiceTest(TestCase):
             [call(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_ORGANIZATION_UNIT),
                   headers=dhis2_config.POST_HEADERS,
                   auth=(settings.USERNAME, settings.PASSWORD),
-                  cert="/opt/app/chai/volume/config/ssl/dhis2.pem",
+                  verify="/opt/app/chai/volume/config/ssl/dhis2.pem",
                   data=json.dumps(organization_unit_list[0])
                   )])
 
@@ -103,7 +103,7 @@ class DHIS2RemoteServiceTest(TestCase):
         requests.post.assert_called_once_with(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_ELEMENT),
                                               headers=dhis2_config.POST_HEADERS,
                                               auth=(settings.USERNAME, settings.PASSWORD),
-                                              cert=PATH_TO_CERT,
+                                              verify=PATH_TO_CERT,
                                               data=json.dumps(request_body_dict))
 
     @override_settings(DHIS2_SSL_VERIFY=False)
