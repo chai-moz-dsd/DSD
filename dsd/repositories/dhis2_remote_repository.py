@@ -90,7 +90,7 @@ def update_user(request_body, user_id):
                         data=request_body,
                         auth=(settings.USERNAME, settings.PASSWORD),
                         headers={'Content-Type': 'application/json'},
-                        cert="/opt/app/chai/volume/config/ssl/dhis2.crt"
+                        cert="/opt/app/chai/volume/config/ssl/dhis2.pem"
                         )
 
 
@@ -100,7 +100,7 @@ def __post_request(url, data):
                              data=data,
                              auth=(settings.USERNAME, settings.PASSWORD),
                              headers={'Content-Type': 'application/json'},
-                             cert="/opt/app/chai/volume/config/ssl/dhis2.crt")
+                             cert="/opt/app/chai/volume/config/ssl/dhis2.pem")
     except ConnectionError:
         raise RemoteRequestException()
 
@@ -110,6 +110,6 @@ def __get_request(url):
         return requests.get(url=url,
                             auth=(settings.USERNAME, settings.PASSWORD),
                             headers={'Content-Type': 'application/json'},
-                            cert="/opt/app/chai/volume/config/ssl/dhis2.crt")
+                            cert="/opt/app/chai/volume/config/ssl/dhis2.pem")
     except ConnectionError:
         raise RemoteRequestException()
