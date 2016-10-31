@@ -216,7 +216,7 @@ LOGGING = {
     'loggers': {
         '': {
             'handlers': ['console', 'debug_file'],
-            'level': 'DEBUG'
+            'level': 'INFO'
         },
         'django.request': {
             'handlers': ['request_file'],

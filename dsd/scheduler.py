@@ -14,7 +14,7 @@ from dsd.services.sync_cocid_service import set_coc_id
 from dsd.services.validate_data_element_values_service import DataElementValuesValidationService
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.CRITICAL)
+# logger.setLevel(logging.CRITICAL)
 
 
 def start():
