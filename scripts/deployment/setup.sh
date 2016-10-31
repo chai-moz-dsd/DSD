@@ -18,7 +18,7 @@ while true; do
     sleep 1
     if curl --fail dhis2:8080; then
         echo "posting."
-        python manage.py shell_plus < dsd/services/post_metadata_service.py
+        python manage.py shell_plus --plain < dsd/services/post_metadata_service.py
         break
     fi;
 done
