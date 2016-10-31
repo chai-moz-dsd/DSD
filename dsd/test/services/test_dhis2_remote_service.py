@@ -14,6 +14,7 @@ from dsd.config import dhis2_config
 from dsd.models import BesMiddlewareCore
 from dsd.models.moh import MoH, MOH_UID
 from dsd.repositories import dhis2_remote_repository
+from dsd.repositories.dhis2_remote_repository import PATH_TO_CERT
 from dsd.repositories.request_template.add_element_template import AddElementRequestTemplate
 from dsd.services import dhis2_remote_service
 from dsd.services.bes_middleware_core_service import is_data_element_belongs_to_facility
@@ -78,7 +79,7 @@ class DHIS2RemoteServiceTest(TestCase):
             [call(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_ORGANIZATION_UNIT),
                   headers=dhis2_config.POST_HEADERS,
                   auth=(settings.USERNAME, settings.PASSWORD),
-                  cert="/opt/app/chai/volume/config/ssl/dhis2.crt",
+                  cert="/opt/app/chai/volume/config/ssl/dhis2.pem",
                   data=json.dumps(organization_unit_list[0])
                   )])
 
@@ -102,7 +103,7 @@ class DHIS2RemoteServiceTest(TestCase):
         requests.post.assert_called_once_with(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_ELEMENT),
                                               headers=dhis2_config.POST_HEADERS,
                                               auth=(settings.USERNAME, settings.PASSWORD),
-                                              cert="/opt/app/chai/volume/config/ssl/dhis2.crt",
+                                              cert=PATH_TO_CERT,
                                               data=json.dumps(request_body_dict))
 
     @override_settings(DHIS2_SSL_VERIFY=False)

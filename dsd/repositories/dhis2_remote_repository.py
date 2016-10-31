@@ -8,9 +8,10 @@ from dsd.exceptions.remote_request_exception import RemoteRequestException
 
 CONTENT_TYPE = {'Content-Type': 'application/json'}
 
+PATH_TO_CERT = "/opt/app/chai/volume/config/ssl/dhis2.pem"
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.CRITICAL)
-
 
 
 def post_category_options(request_body):
@@ -90,8 +91,7 @@ def update_user(request_body, user_id):
                         data=request_body,
                         auth=(settings.USERNAME, settings.PASSWORD),
                         headers={'Content-Type': 'application/json'},
-                        cert="/opt/app/chai/volume/config/ssl/dhis2.pem"
-                        )
+                        cert=PATH_TO_CERT)
 
 
 def __post_request(url, data):
@@ -100,7 +100,7 @@ def __post_request(url, data):
                              data=data,
                              auth=(settings.USERNAME, settings.PASSWORD),
                              headers={'Content-Type': 'application/json'},
-                             cert="/opt/app/chai/volume/config/ssl/dhis2.pem")
+                             cert=PATH_TO_CERT)
     except ConnectionError:
         raise RemoteRequestException()
 
@@ -110,6 +110,6 @@ def __get_request(url):
         return requests.get(url=url,
                             auth=(settings.USERNAME, settings.PASSWORD),
                             headers={'Content-Type': 'application/json'},
-                            cert="/opt/app/chai/volume/config/ssl/dhis2.pem")
+                            cert=PATH_TO_CERT)
     except ConnectionError:
         raise RemoteRequestException()
