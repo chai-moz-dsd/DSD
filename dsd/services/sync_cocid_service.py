@@ -7,6 +7,7 @@ from dsd.config.dhis2_config import key_get_cocid
 from dsd.models import CategoryCombination
 from dsd.models import COCRelation
 from dsd.models import HistoricalCOCRelation
+from dsd.repositories.dhis2_remote_repository import PATH_TO_CERT
 
 
 def get_category_combo_ids():
@@ -17,7 +18,7 @@ def get_category_option_combos(category_comb_id):
     url = key_get_cocid(category_comb_id)
     response = requests.get(url=url,
                             auth=(settings.USERNAME, settings.PASSWORD),
-                            verify=settings.DHIS2_SSL_VERIFY)
+                            verify=PATH_TO_CERT)
     return json.loads(response.text)
 
 

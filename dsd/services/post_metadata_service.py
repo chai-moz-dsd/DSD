@@ -17,6 +17,7 @@ def sync_metadata_with_bes():
     if SyncRecord.objects.filter(status='Success').count() == 1:
         logger.info('Sync metadata start...')
         sync_metadata_with_dhis2()
+        logger.info('Sync metadata end...')
 
 
 def sync_metadata_with_dhis2():
