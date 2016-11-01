@@ -35,5 +35,9 @@ def need_sync_bes_data():
     return not SyncRecord.objects.filter(status='Success').count()
 
 
-while need_sync_bes_data():
-    sync_metadata_with_bes()
+def sync_trigger():
+    while need_sync_bes_data():
+        sync_metadata_with_bes()
+
+
+sync_trigger()
