@@ -62,8 +62,9 @@ def get_user_profile():
 
 
 def assign_all_org_to_user():
-    logger.info('assign_all_org_to_user')
+    logger.info('=== ASSIGN ALL ORG TO USER ===')
     user_id, surname, first_name = get_user_profile()
+    logger.info(user_id, surname, first_name)
     dhis2_remote_repository.update_user(json.dumps(user_update_body(surname, first_name)), user_id)
 
 
@@ -102,6 +103,7 @@ def post_data_element_values(date_element_values):
     for data_element in date_element_values:
         try:
             json_dumps = json.dumps(build_data_element_values_request_body_as_dict(data_element))
+            logger.info(json_dumps)
             dhis2_remote_repository.post_data_elements_value(json_dumps)
         except Exception as e:
             logger.error('post data element =%s, error occur =  %s' % (data_element, e))
