@@ -14,19 +14,44 @@ For deployment, you need to first create a folder */opt/app/chai/volume/config*,
 
 Please ask devs for *settings.ini*.
 
-#### Sign up Docker Cloud and connect it to AWS EC2 instance created above.
-1. Click [here](https://cloud.docker.com/) to navigate to *Docker cloud* official website, then sign up.
-2. Config the EC2 instance following [this article](https://docs.docker.com/docker-cloud/infrastructure/link-aws/#/acreate-a-dockercloud-role-role).
-3. Log in Docker cloud and get into 'Nodes' menu on the left side. 
-4. Click 'Bring your own node' button, it will show you a command, like `curl -Ls https://get.cloud.docker.com/ | sudo -H sh -s 1ec9a8afe1ec424ab49271234567890`
-5. Run the command above on the prod instance.
+#### Get the certificate from *Let's encrypt it*
+1. Log in the instance and install **certbot**
+``` bash
+wget https://dl.eff.org/certbot-auto
+chmod a+x certbot-auto
+```
+2. Make sure TCP ports 80 and 443 on the instance is open.
+3. Get the certificates.
+``` bash
+./certbot-auto certonly --standalone -d portalmbes.com -d portalmbes.com
+```
+4. Create a folder to store the linked certificates
+``` bash
+sudo mkdir -p /opt/app/chai/volume/config/ssl
+```
+5. Link the cert and private key
+``` bash 
+sudo ln -sf /etc/letsencrypt/live/portalmbes.com/fullchain.pem /opt/app/chai/volume/config/ssl/fullchain.pem
+sudo ln -sf /etc/letsencrypt/live/portalmbes.com/privkey.pem /opt/app/chai/volume/config/ssl/privkey.pem
+```
 
-#### Config Docker Cloud to deploy
-1. Log in Docker Cloud, get into 'Stack' menu on the left side.
-2. Click 'Create' button to create a stack. One stack represents a webapp, it may contains several docker contains.
-3. Give it a stack name, and paste stackfile scripts. Please ask devs for scripts.
-4. Click 'Create & Deploy' button to finish deployment.
+#### Install the deployment tool
+1. Log in the instance and download the tool
+``` bash
+curl -L https://github.com/docker/compose/releases/download/1.9.0-rc2/docker-compose-`uname -s`-`uname -m` > docker-compose
+```
+2. Change the permission
+``` bash
+chmod +x docker-compose
+```
+3. Move the tool to bin folder
+``` bash
+sudo mv docker-compose /usr/local/bin/docker-compose
+```
 
--------------------
-
-**Docker Cloud** can deploy and manage Dockerized applications. It can make you to deploy apps anywhere, simplify docker provisioning, etc. Please click [here](https://www.docker.com/products/docker-cloud#/features) to find the introduction of Docker Cloud.
+#### Deployment
+1. Ask devs for *docker-compose.yml* and place it to user folder, eg. /home/ubuntu.
+2. Run the command to deploy
+``` bash
+sudo docker-compose up -d
+```
