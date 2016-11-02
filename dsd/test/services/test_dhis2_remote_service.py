@@ -79,7 +79,7 @@ class DHIS2RemoteServiceTest(TestCase):
             [call(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_ORGANIZATION_UNIT),
                   headers=dhis2_config.POST_HEADERS,
                   auth=(settings.USERNAME, settings.PASSWORD),
-                  verify="/opt/app/chai/volume/config/ssl/dhis2.pem",
+                  verify="/opt/app/chai/volume/config/ssl/fullchain.pem",
                   data=json.dumps(organization_unit_list[0])
                   )])
 
