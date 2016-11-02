@@ -98,7 +98,7 @@ def post_data_set():
 
 
 def post_data_element_values(date_element_values):
-    logger.info('=== START POSt DATA VALUE ===')
+    logger.info('=== START POST DATA VALUE ===')
     for data_element in date_element_values:
         try:
             json_dumps = json.dumps(build_data_element_values_request_body_as_dict(data_element))
