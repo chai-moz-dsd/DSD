@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 def sync_metadata_with_bes():
     sync_metadata_to_local()
-    sync_business_data_to_local()
+    # sync_business_data_to_local()
     if SyncRecord.objects.filter(status='Success').count() == 1:
         logger.info('Sync metadata start...')
         sync_metadata_with_dhis2()
