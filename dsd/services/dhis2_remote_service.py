@@ -64,7 +64,6 @@ def get_user_profile():
 def assign_all_org_to_user():
     logger.info('=== ASSIGN ALL ORG TO USER ===')
     user_id, surname, first_name = get_user_profile()
-    logger.info(user_id, surname, first_name)
     dhis2_remote_repository.update_user(json.dumps(user_update_body(surname, first_name)), user_id)
 
 
