@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 def sync(last_successfully_sync_start_time):
     if not last_successfully_sync_start_time:
         all_remote_bes_middleware_cores = BesMiddlewareCoreRemote.objects.all()
-        logger.info('=== sync %s items ===' % all_remote_bes_middleware_cores.count())
+        logger.info('=== sync %s items ===' % len(all_remote_bes_middleware_cores))
         logger.info('sync all bes_middleware_cores at %s' % last_successfully_sync_start_time)
     else:
         all_remote_bes_middleware_cores = BesMiddlewareCoreRemote.objects.filter(
