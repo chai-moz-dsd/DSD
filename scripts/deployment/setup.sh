@@ -2,6 +2,8 @@
 
 
 echo "setup db"
+sleep 10
+
 source ~/.virtualenvs/dsd/bin/activate
 python manage.py migrate
 python manage.py loaddata dsd/fixtures/attributes.json
