@@ -18,15 +18,11 @@ def sync(last_successfully_sync_start_time):
 
     all_translated_bes_middleware_cores = translate_remote_bes_middleware_cores(all_remote_bes_middleware_cores)
 
-    # all_valid_local_bes_middleware_cores = filter(is_valid, all_translated_bes_middleware_cores)
-    all_valid_local_bes_middleware_cores = all_translated_bes_middleware_cores
-    logger.info('all valid local [bes] data: %s' % len(all_valid_local_bes_middleware_cores))
+    all_valid_local_bes_middleware_cores = filter(is_valid, all_translated_bes_middleware_cores)
 
     bes_middleware_cores = []
-    logger.info('all local items: %s' % len(list(filter(is_valid, all_translated_bes_middleware_cores))))
     for bes_middleware_core in all_valid_local_bes_middleware_cores:
         bes_middleware_cores.append(save(bes_middleware_core))
-    logger.info('all saved items: %s' % len(bes_middleware_cores))
 
     return bes_middleware_cores
 
@@ -40,9 +36,7 @@ def translate_remote_bes_middleware_cores(all_remote_bes_middleware_cores):
     for remote_bes_middleware_core in all_remote_bes_middleware_cores:
         remote_bes_middleware_core.__dict__.pop('_state')
         local_bes_middleware_core = BesMiddlewareCore(**remote_bes_middleware_core.__dict__)
-        logger.info('========= checkpoint  1 =============')
         if is_data_element_belongs_to_facility(local_bes_middleware_core):
-            logger.info('========= checkpoint  2 =============')
             all_local_bes_middleware_cores.append(local_bes_middleware_core)
 
     return all_local_bes_middleware_cores
