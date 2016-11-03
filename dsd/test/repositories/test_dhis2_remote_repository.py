@@ -139,7 +139,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
         requests.get.assert_called_once_with(url=url,
                                              auth=(settings.USERNAME, settings.PASSWORD),
                                              verify=PATH_TO_CERT,
-                                             headers=dhis2_config.POST_HEADERS)
+                                             headers=dhis2_config.HEADER_OAUTH)
 
     @override_settings(DHIS2_SSL_VERIFY=False)
     @patch('requests.get')
@@ -152,7 +152,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
         requests.get.assert_called_once_with(url=url,
                                              auth=(settings.USERNAME, settings.PASSWORD),
                                              verify=PATH_TO_CERT,
-                                             headers=dhis2_config.POST_HEADERS)
+                                             headers=dhis2_config.HEADER_OAUTH)
 
 
 
