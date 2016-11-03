@@ -17,6 +17,8 @@ def sync(last_successfully_sync_start_time):
         logger.info('sync bes_middleware_cores from %s' % last_successfully_sync_start_time)
 
     all_translated_bes_middleware_cores = translate_remote_bes_middleware_cores(all_remote_bes_middleware_cores)
+
+    logger.info('all translate items: %s' % len(all_translated_bes_middleware_cores))
     all_valid_local_bes_middleware_cores = filter(is_valid, all_translated_bes_middleware_cores)
 
     bes_middleware_cores = []
