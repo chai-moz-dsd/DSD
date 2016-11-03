@@ -110,7 +110,7 @@ def __get_request(url):
     try:
         return requests.get(url=url,
                             auth=(settings.USERNAME, settings.PASSWORD),
-                            headers={'Content-Type': 'application/json'},
+                            headers={'Accept': 'application/json'},
                             verify=PATH_TO_CERT)
     except ConnectionError:
         raise RemoteRequestException()

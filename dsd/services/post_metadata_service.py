@@ -30,7 +30,7 @@ def sync_metadata_with_dhis2():
     set_coc_id()
     assign_all_org_to_user()
     set_org_unit_level()
-    # sync_bussiness_with_dhis2()
+    sync_bussiness_with_dhis2()
     # post_historical_data_element_values_to_dhis2()
 
 
