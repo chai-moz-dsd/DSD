@@ -77,6 +77,7 @@ def get_validation_rules(query_params):
 
 def get_self_profile():
     response = __get_request(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_SELF_PROFILE))
+    logger.info(response.text)
     return response.text
 
 
