@@ -87,6 +87,11 @@ def get_data_element_values(query_params):
     return __get_request(url=url)
 
 
+def send_analysis_request():
+    url = dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_SEND_ANALYSIS_ACTION)
+    return __get_request(url=url)
+
+
 def update_user(request_body, user_id):
     return requests.put(url=dhis2_config.key_update_user(user_id),
                         data=request_body,
@@ -114,3 +119,5 @@ def __get_request(url):
                             verify=PATH_TO_CERT)
     except ConnectionError:
         raise RemoteRequestException()
+
+

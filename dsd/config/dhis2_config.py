@@ -21,6 +21,7 @@ KEY_GET_DATA_ELEMENT_VALUES = '_get_data_element_values'
 KEY_GET_VALIDATION_RULES = '_key_get_validation_rules'
 KEY_GET_VALIDATION_RULE_GROUPS = '_key_get_validation_rule_groups'
 KEY_RUN_VALIDATION_ACTION = '_key_run_validation_action'
+KEY_SEND_ANALYSIS_ACTION = '_key_send_analysis_action'
 
 OAUTH2_TOKEN = 'oauth2_token'
 OAUTH2_CREATE = 'oauth2_create'
@@ -48,7 +49,7 @@ DHIS2_STATIC_URLS = {
     KEY_GET_SELF_PROFILE: '%sapi/%s/me' % (DHIS2_BASE_URL, VERSION),
     KEY_GET_DATA_ELEMENT_VALUES: '%sapi/%s/analytics' % (DHIS2_BASE_URL, VERSION),
     KEY_GET_VALIDATION_RULES: '%sapi/%s/validationRules' % (DHIS2_BASE_URL, VERSION),
-
+    KEY_SEND_ANALYSIS_ACTION: '%sdhis-web-reporting/startExport.action' % DHIS2_BASE_URL,
     KEY_GET_VALIDATION_RULE_GROUPS: '%sdhis-web-validationrule/validationRuleGroup.action' % DHIS2_BASE_URL,
     KEY_RUN_VALIDATION_ACTION: '%sdhis-web-validationrule/runValidationAction.action' % DHIS2_BASE_URL,
 }
