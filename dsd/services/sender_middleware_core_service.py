@@ -17,7 +17,10 @@ def sync(sync_time):
         logger.debug('sync sender_middleware_cores from %s' % sync_time)
 
     all_local_sender_middleware_cores = get_all_from_local(all_remote_sender_middleware_cores)
-    all_valid_local_sender_middleware_cores = filter(is_valid, all_local_sender_middleware_cores)
+    # all_valid_local_sender_middleware_cores = filter(is_valid, all_local_sender_middleware_cores)
+
+    all_valid_local_sender_middleware_cores = all_local_sender_middleware_cores
+    logger.info('all valid local sender data: %s' % len(all_valid_local_sender_middleware_cores))
 
     for sender_middleware_core in all_valid_local_sender_middleware_cores:
         save(sender_middleware_core)
