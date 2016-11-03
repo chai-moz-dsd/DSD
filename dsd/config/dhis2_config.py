@@ -48,8 +48,6 @@ DHIS2_STATIC_URLS = {
     KEY_GET_SELF_PROFILE: '%sapi/%s/me' % (DHIS2_BASE_URL, VERSION),
     KEY_GET_DATA_ELEMENT_VALUES: '%sapi/%s/analytics' % (DHIS2_BASE_URL, VERSION),
     KEY_GET_VALIDATION_RULES: '%sapi/%s/validationRules' % (DHIS2_BASE_URL, VERSION),
-    OAUTH2_TOKEN: '%suaa/oauth/token' % DHIS2_BASE_URL,
-    OAUTH2_CREATE: '%sapi/oAuth2Clients' % DHIS2_BASE_URL,
 
     KEY_GET_VALIDATION_RULE_GROUPS: '%sdhis-web-validationrule/validationRuleGroup.action' % DHIS2_BASE_URL,
     KEY_RUN_VALIDATION_ACTION: '%sdhis-web-validationrule/runValidationAction.action' % DHIS2_BASE_URL,
