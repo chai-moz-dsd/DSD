@@ -12,7 +12,7 @@ Since the dsd project is open source project and source code is hosted on Github
 
 For deployment, you need to first create a folder */opt/app/chai/volume/config*, then place *settings.ini* into this folder.
 
-Please ask devs for *settings.ini*.
+Please ask devs for *settings.ini* or copy from the existing prod server.
 
 #### Get the certificate from *Let's encrypt it*
 1. Log in the instance and install **certbot**
@@ -35,6 +35,24 @@ sudo ln -sf /etc/letsencrypt/live/portalmbes.com/fullchain.pem /opt/app/chai/vol
 sudo ln -sf /etc/letsencrypt/live/portalmbes.com/privkey.pem /opt/app/chai/volume/config/ssl/privkey.pem
 ```
 
+#### Create cronjob to update certificates automatically
+Since the certificate got from *let's encrypt it* only can lasts for 90 days, so we need a cronjob to update the certificate automatically.   
+1. Create a script named 'update-cert.sh' with the following content. Or copy from the existing prod server
+``` bash
+#!/usr/bin/env bash
+
+/home/ubuntu/certbot-auto renew --quiet --no-self-upgrade
+
+sudo cp /etc/letsencrypt/live/portalmbes.com/fullchain.pem /opt/app/chai/volume/config/ssl/fullchain.pem
+sudo cp /etc/letsencrypt/live/portalmbes.com/privkey.pem /opt/app/chai/volume/config/ssl/privkey.pem
+```
+2. Create cronjob
+``` bash
+crontab -e
+Add the following command:
+0 0 1 */2 * /home/ubuntu/update-cert.sh
+```
+
 #### Install the deployment tool
 1. Log in the instance and download the tool
 ``` bash
@@ -50,8 +68,8 @@ sudo mv docker-compose /usr/local/bin/docker-compose
 ```
 
 #### Deployment
-1. Ask devs for *docker-compose.yml* and place it to user folder, eg. /home/ubuntu.
-2. Run the command to deploy
+1. Ask devs for *docker-compose.yml* or copy from the existing prod server,  then place it to user folder, eg. /home/ubuntu.
+2. run the command to deploy
 ``` bash
 sudo docker-compose up -d
 ```
