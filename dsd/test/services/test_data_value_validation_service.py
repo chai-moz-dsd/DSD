@@ -14,7 +14,7 @@ from dsd.models import BesMiddlewareCore
 from dsd.models.moh import MOH_UID
 from dsd.repositories import dhis2_remote_repository
 from dsd.services.bes_middleware_core_service import fetch_updated_data_element_values
-from dsd.services.validate_data_element_values_service import DataElementValuesValidationService, \
+from dsd.services.data_value_validation_service import DataElementValuesValidationService, \
     FETCH_CUSTOMIZED_VALIDATION_RULES_REQUEST_PARAMS
 from dsd.test.factories.bes_middleware_core_factory import BesMiddlewareCoreFactory
 from dsd.test.factories.coc_relation_factory import COCRelationFactory
@@ -37,7 +37,7 @@ VALIDATION_GROUP_ID_DYSENTERY_CASES = 'li89jfkd9o1'
 VALIDATION_GROUP_ID_MALARIA_CASES = 'mi89jfkd9o1'
 
 
-class ValidateDataElementValuesServiceTest(TestCase):
+class DataValueValidationServiceTest(TestCase):
     @patch.object(DataElementValuesValidationService, 'fetch_customized_validation_rules')
     @patch('dsd.repositories.dhis2_remote_repository.get_all_rule_groups')
     def setUp(self, mock_get_all_rule_groups, mock_fetch_customized_validation_rules):

@@ -30,11 +30,11 @@ def sync_metadata_with_dhis2():
     set_coc_id()
     assign_all_org_to_user()
     set_org_unit_level()
-    sync_bussiness_with_dhis2()
+    sync_business_with_dhis2()
     post_historical_data_element_values_to_dhis2()
 
 
-def sync_bussiness_with_dhis2():
+def sync_business_with_dhis2():
     date_element_values = fetch_updated_data_element_values()
     post_data_element_values(date_element_values)
 
@@ -46,6 +46,5 @@ def need_sync_bes_data():
 def sync_trigger():
     while need_sync_bes_data():
         sync_metadata_with_bes()
-
 
 sync_trigger()

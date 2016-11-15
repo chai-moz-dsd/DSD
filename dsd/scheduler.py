@@ -11,7 +11,7 @@ from dsd.services import sender_middleware_core_service
 from dsd.services.dhis2_remote_service import post_data_element_values
 from dsd.services.dhis2_send_email_service import dhis2_send_email
 from dsd.services.sync_cocid_service import set_coc_id
-from dsd.services.validate_data_element_values_service import DataElementValuesValidationService
+from dsd.services.data_value_validation_service import DataElementValuesValidationService
 
 logger = logging.getLogger(__name__)
 # logger.setLevel(logging.CRITICAL)

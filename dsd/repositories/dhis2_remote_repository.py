@@ -4,6 +4,7 @@ import requests
 from django.conf import settings
 
 from dsd.config import dhis2_config
+from dsd.config.dhis2_config import HEADERS_CONTENT_TYPE_APPLICATION_JSON, HEADERS_CONTENT_TYPE_APPLICATION_XML
 from dsd.exceptions.remote_request_exception import RemoteRequestException
 
 CONTENT_TYPE = {'Content-Type': 'application/json'}
@@ -96,8 +97,20 @@ def update_user(request_body, user_id):
     return requests.put(url=dhis2_config.key_update_user(user_id),
                         data=request_body,
                         auth=(settings.USERNAME, settings.PASSWORD),
-                        headers={'Content-Type': 'application/json'},
+                        headers=HEADERS_CONTENT_TYPE_APPLICATION_JSON,
                         verify=PATH_TO_CERT)
+
+
+def post_metadata(request_body):
+    url = dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_METADATA)
+    try:
+        return requests.post(url=url,
+                             data=request_body,
+                             auth=(settings.USERNAME, settings.PASSWORD),
+                             headers=HEADERS_CONTENT_TYPE_APPLICATION_XML,
+                             verify=PATH_TO_CERT)
+    except ConnectionError:
+        raise RemoteRequestException()
 
 
 def __post_request(url, data):
@@ -119,5 +132,3 @@ def __get_request(url):
                             verify=PATH_TO_CERT)
     except ConnectionError:
         raise RemoteRequestException()
-
-
