@@ -53,7 +53,7 @@ RUN mkdir -p /etc/uwsgi/sites \
 RUN /bin/bash -c "source ~/.virtualenvs/dsd/bin/activate && python manage.py collectstatic --no-input"
 
 # Expose ports
-EXPOSE 80
+EXPOSE 80 443
 
 # Entrypoint
 CMD ["/usr/bin/supervisord"]
