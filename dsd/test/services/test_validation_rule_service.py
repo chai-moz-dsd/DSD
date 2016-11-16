@@ -3,7 +3,8 @@ import logging
 from django.test import TestCase
 
 from dsd.services.validation_rule_service import generate_validation_rule_xml, RULE_TYPE, IMPORTANCE, OPERATOR, \
-    ORGANISATION_UNIT_LEVEL, PERIOD_TYPE, MISSING_VALUE_STRATEGY, generate_validation_rule_group_xml
+    ORGANISATION_UNIT_LEVEL, PERIOD_TYPE, MISSING_VALUE_STRATEGY, generate_validation_rule_group_xml, \
+    ADDITIONAL_RULE_TYPE
 
 logger = logging.getLogger(__name__)
 
@@ -28,15 +29,17 @@ class ValidationRuleServiceTest(TestCase):
         rule_description = 'Threshold around Colera casos'
         rule_instruction = 'Follow instructions around Colera outbreak'
         rule_type = RULE_TYPE.SURVEILLANCE,
-        period_type = PERIOD_TYPE.weekly
+        period_type = PERIOD_TYPE.Weekly
         importance = IMPORTANCE.HIGH
         operator = OPERATOR.less_than_or_equal_to
         organisation_unit_level = ORGANISATION_UNIT_LEVEL.get('facility')
         left_side_expression = '#{rf040c9a7ab.NwREtdtBRUN}'
         left_side_description = 'Cólera caso'
-        date_element_id = 'rf040c9a7ab'
+        date_element_ids = ['rf040c9a7ab', 'rf040c9a7ac']
         right_side_expression = '0'
-        right_side_description = '0'
+        right_side_description = 'limite'
+        additional_rule_type = ADDITIONAL_RULE_TYPE.Default
+        addition_rule = None
 
         result = generate_validation_rule_xml(rule_id=rule_id,
                                               rule_name=rule_name,
@@ -49,9 +52,11 @@ class ValidationRuleServiceTest(TestCase):
                                               organisation_unit_level=organisation_unit_level,
                                               left_side_expression=left_side_expression,
                                               left_side_description=left_side_description,
-                                              date_element_id=date_element_id,
+                                              date_element_ids=date_element_ids,
                                               right_side_expression=right_side_expression,
-                                              right_side_description=right_side_description)
+                                              right_side_description=right_side_description,
+                                              additional_rule_type=additional_rule_type,
+                                              additional_rule=addition_rule)
         validation_rule = result.find('validationRules/validationRule')
         self.assertEqual(validation_rule.find('id').text, rule_id)
         self.assertEqual(validation_rule.find('name').text, rule_name)
@@ -69,8 +74,9 @@ class ValidationRuleServiceTest(TestCase):
         self.assertEqual(left_side.find('missingValueStrategy').text, MISSING_VALUE_STRATEGY.NEVER_SKIP)
         self.assertEqual(left_side.find('nullIfBlank').text, str(True).lower())
 
-        date_element = left_side.find('dataElements/dataElement')
-        self.assertEqual(date_element.attrib.get('id'), date_element_id)
+        date_elements = left_side.findall('dataElements/dataElement')
+        self.assertEqual(date_elements[0].attrib.get('id'), date_element_ids[0])
+        self.assertEqual(date_elements[1].attrib.get('id'), date_element_ids[1])
 
         right_side = validation_rule.find('rightSide')
         self.assertEqual(right_side.find('expression').text, right_side_expression)

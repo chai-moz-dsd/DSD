@@ -90,7 +90,7 @@ MALARIA_CASES = '_malaria_cases_surpass_average_from_current_week_earlier_weeks_
 CUSTOMIZED_VALIDATION_RULE_TYPE = {
     MEASLES_CASES: 'SarampoCaseInMonths',
     MENINGITIS_CASES: 'MeningiteIncreasedInWeeks',
-    DYSENTERY_CASES: 'DiarrieaCaseInYears',
+    DYSENTERY_CASES: 'DisenteriaCaseInYears',
     MALARIA_CASES: 'MalariaCaseInYears',
 }
 

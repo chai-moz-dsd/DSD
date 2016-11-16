@@ -7,10 +7,21 @@ from dsd.repositories import dhis2_remote_repository
 
 logger = logging.getLogger(__name__)
 
-PERIOD_TYPE = Choices('weekly')
+PERIOD_TYPE = Choices('Weekly')
 IMPORTANCE = Choices("HIGH", "MEDIUM", "LOW")
 RULE_TYPE = Choices("VALIDATION", "SURVEILLANCE")
-MISSING_VALUE_STRATEGY = Choices('NEVER_SKIP')
+MISSING_VALUE_STRATEGY = Choices(
+    'NEVER_SKIP',
+    'SKIP_IF_ANY_VALUE_MISSING'
+)
+
+ADDITIONAL_RULE_TYPE = Choices(
+    'Default',
+    'MalariaCaseInYears',
+    'DisenteriaCaseInYears',
+    'MeningiteIncreasedInWeeks',
+    'SarampoCaseInMonths'
+)
 
 OPERATOR = Choices(
     "equal_to",
@@ -33,7 +44,8 @@ ORGANISATION_UNIT_LEVEL = {
 
 def generate_validation_rule_xml(rule_id, rule_name, rule_description, rule_instruction, rule_type, period_type,
                                  importance, operator, organisation_unit_level, left_side_expression,
-                                 left_side_description, date_element_id, right_side_expression, right_side_description):
+                                 left_side_description, date_element_ids, right_side_expression, right_side_description,
+                                 additional_rule_type, additional_rule):
     name_space = 'http://dhis2.org/schema/dxf/2.0'
     root = ElementTree.Element('{%s}meteData' % name_space, nsmap={None: name_space})
     validation_rules = ElementTree.SubElement(root, 'validationRules')
@@ -45,6 +57,9 @@ def generate_validation_rule_xml(rule_id, rule_name, rule_description, rule_inst
     ElementTree.SubElement(validation_rule, 'ruleType').text = rule_type
     ElementTree.SubElement(validation_rule, 'periodType').text = period_type
     ElementTree.SubElement(validation_rule, 'importance').text = importance
+    ElementTree.SubElement(validation_rule,
+                           'additionalRuleType').text = additional_rule_type if additional_rule_type else None
+    ElementTree.SubElement(validation_rule, 'additionalRule').text = additional_rule if additional_rule else None
     ElementTree.SubElement(validation_rule, 'operator').text = operator
     ElementTree.SubElement(validation_rule, 'organisationUnitLevel').text = organisation_unit_level
 
@@ -54,7 +69,9 @@ def generate_validation_rule_xml(rule_id, rule_name, rule_description, rule_inst
     ElementTree.SubElement(left_side, 'missingValueStrategy').text = MISSING_VALUE_STRATEGY.NEVER_SKIP
     ElementTree.SubElement(left_side, 'nullIfBlank').text = str(True).lower()
     date_elements = ElementTree.SubElement(left_side, 'dataElements')
-    ElementTree.SubElement(date_elements, 'dataElement', id=date_element_id)
+
+    for date_element_id in date_element_ids:
+        ElementTree.SubElement(date_elements, 'dataElement', id=date_element_id)
 
     right_side = ElementTree.SubElement(validation_rule, 'rightSide')
     ElementTree.SubElement(right_side, 'expression').text = right_side_expression
@@ -79,11 +96,13 @@ def generate_validation_rule_group_xml(group_id, name, description, validation_r
     return root
 
 
-def post_validation_rule(rule_id, rule_name, rule_description, rule_instruction, rule_type, period_type,
-                         importance, operator, organisation_unit_level, left_side_expression,
-                         left_side_description, date_element_id, right_side_expression, right_side_description
-                         ):
-    xml = generate_validation_rule_xml(rule_id=rule_id,
+def post_validation_rule(rule_id, rule_name, rule_description, rule_instruction, left_side_expression,
+                         left_side_description, date_element_ids, right_side_expression, right_side_description='limite'
+                         , organisation_unit_level=str(ORGANISATION_UNIT_LEVEL.get('facility')),
+                         rule_type=RULE_TYPE.SURVEILLANCE, period_type=PERIOD_TYPE.Weekly, importance=IMPORTANCE.HIGH,
+                         operator=OPERATOR.less_than_or_equal_to, additional_rule_type=ADDITIONAL_RULE_TYPE.Default,
+                         additional_rule=None):
+    doc = generate_validation_rule_xml(rule_id=rule_id,
                                        rule_name=rule_name,
                                        rule_description=rule_description,
                                        rule_instruction=rule_instruction,
@@ -94,15 +113,19 @@ def post_validation_rule(rule_id, rule_name, rule_description, rule_instruction,
                                        organisation_unit_level=organisation_unit_level,
                                        left_side_expression=left_side_expression,
                                        left_side_description=left_side_description,
-                                       date_element_id=date_element_id,
+                                       date_element_ids=date_element_ids,
                                        right_side_expression=right_side_expression,
-                                       right_side_description=right_side_description)
+                                       right_side_description=right_side_description,
+                                       additional_rule_type=additional_rule_type,
+                                       additional_rule=additional_rule)
 
-    return dhis2_remote_repository.post_metadata(ElementTree.tostring(xml))
+    request_body = ElementTree.tostring(doc, encoding='utf8')
+    logger.info(request_body)
+    return dhis2_remote_repository.post_metadata(request_body)
 
 
-def post_validation_rule_group(group_id, name, description, validation_rule_id):
-    xml = generate_validation_rule_group_xml(group_id=group_id, name=name, description=description,
+def post_validation_rule_group(group_id, name, validation_rule_id, description=''):
+    doc = generate_validation_rule_group_xml(group_id=group_id, name=name, description=description,
                                              validation_rule_id=validation_rule_id)
 
-    return dhis2_remote_repository.post_metadata(ElementTree.tostring(xml))
+    return dhis2_remote_repository.post_metadata(ElementTree.tostring(doc))

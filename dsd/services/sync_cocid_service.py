@@ -4,8 +4,8 @@ import requests
 
 from chai import settings
 from dsd.config.dhis2_config import key_get_cocid
-from dsd.models import CategoryCombination
 from dsd.models import COCRelation
+from dsd.models import CategoryCombination
 from dsd.models import HistoricalCOCRelation
 from dsd.repositories.dhis2_remote_repository import PATH_TO_CERT
 
@@ -23,8 +23,7 @@ def get_category_option_combos(category_comb_id):
 
 
 def update_historical_coc_relation(coc_relation):
-    historical_coc_relation = HistoricalCOCRelation.objects.filter(disease_uid=coc_relation)
-    pass
+    HistoricalCOCRelation.objects.filter(disease_uid=coc_relation)
 
 
 def update_coc_relation(cc_id, coc):

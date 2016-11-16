@@ -155,6 +155,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
                                              headers=dhis2_config.HEADER_OAUTH)
 
     @override_settings(DHIS2_SSL_VERIFY=False)
+    @patch('dsd.repositories.dhis2_remote_repository.PATH_TO_CERT', False)
     @patch('requests.post')
     def test_should_post_metadata(self, mock_post):
         mock_post.return_value = MagicMock(status_code=HTTP_200_OK)
@@ -164,5 +165,5 @@ class DHIS2RemoteRepositoryTest(TestCase):
         requests.post.assert_called_once_with(url=url,
                                               data=request_body,
                                               auth=(settings.USERNAME, settings.PASSWORD),
-                                              verify=PATH_TO_CERT,
+                                              verify=False,
                                               headers=dhis2_config.HEADERS_CONTENT_TYPE_APPLICATION_XML)

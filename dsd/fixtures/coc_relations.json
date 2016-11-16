@@ -253,7 +253,7 @@
     "model": "dsd.cocrelation",
     "pk": 26,
     "fields": {
-      "name_in_bes": "cases_tetanus",
+      "name_in_bes": "deaths_tetanus",
       "element_id": "c85cd6ce5d8",
       "cc_id": "td729451101",
       "name_of_coc": "O"
