@@ -72,4 +72,18 @@ sudo mv docker-compose /usr/local/bin/docker-compose
 2. run the command to deploy
 ``` bash
 sudo docker-compose up -d
+
+#### Redeployment
+1. Stop the system
+``` bash
+sudo docker-compose stop
 ```
+2. Update code if necessary
+``` bash
+sudo docker-compose pull
+```
+3. Restart the system
+``` bash
+sudo docker-compose up -d
+```
+>Redeployment won't delete any existing data in the system
