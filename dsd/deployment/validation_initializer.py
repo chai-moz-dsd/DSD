@@ -12,7 +12,8 @@ def add_colera_case():
     rule_id = 'tOCXddkXkw0'
     disease_code = '001_CÓLERA'
     date_element_ids = [Element.objects.get(code=disease_code).id]
-    left_side_expression = assemble_left_side_expression(disease_code, 'cases_cholera')
+    left_side_expression = DataElementValuesValidationService.assemble_left_side_expression(disease_code,
+                                                                                            'cases_cholera')
 
     post_validation_rule(rule_id=rule_id,
                          rule_name='Cólera Casos > 0',
@@ -30,7 +31,8 @@ def add_colera_deth():
     rule_id = 'iz4ccOJSd4l'
     disease_code = '001_CÓLERA'
     date_element_ids = [Element.objects.get(code=disease_code).id]
-    left_side_expression = assemble_left_side_expression(disease_code, 'deaths_cholera')
+    left_side_expression = DataElementValuesValidationService.assemble_left_side_expression(disease_code,
+                                                                                            'deaths_cholera')
 
     post_validation_rule(rule_id=rule_id,
                          rule_name='Cólera morte > 2',
@@ -48,7 +50,8 @@ def add_diarreia_death():
     rule_id = 'NGNXRZoeBgj'
     disease_code = 'DIARREIA_009'
     date_element_ids = [Element.objects.get(code=disease_code).id]
-    left_side_expression = assemble_left_side_expression(disease_code, 'deaths_diarrhea_15')
+    left_side_expression = DataElementValuesValidationService.assemble_left_side_expression(disease_code,
+                                                                                            'deaths_diarrhea_15')
 
     post_validation_rule(rule_id=rule_id,
                          rule_name='Diarreia Audit death Case',
@@ -68,7 +71,8 @@ def add_disenteria_case():
     rule_id = 'QhVKtePYsLu'
     disease_code = '009.2_DISENTERIA'
     date_element_ids = [Element.objects.get(code=disease_code).id]
-    left_side_expression = assemble_left_side_expression(disease_code, 'cases_dysentery')
+    left_side_expression = DataElementValuesValidationService.assemble_left_side_expression(disease_code,
+                                                                                            'cases_dysentery')
 
     post_validation_rule(rule_id=rule_id,
                          rule_name='Disenteria (Shigella): Caso > 0',
@@ -87,7 +91,7 @@ def add_pfa_case():
     rule_id = 'GzblVtRJAQD'
     disease_code = '045_PARALISIA_FLÁCIDA_AGUDA'
     date_element_ids = [Element.objects.get(code=disease_code).id]
-    left_side_expression = assemble_left_side_expression(disease_code, 'cases_pfa')
+    left_side_expression = DataElementValuesValidationService.assemble_left_side_expression(disease_code, 'cases_pfa')
 
     post_validation_rule(rule_id=rule_id,
                          rule_name='Paralesia flacida aguda (PFA) > 0',
@@ -106,7 +110,8 @@ def add_peste_case():
     rule_id = 'MlHtb3yxsJn'
     disease_code = '020_PESTE'
     date_element_ids = [Element.objects.get(code=disease_code).id]
-    left_side_expression = assemble_left_side_expression(disease_code, 'cases_plague')
+    left_side_expression = DataElementValuesValidationService.assemble_left_side_expression(disease_code,
+                                                                                            'cases_plague')
 
     post_validation_rule(rule_id=rule_id,
                          rule_name='Peste caso > 0',
@@ -125,7 +130,8 @@ def add_raiva_case():
     rule_id = 'SBm9jfYqwFc'
     disease_code = '071_RAIVA'
     date_element_ids = [Element.objects.get(code=disease_code).id]
-    left_side_expression = assemble_left_side_expression(disease_code, 'cases_rabies')
+    left_side_expression = DataElementValuesValidationService.assemble_left_side_expression(disease_code,
+                                                                                            'cases_rabies')
 
     post_validation_rule(rule_id=rule_id,
                          rule_name='Raiva caso > 0',
@@ -144,7 +150,8 @@ def add_raiva_death():
     rule_id = 'AhTAFtw7sM4'
     disease_code = '071_RAIVA'
     date_element_ids = [Element.objects.get(code=disease_code).id]
-    left_side_expression = assemble_left_side_expression(disease_code, 'deaths_rabies')
+    left_side_expression = DataElementValuesValidationService.assemble_left_side_expression(disease_code,
+                                                                                            'deaths_rabies')
 
     post_validation_rule(rule_id=rule_id,
                          rule_name='Raiva  morte > 0',
@@ -163,8 +170,9 @@ def add_sarampo_case():
     rule_id = 'C0U9HaMlefd'
     disease_code = 'SARAMPO_055'
     date_element_ids = [Element.objects.get(code=disease_code).id]
-    left_side_expression = '%s+%s' % (assemble_left_side_expression(disease_code, 'cases_measles'),
-                                      assemble_left_side_expression(disease_code, 'cases_nv_measles'))
+    left_side_expression = '%s+%s' % (
+    DataElementValuesValidationService.assemble_left_side_expression(disease_code, 'cases_measles'),
+    DataElementValuesValidationService.assemble_left_side_expression(disease_code, 'cases_nv_measles'))
 
     post_validation_rule(rule_id=rule_id,
                          rule_name='Sarampo case in a HF in a week',
@@ -183,7 +191,8 @@ def add_tetanus_case():
     rule_id = 'Q9Ko2HFaPJm'
     disease_code = '037_TÉTANO_RECÉM_NASCIDOS'
     date_element_ids = [Element.objects.get(code=disease_code).id]
-    left_side_expression = assemble_left_side_expression(disease_code, 'cases_tetanus')
+    left_side_expression = DataElementValuesValidationService.assemble_left_side_expression(disease_code,
+                                                                                            'cases_tetanus')
 
     post_validation_rule(rule_id=rule_id,
                          rule_name='Tétano no recém nascido caso > 0',
@@ -205,8 +214,9 @@ def add_malaria_case():
     disease_code2 = 'MALARIA_CONFIRMADA'
     date_element_id2 = Element.objects.get(code=disease_code2).id
 
-    left_side_expression = '%s+%s' % (assemble_left_side_expression(disease_code1, 'cases_malaria_clinic')
-                                      , assemble_left_side_expression(disease_code2, 'cases_malaria_confirmed'))
+    left_side_expression = '%s+%s' % (
+    DataElementValuesValidationService.assemble_left_side_expression(disease_code1, 'cases_malaria_clinic')
+    , DataElementValuesValidationService.assemble_left_side_expression(disease_code2, 'cases_malaria_confirmed'))
 
     post_validation_rule(rule_id=rule_id,
                          rule_name='Malária: Casos > average from current week + (A) ealiar weeks to current week - (B) weeks later weeks in past (C) years + (D) * std dev',
@@ -229,7 +239,8 @@ def add_complex_disenteria_case():
     rule_id = 'vKERgxn2ycf'
     disease_code = '009.2_DISENTERIA'
     date_element_ids = [Element.objects.get(code=disease_code).id]
-    left_side_expression = assemble_left_side_expression(disease_code, 'cases_dysentery')
+    left_side_expression = DataElementValuesValidationService.assemble_left_side_expression(disease_code,
+                                                                                            'cases_dysentery')
 
     post_validation_rule(rule_id=rule_id,
                          rule_name='Disenteria: Cases > average for same week in last ( A ) years + ( B ) * std dev',
@@ -252,7 +263,8 @@ def add_meningite_case():
     rule_id = 'JTiPI2lUKp0'
     disease_code = '009.2_DISENTERIA'
     date_element_ids = [Element.objects.get(code=disease_code).id]
-    left_side_expression = assemble_left_side_expression(disease_code, 'cases_meningitis')
+    left_side_expression = DataElementValuesValidationService.assemble_left_side_expression(disease_code,
+                                                                                            'cases_meningitis')
 
     post_validation_rule(rule_id=rule_id,
                          rule_name='Meningite (inclui suspeitas) week1 < week2 * 2 < week3 * 2',
@@ -275,8 +287,9 @@ def add_complex_sarampo_case():
     rule_id = 'FU31nh8lfLn'
     disease_code = 'SARAMPO_055'
     date_element_ids = [Element.objects.get(code=disease_code).id]
-    left_side_expression = '%s+%s' % (assemble_left_side_expression(disease_code, 'cases_measles'),
-                                      assemble_left_side_expression(disease_code, 'cases_nv_measles'))
+    left_side_expression = '%s+%s' % (
+    DataElementValuesValidationService.assemble_left_side_expression(disease_code, 'cases_measles'),
+    DataElementValuesValidationService.assemble_left_side_expression(disease_code, 'cases_nv_measles'))
 
     post_validation_rule(rule_id=rule_id,
                          rule_name='Sarampo case in a district a month',
@@ -292,13 +305,6 @@ def add_complex_sarampo_case():
                          )
     post_validation_rule_group(group_id='L23BjGdJeKD', name='Sarampo case in a district a month grupo',
                                validation_rule_id=rule_id)
-
-
-def assemble_left_side_expression(disease_code, query_name_prefix):
-    element_ids = DataElementValuesValidationService.get_element_ids(disease_code=disease_code,
-                                                                     query_name_prefix=query_name_prefix)
-    expression_units = ['#{%s}' % element_id for element_id in element_ids]
-    return '+'.join(expression_units)
 
 
 add_colera_case()

@@ -359,6 +359,14 @@ class DataElementValuesValidationService(object):
         return result
 
     @staticmethod
+    def assemble_left_side_expression(disease_code, query_name_prefix):
+        element_ids = DataElementValuesValidationService.get_element_ids(disease_code=disease_code,
+                                                                         query_name_prefix=query_name_prefix)
+        expression_units = ['#{%s}' % element_id for element_id in element_ids]
+        return '+'.join(expression_units)
+
+
+    @staticmethod
     def fetch_same_period_in_recent_years(current_year, year_offset, week_num, weeks_before, weeks_after,
                                           organisation_id):
         five_years_malaria = []

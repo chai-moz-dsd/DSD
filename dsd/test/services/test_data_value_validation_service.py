@@ -116,6 +116,12 @@ class DataValueValidationServiceTest(TestCase):
         self.assertEqual(target_year, 2016)
         self.assertEqual(target_week, 3)
 
+    @patch.object(DataElementValuesValidationService, 'get_element_ids')
+    def test_should_assemble_left_side_expression(self, mock_get_element_ids):
+        mock_get_element_ids.return_value = ['a.a', 'b.b', 'c.c']
+        result = DataElementValuesValidationService.assemble_left_side_expression('', '')
+        self.assertEqual(result, '#{a.a}+#{b.b}+#{c.c}')
+
     @override_settings(DHIS2_SSL_VERIFY=False)
     @patch('dsd.repositories.dhis2_remote_repository.get_data_element_values')
     def test_should_fetch_malaria_last_five_weeks(self, mock_get_data_element_values):
