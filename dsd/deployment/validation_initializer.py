@@ -54,7 +54,7 @@ def add_diarreia_death():
                                                                                             'deaths_diarrhea_15')
 
     post_validation_rule(rule_id=rule_id,
-                         rule_name='Diarreia Audit death Case',
+                         rule_name='Diarreia adulto death Case',
                          rule_description='2 adult deaths in a district.\r\n“Adult” here refers to cases with age greater than 15 years old.',
                          rule_instruction='2 adult deaths in a district.\r\n“Adult” here refers to cases with age greater than 15 years old.',
                          operator=OPERATOR.less_than,
