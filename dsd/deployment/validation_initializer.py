@@ -63,7 +63,7 @@ def add_diarreia_death():
                          left_side_description='Diarreia',
                          date_element_ids=date_element_ids,
                          right_side_expression='2')
-    post_validation_rule_group(group_id='FGVVEJ2rQaQ', name='Diarreia Audit death Case grupo',
+    post_validation_rule_group(group_id='FGVVEJ2rQaQ', name='Diarreia adulto death Case grupo',
                                validation_rule_id=rule_id)
 
 
