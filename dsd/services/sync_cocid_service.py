@@ -18,7 +18,7 @@ def get_category_option_combos(category_comb_id):
     url = key_get_cocid(category_comb_id)
     response = requests.get(url=url,
                             auth=(settings.USERNAME, settings.PASSWORD),
-                            verify=PATH_TO_CERT)
+                            verify=False)
     return json.loads(response.text)
 
 

@@ -24,7 +24,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
             url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_CATEGORY_COMBINATIONS),
             headers=dhis2_config.HEADERS_CONTENT_TYPE_APPLICATION_JSON,
             auth=(settings.USERNAME, settings.PASSWORD),
-            verify=PATH_TO_CERT,
+            verify=False,
             data=self.empty_request_body)
 
     @override_settings(DHIS2_SSL_VERIFY=False)
@@ -37,7 +37,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
         requests.post.assert_called_once_with(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_CATEGORIES),
                                               headers=dhis2_config.HEADERS_CONTENT_TYPE_APPLICATION_JSON,
                                               auth=(settings.USERNAME, settings.PASSWORD),
-                                              verify=PATH_TO_CERT,
+                                              verify=False,
                                               data=self.empty_request_body)
 
     @override_settings(DHIS2_SSL_VERIFY=False)
@@ -51,7 +51,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
             url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_CATEGORY_OPTIONS),
             headers=dhis2_config.HEADERS_CONTENT_TYPE_APPLICATION_JSON,
             auth=(settings.USERNAME, settings.PASSWORD),
-            verify=PATH_TO_CERT,
+            verify=False,
             data=self.empty_request_body)
 
     @override_settings(DHIS2_SSL_VERIFY=False)
@@ -64,7 +64,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
         requests.post.assert_called_once_with(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_DATA_SET),
                                               headers=dhis2_config.HEADERS_CONTENT_TYPE_APPLICATION_JSON,
                                               auth=(settings.USERNAME, settings.PASSWORD),
-                                              verify=PATH_TO_CERT,
+                                              verify=False,
                                               data=self.empty_request_body)
 
     @override_settings(DHIS2_SSL_VERIFY=False)
@@ -82,7 +82,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
         requests.post.assert_called_once_with(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_ATTRIBUTE),
                                               headers=dhis2_config.HEADERS_CONTENT_TYPE_APPLICATION_JSON,
                                               auth=(settings.USERNAME, settings.PASSWORD),
-                                              verify=PATH_TO_CERT,
+                                              verify=False,
                                               data=self.empty_request_body)
 
     @override_settings(DHIS2_SSL_VERIFY=False)
@@ -101,7 +101,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
             url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_DATA_SET_ELEMENTS),
             headers=dhis2_config.HEADERS_CONTENT_TYPE_APPLICATION_JSON,
             auth=(settings.USERNAME, settings.PASSWORD),
-            verify=PATH_TO_CERT,
+            verify=False,
             data=self.empty_request_body)
 
     @override_settings(DHIS2_SSL_VERIFY=False)
@@ -118,7 +118,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
         requests.post.assert_called_once_with(url=dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_DATA_SET),
                                               headers=dhis2_config.HEADERS_CONTENT_TYPE_APPLICATION_JSON,
                                               auth=(settings.USERNAME, settings.PASSWORD),
-                                              verify=PATH_TO_CERT,
+                                              verify=False,
                                               data=self.empty_request_body)
 
     @override_settings(DHIS2_SSL_VERIFY=False)
@@ -138,7 +138,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
         url = '%s?%s' % (dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_DATA_ELEMENT_VALUES), query_params)
         requests.get.assert_called_once_with(url=url,
                                              auth=(settings.USERNAME, settings.PASSWORD),
-                                             verify=PATH_TO_CERT,
+                                             verify=False,
                                              headers=dhis2_config.HEADER_OAUTH)
 
     @override_settings(DHIS2_SSL_VERIFY=False)
@@ -151,7 +151,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
         url = '%s?%s' % (dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_VALIDATION_RULES), query_params)
         requests.get.assert_called_once_with(url=url,
                                              auth=(settings.USERNAME, settings.PASSWORD),
-                                             verify=PATH_TO_CERT,
+                                             verify=False,
                                              headers=dhis2_config.HEADER_OAUTH)
 
     @override_settings(DHIS2_SSL_VERIFY=False)

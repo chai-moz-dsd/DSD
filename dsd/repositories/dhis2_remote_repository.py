@@ -98,7 +98,7 @@ def update_user(request_body, user_id):
                         data=request_body,
                         auth=(settings.USERNAME, settings.PASSWORD),
                         headers=HEADERS_CONTENT_TYPE_APPLICATION_JSON,
-                        verify=PATH_TO_CERT)
+                        verify=False)
 
 
 def post_metadata(request_body):
@@ -108,7 +108,7 @@ def post_metadata(request_body):
                              data=request_body,
                              auth=(settings.USERNAME, settings.PASSWORD),
                              headers=HEADERS_CONTENT_TYPE_APPLICATION_XML,
-                             verify=PATH_TO_CERT)
+                             verify=False)
     except ConnectionError:
         raise RemoteRequestException()
 
@@ -119,7 +119,7 @@ def __post_request(url, data):
                              data=data,
                              auth=(settings.USERNAME, settings.PASSWORD),
                              headers={'Content-Type': 'application/json'},
-                             verify=PATH_TO_CERT)
+                             verify=False)
     except ConnectionError:
         raise RemoteRequestException()
 
@@ -129,6 +129,6 @@ def __get_request(url):
         return requests.get(url=url,
                             auth=(settings.USERNAME, settings.PASSWORD),
                             headers={'Accept': 'application/json'},
-                            verify=PATH_TO_CERT)
+                            verify=False)
     except ConnectionError:
         raise RemoteRequestException()
