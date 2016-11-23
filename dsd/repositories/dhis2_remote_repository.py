@@ -89,6 +89,7 @@ def get_data_element_values(query_params):
 
 
 def send_analysis_request():
+    logger.critical('send analysis request to dhis2')
     url = dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_SEND_ANALYSIS_ACTION)
     return __get_request(url=url)
 
