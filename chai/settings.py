@@ -116,8 +116,6 @@ DHIS2_SERVER_IP = config['DHIS2_SERVER']['IP']
 DHIS2_PORT = config['DHIS2_SERVER']['PORT']
 USERNAME = config['DHIS2_SERVER']['USERNAME']
 PASSWORD = config['DHIS2_SERVER']['PASSWORD']
-OAUTH2_UID = config['DHIS2_SERVER']['OAUTH2_UID']
-OAUTH2_SECRET = config['DHIS2_SERVER']['OAUTH2_SECRET']
 
 DATABASE_ROUTERS = ['dsd.routers.remote_router.RemoteRouter', 'dsd.routers.local_router.LocalRouter']
 
