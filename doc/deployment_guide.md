@@ -20,7 +20,7 @@ Please ask devs for *settings.ini* or copy from the existing prod server.
 wget https://dl.eff.org/certbot-auto
 chmod a+x certbot-auto
 ```
-2. Make sure TCP ports 80 and 443 on the instance is open.
+2. Make sure TCP ports 80 and 443 on the instance are open.
 3. Get the certificates.
 ``` bash
 ./certbot-auto certonly --standalone -d portalmbes.com -d portalmbes.com
