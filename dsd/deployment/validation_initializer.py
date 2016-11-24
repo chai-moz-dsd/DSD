@@ -261,7 +261,7 @@ def add_complex_disenteria_case():
 
 def add_meningite_case():
     rule_id = 'JTiPI2lUKp0'
-    disease_code = '009.2_DISENTERIA'
+    disease_code = 'MENINGITE_036'
     date_element_ids = [Element.objects.get(code=disease_code).id]
     left_side_expression = DataElementValuesValidationService.assemble_left_side_expression(disease_code,
                                                                                             'cases_meningitis')
