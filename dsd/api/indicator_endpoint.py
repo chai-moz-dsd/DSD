@@ -68,13 +68,15 @@ def get_indicator_info(element):
     freshness = FRESHNESS.get(element[2], None)
     submission_time = element[3]
     version = 'v1.1'
+    comments = ''
 
     return {'syncStatus': sync_status,
             'syncTime': {
                 'time': submission_time,
                 'status': freshness
             },
-            'ODKVersion': version}
+            'ODKVersion': version,
+            'comments': comments}
 
 
 def get_random_status():
