@@ -15,7 +15,8 @@ def get_sql_command(facilities, start, end):
            get_bes_year_selection() + ',' + \
            get_bes_number_selection() + ',' + \
            get_week_of_year_selection() + ',' + \
-           get_day_of_week() + ' ' + \
+           get_day_of_week() + ',' + \
+           get_comments_of_indicator() + ' ' + \
            'FROM ' + \
            get_from_clause() + ' ' + \
            'WHERE ' + \
@@ -46,6 +47,9 @@ def get_week_of_year_selection():
 
 def get_day_of_week():
     return 'date_part(\'isodow\', "_SUBMISSION_DATE") AS dayOfWeek'
+
+def get_comments_of_indicator():
+    return '"SKIPABLE_CAMPO_ABERTO"'
 
 
 def get_completeness_selection():

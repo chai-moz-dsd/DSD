@@ -11,6 +11,8 @@ from rest_framework.response import Response
 from dsd.exceptions.illegal_arguments_exception import IllegalArgumentException
 from dsd.services.indicator_service import START_DATE, END_DATE, OUS, get_sql_command, MAX_WEEK
 
+COMMENTS_INDEX = 8
+
 SYNC_STATUS = {'Completed': 1, 'Incompleted': 0, 'Not_submitted': -1}
 FRESHNESS = {'Early': 1, 'Normal': 0, 'Later': -1}
 
@@ -63,12 +65,16 @@ def get_isocalendar(date):
     return datetime.fromtimestamp(float(date) / 1000).isocalendar()
 
 
+def comments_exist(element):
+    return len(element) > COMMENTS_INDEX
+
+
 def get_indicator_info(element):
     sync_status = SYNC_STATUS.get(element[1], None)
     freshness = FRESHNESS.get(element[2], None)
     submission_time = element[3]
     version = 'v1.1'
-    comments = ''
+    comments = element[8] if comments_exist(element) else None
 
     return {'syncStatus': sync_status,
             'syncTime': {
