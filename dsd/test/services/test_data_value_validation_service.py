@@ -15,12 +15,13 @@ from dsd.models.moh import MOH_UID
 from dsd.repositories import dhis2_remote_repository
 from dsd.services.bes_middleware_core_service import fetch_updated_data_element_values
 from dsd.services.data_value_validation_service import DataElementValuesValidationService, \
-    FETCH_CUSTOMIZED_VALIDATION_RULES_REQUEST_PARAMS
+    FETCH_CUSTOMIZED_VALIDATION_RULES_REQUEST_PARAMS, FETCH_DEFAULT_VALIDATION_RULES_REQUEST_PARAMS
 from dsd.test.factories.bes_middleware_core_factory import BesMiddlewareCoreFactory
 from dsd.test.factories.coc_relation_factory import COCRelationFactory
 from dsd.test.factories.element_factory import ElementFactory
 from dsd.test.factories.facility_factory import FacilityFactory
 from dsd.test.helpers.fake_date import FakeDate
+from dsd.test.helpers.fake_datetime import FakeDatetime
 
 logger = logging.getLogger(__name__)
 
@@ -146,7 +147,7 @@ class DataValueValidationServiceTest(TestCase):
 
         self.assertEqual(result, 10)
 
-    @patch('datetime.date', FakeDate)
+    @patch('datetime.datetime', FakeDatetime)
     def test_should_fetch_info_from_updated_data_when_on_random_week(self):
         BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=29)
 
@@ -155,7 +156,7 @@ class DataValueValidationServiceTest(TestCase):
         self.assertEqual(start, '2016-07-18')
         self.assertEqual(end, '2016-07-24')
 
-    @patch('datetime.date', FakeDate)
+    @patch('datetime.datetime', FakeDatetime)
     def test_should_fetch_info_from_updated_data_when_on_year_end(self):
         BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=52)
 
@@ -164,7 +165,7 @@ class DataValueValidationServiceTest(TestCase):
         self.assertEqual(start, '2016-12-26')
         self.assertEqual(end, '2017-01-01')
 
-    @patch('datetime.date', FakeDate)
+    @patch('datetime.datetime', FakeDatetime)
     def test_should_fetch_info_from_updated_data_when_on_year_start(self):
         uri = uuid.uuid4()
         BesMiddlewareCoreFactory(uri=uri, bes_year=datetime.datetime.today(), bes_number=1)
@@ -245,7 +246,7 @@ class DataValueValidationServiceTest(TestCase):
             REAL_HTML_RESPONSE)
         self.assertDictEqual(expected_groups, rule_groups)
 
-    @patch('datetime.date', FakeDate)
+    @patch('datetime.datetime', FakeDatetime)
     @patch.object(DataElementValuesValidationService, 'fetch_default_validation_rules')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
     def test_should_be_false_if_match_rule(self, mock_get_validation_results, mock_fetch_default_validation_rules):
@@ -272,7 +273,7 @@ class DataValueValidationServiceTest(TestCase):
                                                                                              FOUR_WEEKS_DAYS)
         self.assertEqual(before_08th, '2016-07-17')
 
-    @patch('datetime.date', FakeDate)
+    @patch('datetime.datetime', FakeDatetime)
     @patch.object(DataElementValuesValidationService, 'fetch_default_validation_rules')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
     def test_should_be_true_if_mismatch_rule(self, mock_get_validation_results, mock_fetch_default_validation_rules):
@@ -290,7 +291,7 @@ class DataValueValidationServiceTest(TestCase):
         self.assertEqual(True,
                          self.data_element_values_validation_service.should_alert_by_facility[device_id]['eKuAVF39NpL'])
 
-    @patch('datetime.date', FakeDate)
+    @patch('datetime.datetime', FakeDatetime)
     @patch.object(DataElementValuesValidationService, 'should_alert', should_alert_return_value)
     @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_rule',
                   update_alert_status_by_facility_and_rule_return_value)
@@ -312,7 +313,7 @@ class DataValueValidationServiceTest(TestCase):
             'organisationUnitId=MOH12345678&startDate=2016-05-30&endDate=2016-06-26' \
             '&validationRuleGroupId=%s&sendAlerts=true' % VALIDATION_GROUP_ID_MEASLES_CASES)
 
-    @patch('datetime.date', FakeDate)
+    @patch('datetime.datetime', FakeDatetime)
     @patch.object(DataElementValuesValidationService, 'should_alert', should_alert_return_value)
     @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_rule',
                   update_alert_status_by_facility_and_rule_return_value)
@@ -331,6 +332,7 @@ class DataValueValidationServiceTest(TestCase):
             'organisationUnitId=MOH12345678&startDate=2016-06-05&endDate=2016-06-26' \
             '&validationRuleGroupId=%s&sendAlerts=true' % VALIDATION_GROUP_ID_MENINGITIS_CASES)
 
+    @patch('datetime.datetime', FakeDatetime)
     @patch.object(DataElementValuesValidationService, 'should_alert', should_alert_return_value)
     @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_rule',
                   update_alert_status_by_facility_and_rule_return_value)
@@ -352,6 +354,7 @@ class DataValueValidationServiceTest(TestCase):
             'organisationUnitId=MOH12345678&startDate=2016-05-23&endDate=2016-06-26' \
             '&validationRuleGroupId=%s&sendAlerts=true' % VALIDATION_GROUP_ID_MALARIA_CASES)
 
+    @patch('datetime.datetime', FakeDatetime)
     @patch.object(DataElementValuesValidationService, 'should_alert', should_alert_return_value)
     @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_rule',
                   update_alert_status_by_facility_and_rule_return_value)
@@ -492,6 +495,15 @@ class DataValueValidationServiceTest(TestCase):
         self.assertEquals(element_ids[1], '%s.%s' % (element_id, 2))
         self.assertEquals(element_ids[2], '%s.%s' % (element_id, 3))
         self.assertEquals(element_ids[3], '%s.%s' % (element_id, 4))
+
+    def test_should_get_default_validation_rules_request_params(self):
+        self.assertEqual(FETCH_DEFAULT_VALIDATION_RULES_REQUEST_PARAMS,
+                         'fields=id&fields=validationRuleGroups&filter=additionalRuleType:eq:Default')
+
+    def test_should_get_customized_validation_rules_request_params(self):
+        self.assertEqual(FETCH_CUSTOMIZED_VALIDATION_RULES_REQUEST_PARAMS,
+                         'fields=id&fields=validationRuleGroups&fields=additionalRuleType&fields=additionalRule'
+                         '&filter=additionalRuleType:ne:Default')
 
 
 REAL_HTML_RESPONSE = '''
