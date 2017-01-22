@@ -59,7 +59,7 @@ class DataElementValuesValidationService(object):
 
     @staticmethod
     def fetch_info_from_updated_data(value):
-        year, _, _ = value.bes_year.isocalendar()
+        year, _, _ = value.bes_year.year
         week_time = '%s-W%s' % (year, value.bes_number)
 
         date_week_start = datetime.datetime.strptime('%s-1' % week_time, '%Y-W%W-%w').strftime('%Y-%m-%d')
@@ -145,7 +145,7 @@ class DataElementValuesValidationService(object):
         return dhis2_remote_repository.get_validation_results(validate_params)
 
     def send_validation_malaria_in_recent_years_average(self, value, organisation_id):
-        current_year, _, _ = value.bes_year.isocalendar()
+        current_year, _, _ = value.bes_year.year
         week_num = value.bes_number
 
         rule_type = CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES)
@@ -184,7 +184,7 @@ class DataElementValuesValidationService(object):
             self.update_alert_status_by_facility_and_rule(value.device_id, rule_id, response)
 
     def send_validation_dysentery_recent_years_average(self, value, organisation_id):
-        current_year, _, _ = value.bes_year.isocalendar()
+        current_year, _, _ = value.bes_year.year
         week_num = value.bes_number
         recent_years = self.customized_rule_type_to_addition_rules.get(
             CUSTOMIZED_VALIDATION_RULE_TYPE.get(DYSENTERY_CASES)).get(
@@ -216,7 +216,7 @@ class DataElementValuesValidationService(object):
             self.update_alert_status_by_facility_and_rule(value.device_id, rule_id, response)
 
     def send_validation_for_sarampo_in_recent_weeks(self, value, organisation_id):
-        current_year, _, _ = value.bes_year.isocalendar()
+        current_year, _, _ = value.bes_year.year
         week_num = value.bes_number
         start, data_week_end = self.fetch_info_from_updated_data(value)
 
@@ -244,7 +244,7 @@ class DataElementValuesValidationService(object):
             self.update_alert_status_by_facility_and_rule(value.device_id, rule_id, response)
 
     def send_validation_for_meningitis_every_two_weeks(self, value, organisation_id):
-        current_year, _, _ = value.bes_year.isocalendar()
+        current_year, _, _ = value.bes_year.year
         week_num = value.bes_number
 
         recent_weeks = self.customized_rule_type_to_addition_rules.get(
