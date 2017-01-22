@@ -25,7 +25,7 @@ FETCH_CUSTOMIZED_VALIDATION_RULES_REQUEST_PARAMS = '%sfilter=additionalRuleType:
     'fields='.join(['', 'id&', 'validationRuleGroups&', 'additionalRuleType&', 'additionalRule&']))
 
 FETCH_DEFAULT_VALIDATION_RULES_REQUEST_PARAMS = '%sfilter=additionalRuleType:eq:Default' % (
-    'fields='.join(['id&', 'validationRuleGroups&']))
+    'fields='.join(['', 'id&', 'validationRuleGroups&']))
 
 
 class DataElementValuesValidationService(object):
