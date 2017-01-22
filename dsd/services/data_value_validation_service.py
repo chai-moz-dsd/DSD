@@ -1,9 +1,9 @@
 import datetime
 import json
 import logging
-import re
 from statistics import mean, stdev
 
+import re
 from django.db.models import Q
 from rest_framework.status import HTTP_200_OK
 
@@ -21,11 +21,15 @@ logger = logging.getLogger(__name__)
 
 logger.setLevel(logging.CRITICAL)
 
-FETCH_CUSTOMIZED_VALIDATION_RULES_REQUEST_PARAMS = '%sfilter=additionalRuleType:ne:Default' % (
-    'fields='.join(['', 'id&', 'validationRuleGroups&', 'additionalRuleType&', 'additionalRule&']))
+FETCH_CUSTOMIZED_VALIDATION_RULES_REQUEST_PARAMS = 'fields=id' \
+                                                   '&fields=validationRuleGroups' \
+                                                   '&fields=additionalRuleType' \
+                                                   '&fields=additionalRule' \
+                                                   '&filter=additionalRuleType:ne:Default'
 
-FETCH_DEFAULT_VALIDATION_RULES_REQUEST_PARAMS = '%sfilter=additionalRuleType:eq:Default' % (
-    'fields='.join(['', 'id&', 'validationRuleGroups&']))
+FETCH_DEFAULT_VALIDATION_RULES_REQUEST_PARAMS = 'fields=id' \
+                                                '&fields=validationRuleGroups' \
+                                                '&filter=additionalRuleType:eq:Default'
 
 
 class DataElementValuesValidationService(object):
@@ -364,7 +368,6 @@ class DataElementValuesValidationService(object):
                                                                          query_name_prefix=query_name_prefix)
         expression_units = ['#{%s}' % element_id for element_id in element_ids]
         return '+'.join(expression_units)
-
 
     @staticmethod
     def fetch_same_period_in_recent_years(current_year, year_offset, week_num, weeks_before, weeks_after,
