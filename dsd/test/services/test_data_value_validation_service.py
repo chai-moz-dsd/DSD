@@ -20,7 +20,6 @@ from dsd.test.factories.bes_middleware_core_factory import BesMiddlewareCoreFact
 from dsd.test.factories.coc_relation_factory import COCRelationFactory
 from dsd.test.factories.element_factory import ElementFactory
 from dsd.test.factories.facility_factory import FacilityFactory
-from dsd.test.helpers.fake_date import FakeDate
 from dsd.test.helpers.fake_datetime import FakeDatetime
 
 logger = logging.getLogger(__name__)
