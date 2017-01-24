@@ -276,7 +276,7 @@ class DataElementValuesValidationService(object):
                                                                                             current_week,
                                                                                             organisation_id)
         logger.critical('year = %s,week=%s' % (year, week))
-        for offset in range(0, -week_offset, -1):
+        for offset in range(0, -week_offset + 1, -1):
             previous_year, previous_week = DataElementValuesValidationService.calculate_year_week_by_offset(year, week,
                                                                                                             offset - 1)
             meningitis_cases_previous_week = DataElementValuesValidationService.fetch_meningitis(previous_year,
