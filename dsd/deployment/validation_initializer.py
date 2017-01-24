@@ -269,7 +269,7 @@ def add_meningite_case():
                                                                                             'cases_meningitis')
 
     post_validation_rule(rule_id=rule_id,
-                         rule_name='Meningite (inclui suspeitas) week1 < week2 * 2 < week3 * 2',
+                         rule_name='Meningite (inclui suspeitas) week1 * 2 < week2; week2 * 2 < week3',
                          rule_description='Case duplication in last 3 consectuve epidemiological weeks\r\nThe logic can be described as:\r\nCase for week 1 * 2 <= Case for week 2 && Case for week 2 * 2 <= Case for week 3\r\nFor example, week 1 we have 2 cases, week 2 we have 4 or more cases, and for week 3 we have 8 or more cases, then this would trigger the alert.',
                          rule_instruction='Case duplication in last 3 consectuve epidemiological weeks\r\nThe logic can be described as:\r\nCase for week 1 * 2 <= Case for week 2 && Case for week 2 * 2 <= Case for week 3\r\nFor example, week 1 we have 2 cases, week 2 we have 4 or more cases, and for week 3 we have 8 or more cases, then this would trigger the alert.',
                          organisation_unit_level=str(ORGANISATION_UNIT_LEVEL.get('facility')),
