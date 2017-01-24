@@ -106,7 +106,7 @@ class DataElementValuesValidationService(object):
     def send_validation_for_each_disease(self, value, organisation_id):
         date_week_start, date_week_end = self.fetch_info_from_updated_data(value)
         for rule_id, rule_group_id in self.fetch_default_validation_rules().items():
-            should_alert = self.should_alert(rule_id, value)
+            should_alert = self.should_alert(value.device_id, rule_id)
             logger.critical(
                 'each: device_id = %s, rule_id = %s: should_alert = %s, rule_group_id = %s, start = %s, end = %s ' % (
                     value.device_id, rule_id, should_alert, rule_group_id, date_week_start, date_week_end))
