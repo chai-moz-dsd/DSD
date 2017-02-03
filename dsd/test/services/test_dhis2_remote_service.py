@@ -192,9 +192,9 @@ class DHIS2RemoteServiceTest(TestCase):
         self.assertEqual(request_body_dict.get('name'), dhis2_config.DATA_SET_NAME)
         self.assertEqual(request_body_dict.get('shortName'), dhis2_config.DATA_SET_NAME)
 
-        self.assertEqual(len(request_body_dict.get('organisationUnits')), 4)
-        self.assertEqual(request_body_dict.get('organisationUnits')[0].get('id'), facility1.uid)
-        self.assertEqual(request_body_dict.get('organisationUnits')[1].get('id'), facility2.uid)
+        self.assertEqual(len(request_body_dict.get('organisationUnits')), 5)
+        self.assertEqual(request_body_dict.get('organisationUnits')[1].get('id'), facility1.uid)
+        self.assertEqual(request_body_dict.get('organisationUnits')[2].get('id'), facility2.uid)
 
     def test_should_build_category_options_request_body_as_dict(self):
         option_id = generate_id()
