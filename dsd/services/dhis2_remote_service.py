@@ -137,7 +137,7 @@ def build_data_element_values_request_body_as_dict(bes_middleware_core):
 
 
 def build_data_set_request_body_as_dict():
-    organisation_units = []
+    organisation_units = ['MOH12345678']
     element_ids_list = []
     for facility in Facility.objects.all():
         organisation_units.append({'id': facility.uid})
@@ -145,6 +145,8 @@ def build_data_set_request_body_as_dict():
         organisation_units.append({'id': district.uid})
     for element in Element.objects.all():
         element_ids_list.append({'id': element.id})
+
+    # Add category combo id, the id is a fixed value in dhis
     return {
         'dataElements': element_ids_list,
         'expiryDays': 0,
@@ -157,7 +159,10 @@ def build_data_set_request_body_as_dict():
         'organisationUnits': organisation_units,
         'periodType': dhis2_config.DATA_SET_PERIOD_TYPES,
         'shortName': dhis2_config.DATA_SET_NAME,
-        'timelyDays': 15
+        'timelyDays': 15,
+        'categoryCombo': {
+            'id': 'bjDvmb4bfuf'
+        }
     }
 
 
