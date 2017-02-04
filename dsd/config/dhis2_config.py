@@ -23,6 +23,7 @@ KEY_GET_VALIDATION_RULE_GROUPS = '_key_get_validation_rule_groups'
 KEY_RUN_VALIDATION_ACTION = '_key_run_validation_action'
 KEY_SEND_ANALYSIS_ACTION = '_key_send_analysis_action'
 KEY_POST_METADATA = '_key_post_metadata'
+KEY_GET_ORGANISATIONUNITS = '_get_organisationunits'
 
 OAUTH2_TOKEN = 'oauth2_token'
 OAUTH2_CREATE = 'oauth2_create'
@@ -55,6 +56,7 @@ DHIS2_STATIC_URLS = {
     KEY_GET_VALIDATION_RULE_GROUPS: '%sdhis-web-validationrule/validationRuleGroup.action' % DHIS2_BASE_URL,
     KEY_RUN_VALIDATION_ACTION: '%sdhis-web-validationrule/runValidationAction.action' % DHIS2_BASE_URL,
     KEY_POST_METADATA: '%sapi/metaData' % DHIS2_BASE_URL,
+    KEY_GET_ORGANISATIONUNITS: '%sapi/organisationUnits' % DHIS2_BASE_URL,
 }
 
 DATA_SET_ID = 'TTLoO39Scy9'
