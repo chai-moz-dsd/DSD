@@ -2,7 +2,7 @@ import json
 
 from django.test import TestCase
 from django.test import override_settings
-from mock import MagicMock, patch
+from mock import MagicMock, patch, ANY
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 
 from dsd.repositories import dhis2_remote_repository
@@ -167,3 +167,11 @@ class DHIS2RemoteRepositoryTest(TestCase):
                                               auth=(settings.USERNAME, settings.PASSWORD),
                                               verify=False,
                                               headers=dhis2_config.HEADERS_CONTENT_TYPE_APPLICATION_XML)
+
+    @override_settings(DHIS2_SSL_VERIFY=False)
+    @patch('dsd.repositories.dhis2_remote_repository.__get_request')
+    def test_should_construct_organisationunits_url(self, mock_get):
+        expected_url = 'http://127.0.0.1:8080/api/organisationUnits/oa01020304'
+        get_district_organisation_id('oa01020304')
+        mock_get.assert_called_with(expected_url)
+

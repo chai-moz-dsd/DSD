@@ -15,6 +15,7 @@ from dsd.models import COCRelation
 from dsd.models import Element
 from dsd.models import Facility
 from dsd.repositories import dhis2_remote_repository
+from dsd.repositories.dhis2_remote_repository import get_district_organisation_id
 from dsd.services.dhis2_remote_service import construct_get_element_values_request_query_params
 
 logger = logging.getLogger(__name__)
@@ -248,7 +249,11 @@ class DataElementValuesValidationService(object):
                 rule_group_id, data_week_start, data_week_end, sarampo_cases_in_a_month))
 
             should_alert = self.should_alert(value.device_id, rule_id)
-            response = self.send_validation_request(rule_group_id, data_week_start, data_week_end, organisation_id,
+            district_organisation_id = get_district_organisation_id(organisation_id)
+            response = self.send_validation_request(rule_group_id,
+                                                    data_week_start,
+                                                    data_week_end,
+                                                    district_organisation_id,
                                                     should_alert)
             self.update_alert_status_by_facility_and_rule(value.device_id, rule_id, response)
 
@@ -318,11 +323,12 @@ class DataElementValuesValidationService(object):
     def fetch_sarampo_by_period(year, week_num, week_offset, organisation_id):
         period_weeks = ['%sW%s' % (DataElementValuesValidationService.calculate_year_week_by_offset(year, week_num, i))
                         for i in range(-week_offset + 1, 1)]
-        print(period_weeks)
+
         element_ids = DataElementValuesValidationService.get_element_ids(disease_code='SARAMPO_055',
                                                                          query_name_prefix='cases_measles')
         special_element_ids = DataElementValuesValidationService.get_element_ids(disease_code='SARAMPO_055',
                                                                                  query_name_prefix='cases_nv_measles')
+
         element_ids.extend(special_element_ids)
         return DataElementValuesValidationService.fetch_disease_in_year_weeks(organisation_id, element_ids,
                                                                               period_weeks)

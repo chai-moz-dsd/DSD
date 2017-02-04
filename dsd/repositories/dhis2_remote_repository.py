@@ -88,6 +88,12 @@ def get_data_element_values(query_params):
     return __get_request(url=url)
 
 
+def get_district_organisation_id(facility_organisation_id):
+    url = '%s/%s' %(dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_ORGANISATIONUNITS), facility_organisation_id)
+    organisationunit_res = __get_request(url)
+    return organisationunit_res.json().get('parent').get('id')
+
+
 def send_analysis_request():
     logger.critical('send analysis request to dhis2')
     url = dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_SEND_ANALYSIS_ACTION)
