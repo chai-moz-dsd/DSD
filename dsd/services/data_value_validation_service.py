@@ -250,6 +250,7 @@ class DataElementValuesValidationService(object):
 
             should_alert = self.should_alert(value.device_id, rule_id)
             district_organisation_id = get_district_organisation_id(organisation_id)
+            logger.critical('district organisation unit id: %s' %district_organisation_id)
             response = self.send_validation_request(rule_group_id,
                                                     data_week_start,
                                                     data_week_end,
