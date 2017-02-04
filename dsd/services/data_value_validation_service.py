@@ -31,6 +31,13 @@ FETCH_DEFAULT_VALIDATION_RULES_REQUEST_PARAMS = 'fields=id' \
                                                 '&fields=validationRuleGroups' \
                                                 '&filter=additionalRuleType:eq:Default'
 
+DATAVALUE_INDEX = 2
+
+
+def calculate_values_by_rows_data(rows):
+    values = sum(map(lambda x: int(float(x[DATAVALUE_INDEX])), rows))
+    return values
+
 
 class DataElementValuesValidationService(object):
     def __init__(self):
@@ -226,7 +233,9 @@ class DataElementValuesValidationService(object):
         threshold = self.customized_rule_type_to_addition_rules.get(
             CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES)).get(
             'threshold')
+
         sarampo_cases_in_a_month = self.fetch_sarampo_by_period(current_year, week_num, week_offset, organisation_id)
+        logger.critical('sarampo_cases_in_a_month values: %d threshold: %d' % (sarampo_cases_in_a_month, threshold))
 
         if sarampo_cases_in_a_month >= threshold:
             rule_id = self.customized_rule_type_to_rule_ids.get(CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES))
@@ -309,6 +318,7 @@ class DataElementValuesValidationService(object):
     def fetch_sarampo_by_period(year, week_num, week_offset, organisation_id):
         period_weeks = ['%sW%s' % (DataElementValuesValidationService.calculate_year_week_by_offset(year, week_num, i))
                         for i in range(-week_offset + 1, 1)]
+        print(period_weeks)
         element_ids = DataElementValuesValidationService.get_element_ids(disease_code='SARAMPO_055',
                                                                          query_name_prefix='cases_measles')
         special_element_ids = DataElementValuesValidationService.get_element_ids(disease_code='SARAMPO_055',
@@ -352,7 +362,7 @@ class DataElementValuesValidationService(object):
             period_weeks=period_weeks
         )
         element_data = dhis2_remote_repository.get_data_element_values(query_params).json().get('rows')
-        return int(float(element_data[0][2])) if element_data else 0
+        return calculate_values_by_rows_data(element_data)
 
     @staticmethod
     def get_element_ids(disease_code, query_name_prefix):

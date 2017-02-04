@@ -15,7 +15,8 @@ from dsd.models.moh import MOH_UID
 from dsd.repositories import dhis2_remote_repository
 from dsd.services.bes_middleware_core_service import fetch_updated_data_element_values
 from dsd.services.data_value_validation_service import DataElementValuesValidationService, \
-    FETCH_CUSTOMIZED_VALIDATION_RULES_REQUEST_PARAMS, FETCH_DEFAULT_VALIDATION_RULES_REQUEST_PARAMS
+    FETCH_CUSTOMIZED_VALIDATION_RULES_REQUEST_PARAMS, FETCH_DEFAULT_VALIDATION_RULES_REQUEST_PARAMS, \
+    calculate_values_by_rows_data
 from dsd.test.factories.bes_middleware_core_factory import BesMiddlewareCoreFactory
 from dsd.test.factories.coc_relation_factory import COCRelationFactory
 from dsd.test.factories.element_factory import ElementFactory
@@ -504,6 +505,30 @@ class DataValueValidationServiceTest(TestCase):
                          'fields=id&fields=validationRuleGroups&fields=additionalRuleType&fields=additionalRule'
                          '&filter=additionalRuleType:ne:Default')
 
+    def test_calculate_values_by_rows_data(self):
+        self.assertEqual(2011, calculate_values_by_rows_data(ROWS_DATA))
+
+
+ROWS_DATA = [[
+    "af47c3c71d0.I1MJ2dh7Jyc",
+    "oc7d7efa687",
+    "1.0",
+    "highlight.false"
+], [
+    "af47c3c71d0.JSLPGA5DXRb",
+    "oc7d7efa687",
+    "2002.0",
+    "highlight.true"
+], [
+    "af47c3c71d0.znVaTr0bGvB",
+    "oc7d7efa687",
+    "8.0",
+    "highlight.false"
+], [
+    "af47c3c71d0.JL7KRsGFIa1",
+    "oc7d7efa687",
+    "0.0",
+    "highlight.false"]]
 
 REAL_HTML_RESPONSE = '''
 <tbody id="list">
