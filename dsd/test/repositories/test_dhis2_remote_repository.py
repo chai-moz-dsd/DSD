@@ -171,7 +171,7 @@ class DHIS2RemoteRepositoryTest(TestCase):
     @override_settings(DHIS2_SSL_VERIFY=False)
     @patch('dsd.repositories.dhis2_remote_repository.__get_request')
     def test_should_construct_organisationunits_url(self, mock_get):
-        expected_url = 'http://127.0.0.1:8080/api/organisationUnits/oa01020304'
+        expected_url = '%s/oa01020304' %(dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_ORGANISATIONUNITS))
         get_district_organisation_id('oa01020304')
         mock_get.assert_called_with(expected_url)
 
