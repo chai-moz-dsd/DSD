@@ -137,7 +137,7 @@ def build_data_element_values_request_body_as_dict(bes_middleware_core):
 
 
 def build_data_set_request_body_as_dict():
-    organisation_units = ['MOH12345678']
+    organisation_units = [{'id': 'MOH12345678'}]
     element_ids_list = []
     for facility in Facility.objects.all():
         organisation_units.append({'id': facility.uid})

@@ -8,8 +8,6 @@ from dsd.services.validation_rule_service import ORGANISATION_UNIT_LEVEL, post_v
 logger = logging.getLogger(__name__)
 
 
-EMPTY_DESCRIPTION = ' '
-
 def add_colera_case():
     rule_id = 'tOCXddkXkw0'
     disease_code = '001_CÓLERA'
@@ -82,7 +80,7 @@ def add_disenteria_case():
                          rule_instruction='Disenteria (Shigella): Caso > 0',
                          organisation_unit_level=str(ORGANISATION_UNIT_LEVEL.get('facility')),
                          left_side_expression=left_side_expression,
-                         left_side_description='disenteria saso',
+                         left_side_description='Disenteria saso',
                          date_element_ids=date_element_ids,
                          right_side_expression='0')
     post_validation_rule_group(group_id='g0AWTpbBv2o', name='Disenteria (Shigella): Caso > 0 grupo',
@@ -226,7 +224,7 @@ def add_malaria_case():
                          rule_instruction='Cases reported within the reporting period > the mean of the same epidemilogical period for the previous 5 years + 2 std dev. NB: monthly, not weekly\r\nThe logic can be described as:\r\nCase reported in this calendar month (current EPI week and 2 weeks before and after) > the average of cases in same calendar month period for past 5 years + 2 std dev',
                          organisation_unit_level=str(ORGANISATION_UNIT_LEVEL.get('facility')),
                          left_side_expression=left_side_expression,
-                         left_side_description=EMPTY_DESCRIPTION,
+                         left_side_description='Malária cases greater than average in past years',
                          date_element_ids=[date_element_id1, date_element_id2],
                          right_side_expression='0',
                          additional_rule_type=ADDITIONAL_RULE_TYPE.MalariaCaseInYears,
@@ -250,7 +248,7 @@ def add_complex_disenteria_case():
                          rule_instruction='Cases reported within the epidemiological week > the mean of the same epidemilogical week for the previous 5 years + 2 std dev.',
                          organisation_unit_level=str(ORGANISATION_UNIT_LEVEL.get('facility')),
                          left_side_expression=left_side_expression,
-                         left_side_description=EMPTY_DESCRIPTION,
+                         left_side_description='Disenteria cases greater than average for same week in last years',
                          date_element_ids=date_element_ids,
                          right_side_expression='0',
                          additional_rule_type=ADDITIONAL_RULE_TYPE.DisenteriaCaseInYears,
@@ -274,7 +272,7 @@ def add_meningite_case():
                          rule_instruction='Case duplication in last 3 consectuve epidemiological weeks\r\nThe logic can be described as:\r\nCase for week 1 * 2 <= Case for week 2 && Case for week 2 * 2 <= Case for week 3\r\nFor example, week 1 we have 2 cases, week 2 we have 4 or more cases, and for week 3 we have 8 or more cases, then this would trigger the alert.',
                          organisation_unit_level=str(ORGANISATION_UNIT_LEVEL.get('facility')),
                          left_side_expression=left_side_expression,
-                         left_side_description=EMPTY_DESCRIPTION,
+                         left_side_description='Meningite cases duplication in recent consecutive weeks',
                          date_element_ids=date_element_ids,
                          right_side_expression='0',
                          additional_rule_type=ADDITIONAL_RULE_TYPE.MeningiteIncreasedInWeeks,
@@ -299,7 +297,7 @@ def add_complex_sarampo_case():
                          rule_instruction='5 cases in a district in a month',
                          organisation_unit_level=str(ORGANISATION_UNIT_LEVEL.get('district')),
                          left_side_expression=left_side_expression,
-                         left_side_description=EMPTY_DESCRIPTION,
+                         left_side_description='Sarampo cases in recent EPI weeks',
                          date_element_ids=date_element_ids,
                          right_side_expression='0',
                          additional_rule_type=ADDITIONAL_RULE_TYPE.SarampoCaseInMonths,
