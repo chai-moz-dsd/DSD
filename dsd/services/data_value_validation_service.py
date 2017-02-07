@@ -42,7 +42,6 @@ def calculate_values_by_rows_data(rows):
 
 class DataElementValuesValidationService(object):
     def __init__(self):
-        self.should_alert_by_disease = {}.fromkeys(DISEASE_I18N_MAP.keys(), True)
         self.should_alert_by_facility = {}
 
         _, self.rule_group_name_id_map = self.fetch_all_rule_groups()
