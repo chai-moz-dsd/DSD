@@ -72,7 +72,7 @@ def get_data_element_values(query_params):
 
 def get_validation_rules(query_params):
     url = '%s?%s' % (dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_VALIDATION_RULES), query_params)
-    logger.critical('meningitis_cases_previous_week url=%s' % url)
+    logger.critical('get_validation_rules url=%s' % url)
     return __get_request(url=url)
 
 
@@ -122,6 +122,8 @@ def post_metadata(request_body):
 
 def __post_request(url, data):
     try:
+        print(url)
+        print(data)
         return requests.post(url=url,
                              data=data,
                              auth=(settings.USERNAME, settings.PASSWORD),
