@@ -14,6 +14,7 @@ from dsd.config.dhis2_config import DISEASE_I18N_MAP, THREE_WEEKS_DAYS, \
 from dsd.models import COCRelation
 from dsd.models import Element
 from dsd.models import Facility
+from dsd.models.moh import MOH_UID
 from dsd.repositories import dhis2_remote_repository
 from dsd.repositories.dhis2_remote_repository import get_district_organisation_id
 from dsd.services.dhis2_remote_service import construct_get_element_values_request_query_params
@@ -55,7 +56,7 @@ class DataElementValuesValidationService(object):
                 facility = Facility.objects.filter(device_serial=value.device_id).first()
                 if not facility:
                     continue
-                organization_id = facility.uid
+                organization_id = MOH_UID
                 self.send_validation_for_each_disease(value, organization_id)
                 self.send_validation_for_sarampo_in_recent_weeks(value, organization_id)
                 self.send_validation_for_meningitis_every_two_weeks(value, organization_id)
