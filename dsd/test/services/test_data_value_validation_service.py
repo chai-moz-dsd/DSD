@@ -252,24 +252,6 @@ class DataValueValidationServiceTest(TestCase):
             REAL_HTML_RESPONSE)
         self.assertDictEqual(expected_groups, rule_groups)
 
-    @patch('datetime.datetime', FakeDatetime)
-    @patch.object(DataElementValuesValidationService, 'fetch_default_validation_rules')
-    @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
-    def test_should_be_false_if_match_rule(self, mock_get_validation_results, mock_fetch_default_validation_rules):
-        mock_get_validation_results.return_value = MagicMock(status_code=HTTP_200_OK,
-                                                             text='<div id="validationResults">')
-        mock_fetch_default_validation_rules.return_value = {
-            'eKuAVF39NpL': ('nk1ljBLyhOr', 4)
-        }
-        device_id = '356670060310976'
-        BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=52, device_id=device_id)
-
-        value = BesMiddlewareCore.objects.first()
-        self.data_element_values_validation_service.send_validation_for_each_disease(value, MOH_UID)
-
-        self.assertEqual(False,
-                         self.data_element_values_validation_service.alerted_history_for_org_unit[device_id]['eKuAVF39NpL'])
-
     def test_should_get_four_weeks_before_date(self):
         before_20th = self.data_element_values_validation_service.change_date_to_days_before('2016-09-20',
                                                                                              FOUR_WEEKS_DAYS)
@@ -278,24 +260,6 @@ class DataValueValidationServiceTest(TestCase):
         before_08th = self.data_element_values_validation_service.change_date_to_days_before('2016-08-13',
                                                                                              FOUR_WEEKS_DAYS)
         self.assertEqual(before_08th, '2016-07-17')
-
-    @patch('datetime.datetime', FakeDatetime)
-    @patch.object(DataElementValuesValidationService, 'fetch_default_validation_rules')
-    @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
-    def test_should_be_true_if_mismatch_rule(self, mock_get_validation_results, mock_fetch_default_validation_rules):
-        mock_fetch_default_validation_rules.return_value = {
-            'eKuAVF39NpL': ('nk1ljBLyhOr', 4)
-        }
-
-        mock_get_validation_results.return_value = MagicMock(status_code=HTTP_200_OK,
-                                                             text='Validation passed successfully')
-        device_id = '356670060310976'
-        BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=52, device_id=device_id)
-
-        value = BesMiddlewareCore.objects.first()
-        self.data_element_values_validation_service.send_validation_for_each_disease(value, MOH_UID)
-        self.assertEqual(True,
-                         self.data_element_values_validation_service.alerted_history_for_org_unit[device_id]['eKuAVF39NpL'])
 
     # @patch('datetime.datetime', FakeDatetime)
     # @patch.object(DataElementValuesValidationService, 'should_alert', should_alert_return_value)

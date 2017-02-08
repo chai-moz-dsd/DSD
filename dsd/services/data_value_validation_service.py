@@ -17,6 +17,7 @@ from dsd.models import Facility
 from dsd.models.moh import MOH_UID
 from dsd.repositories import dhis2_remote_repository
 from dsd.repositories.dhis2_remote_repository import get_district_organisation_id
+from dsd.services.alert_service import should_send_alert, update_alert_status
 from dsd.services.dhis2_remote_service import construct_get_element_values_request_query_params
 
 logger = logging.getLogger(__name__)
@@ -151,11 +152,15 @@ class DataElementValuesValidationService(object):
                 'each: device_id = %s, rule_id = %s: rule_group_id = %s, start = %s, end = %s ' % (
                     value.device_id, rule_id, rule_group_id, date_week_start, date_week_end))
 
-            should_alert = self.alerted_last_time(value.device_id, rule_id)
+            should_alert = should_send_alert(rule_group_id, organisation_id)
             response = self.send_validation_request(rule_group_id, date_week_start, date_week_end, validated_organisation_id,
                                                     should_alert)
 
-            self.update_alert_status_by_facility_and_rule(value.device_id, rule_id, response)
+            updated_alert_flag = False
+            if self.__should_alert_next_time(response):
+                updated_alert_flag = True
+
+            update_alert_status(rule_group_id, organisation_id, updated_alert_flag)
 
             if response.status_code != HTTP_200_OK:
                 logger.critical('validate request failed, response = %s' % response)
