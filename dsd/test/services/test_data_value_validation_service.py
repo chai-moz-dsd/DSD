@@ -289,67 +289,61 @@ class DataValueValidationServiceTest(TestCase):
     #         '&validationRuleGroupId=%s&sendAlerts=true' % VALIDATION_GROUP_ID_MEASLES_CASES)
 
     @patch('datetime.datetime', FakeDatetime)
-    @patch.object(DataElementValuesValidationService, 'alerted_last_time', alerted_last_time_return_value)
-    @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_rule',
-                  update_alert_status_by_facility_and_rule_return_value)
     @patch.object(DataElementValuesValidationService, 'is_meningitis_increasement_rule_match')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
     def test_should_validate_meningitis_every_two_weeks(self,
                                                         mock_get_validation_results,
                                                         mock_is_meningitis_increasement_rule_match):
-        mock_get_validation_results.return_value = (HTTP_200_OK, {})
+        mock_get_validation_results.return_value = MagicMock(status=HTTP_200_OK)
         mock_is_meningitis_increasement_rule_match.return_value = True
         data_element_values = BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
+        FacilityFactory(uid='o77a351bea1')
 
         self.data_element_values_validation_service.send_validation_for_meningitis_every_two_weeks(data_element_values,
-                                                                                                   MOH_UID)
+                                                                                                   'o77a351bea1')
         mock_get_validation_results.assert_called_once_with(
-            'organisationUnitId=MOH12345678&startDate=2016-06-05&endDate=2016-06-26' \
+            'organisationUnitId=o77a351bea1&startDate=2016-06-05&endDate=2016-06-26' \
             '&validationRuleGroupId=%s&sendAlerts=true' % VALIDATION_GROUP_ID_MENINGITIS_CASES)
 
     @patch('datetime.datetime', FakeDatetime)
-    @patch.object(DataElementValuesValidationService, 'alerted_last_time', alerted_last_time_return_value)
-    @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_rule',
-                  update_alert_status_by_facility_and_rule_return_value)
     @patch.object(DataElementValuesValidationService, 'fetch_malaria_by_year_and_weeks_range')
     @patch.object(DataElementValuesValidationService, 'fetch_malaria_in_previous_weeks')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
     def test_should_validate_malaria_five_years_average(self, mock_get_validation_results,
                                                         mock_fetch_malaria_in_previous_weeks,
                                                         mock_fetch_malaria_by_year_and_weeks_range):
-        mock_get_validation_results.return_value = (HTTP_200_OK, {})
+        mock_get_validation_results.return_value = MagicMock(status_code=HTTP_200_OK)
         mock_fetch_malaria_in_previous_weeks.return_value = 2
         mock_fetch_malaria_by_year_and_weeks_range.return_value = 1
         data_element_values = BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
+        FacilityFactory(uid='o77a351bea1')
 
         self.data_element_values_validation_service.send_validation_malaria_in_recent_years_average(
             data_element_values,
-            MOH_UID)
+            'o77a351bea1')
         mock_get_validation_results.assert_called_once_with(
-            'organisationUnitId=MOH12345678&startDate=2016-05-23&endDate=2016-06-26' \
+            'organisationUnitId=o77a351bea1&startDate=2016-05-23&endDate=2016-06-26' \
             '&validationRuleGroupId=%s&sendAlerts=true' % VALIDATION_GROUP_ID_MALARIA_CASES)
 
     @patch('datetime.datetime', FakeDatetime)
-    @patch.object(DataElementValuesValidationService, 'alerted_last_time', alerted_last_time_return_value)
-    @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_rule',
-                  update_alert_status_by_facility_and_rule_return_value)
     @patch.object(DataElementValuesValidationService, 'fetch_dysentery_same_week_in_recent_five_years')
     @patch.object(DataElementValuesValidationService, 'fetch_dysentery_in_week_num')
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
     def test_should_validate_dysentery_five_years_average(self, mock_get_validation_results,
                                                           mock_fetch_dysentery_in_week_num,
                                                           mock_fetch_dysentery_same_week_in_recent_five_years):
-        mock_get_validation_results.return_value = (HTTP_200_OK, {})
+        mock_get_validation_results.return_value = MagicMock(status_code=HTTP_200_OK)
         mock_fetch_dysentery_in_week_num.return_value = 2
         mock_fetch_dysentery_same_week_in_recent_five_years.return_value = [1, 1, 1, 1, 1]
         data_element_values = BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=25)
+        FacilityFactory(uid='GOdZ9skc5z0')
 
         self.data_element_values_validation_service.send_validation_dysentery_recent_years_average(
             data_element_values,
-            MOH_UID)
+            'GOdZ9skc5z0')
 
         mock_get_validation_results.assert_called_once_with(
-            'organisationUnitId=MOH12345678&startDate=2016-06-20'
+            'organisationUnitId=GOdZ9skc5z0&startDate=2016-06-20'
             '&endDate=2016-06-26&validationRuleGroupId=%s&sendAlerts=true' % VALIDATION_GROUP_ID_DYSENTERY_CASES)
 
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_rules')
