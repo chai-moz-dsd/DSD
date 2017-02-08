@@ -31,7 +31,7 @@ logging.getLogger().setLevel(logging.CRITICAL)
 
 fetch_disease_in_year_weeks_result = Mock(return_value=10)
 
-should_alert_return_value = Mock(return_value=True)
+alerted_last_time_return_value = Mock(return_value=True)
 update_alert_status_by_facility_and_rule_return_value = Mock()
 
 VALIDATION_GROUP_ID_MEASLES_CASES = 'xi89jfkd9o1'
@@ -154,7 +154,7 @@ class DataValueValidationServiceTest(TestCase):
         BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=29)
 
         value = BesMiddlewareCore.objects.first()
-        start, end = self.data_element_values_validation_service.fetch_info_from_updated_data(value)
+        start, end = self.data_element_values_validation_service.week_range_in_updated_data(value)
         self.assertEqual(start, '2016-07-18')
         self.assertEqual(end, '2016-07-24')
 
@@ -163,7 +163,7 @@ class DataValueValidationServiceTest(TestCase):
         BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=52)
 
         value = BesMiddlewareCore.objects.first()
-        start, end = self.data_element_values_validation_service.fetch_info_from_updated_data(value)
+        start, end = self.data_element_values_validation_service.week_range_in_updated_data(value)
         self.assertEqual(start, '2016-12-26')
         self.assertEqual(end, '2017-01-01')
 
@@ -171,7 +171,7 @@ class DataValueValidationServiceTest(TestCase):
     def test_should_fetch_info_from_updated_data_when_on_year_start(self):
         uri = uuid.uuid4()
         BesMiddlewareCoreFactory(uri=uri, bes_year=datetime.datetime.today(), bes_number=1)
-        start, end = self.data_element_values_validation_service.fetch_info_from_updated_data(
+        start, end = self.data_element_values_validation_service.week_range_in_updated_data(
             BesMiddlewareCore.objects.get(uri=uri))
         self.assertEqual(start, '2016-01-04')
         self.assertEqual(end, '2016-01-10')
@@ -268,7 +268,7 @@ class DataValueValidationServiceTest(TestCase):
         self.data_element_values_validation_service.send_validation_for_each_disease(value, MOH_UID)
 
         self.assertEqual(False,
-                         self.data_element_values_validation_service.should_alert_by_facility[device_id]['eKuAVF39NpL'])
+                         self.data_element_values_validation_service.alerted_history_for_org_unit[device_id]['eKuAVF39NpL'])
 
     def test_should_get_four_weeks_before_date(self):
         before_20th = self.data_element_values_validation_service.change_date_to_days_before('2016-09-20',
@@ -295,7 +295,7 @@ class DataValueValidationServiceTest(TestCase):
         value = BesMiddlewareCore.objects.first()
         self.data_element_values_validation_service.send_validation_for_each_disease(value, MOH_UID)
         self.assertEqual(True,
-                         self.data_element_values_validation_service.should_alert_by_facility[device_id]['eKuAVF39NpL'])
+                         self.data_element_values_validation_service.alerted_history_for_org_unit[device_id]['eKuAVF39NpL'])
 
     # @patch('datetime.datetime', FakeDatetime)
     # @patch.object(DataElementValuesValidationService, 'should_alert', should_alert_return_value)
@@ -325,7 +325,7 @@ class DataValueValidationServiceTest(TestCase):
     #         '&validationRuleGroupId=%s&sendAlerts=true' % VALIDATION_GROUP_ID_MEASLES_CASES)
 
     @patch('datetime.datetime', FakeDatetime)
-    @patch.object(DataElementValuesValidationService, 'should_alert', should_alert_return_value)
+    @patch.object(DataElementValuesValidationService, 'alerted_last_time', alerted_last_time_return_value)
     @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_rule',
                   update_alert_status_by_facility_and_rule_return_value)
     @patch.object(DataElementValuesValidationService, 'is_meningitis_increasement_rule_match')
@@ -344,7 +344,7 @@ class DataValueValidationServiceTest(TestCase):
             '&validationRuleGroupId=%s&sendAlerts=true' % VALIDATION_GROUP_ID_MENINGITIS_CASES)
 
     @patch('datetime.datetime', FakeDatetime)
-    @patch.object(DataElementValuesValidationService, 'should_alert', should_alert_return_value)
+    @patch.object(DataElementValuesValidationService, 'alerted_last_time', alerted_last_time_return_value)
     @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_rule',
                   update_alert_status_by_facility_and_rule_return_value)
     @patch.object(DataElementValuesValidationService, 'fetch_malaria_by_year_and_weeks_range')
@@ -366,7 +366,7 @@ class DataValueValidationServiceTest(TestCase):
             '&validationRuleGroupId=%s&sendAlerts=true' % VALIDATION_GROUP_ID_MALARIA_CASES)
 
     @patch('datetime.datetime', FakeDatetime)
-    @patch.object(DataElementValuesValidationService, 'should_alert', should_alert_return_value)
+    @patch.object(DataElementValuesValidationService, 'alerted_last_time', alerted_last_time_return_value)
     @patch.object(DataElementValuesValidationService, 'update_alert_status_by_facility_and_rule',
                   update_alert_status_by_facility_and_rule_return_value)
     @patch.object(DataElementValuesValidationService, 'fetch_dysentery_same_week_in_recent_five_years')

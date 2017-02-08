@@ -72,7 +72,7 @@ def get_matched_org_id_by_rule(facility_id, level):
 
 class DataElementValuesValidationService(object):
     def __init__(self):
-        self.should_alert_by_facility = {}
+        self.alerted_history_for_org_unit = {}
 
         _, self.rule_group_name_id_map = self.fetch_all_rule_groups()
         customized_rule_type_to_addition_rules, self.customized_rule_type_to_rule_ids, self.customized_rule_type_to_rule_groups = self.fetch_customized_validation_rules()
@@ -95,7 +95,7 @@ class DataElementValuesValidationService(object):
                 logger.critical('validate_values error : %s!' % e)
 
     @staticmethod
-    def fetch_info_from_updated_data(value):
+    def week_range_in_updated_data(value):
         year = value.bes_year.year
         week_time = '%s-W%s' % (year, value.bes_number)
 
@@ -141,17 +141,17 @@ class DataElementValuesValidationService(object):
         return self.rule_group_name_id_map.get('%s GROUP' % DISEASE_I18N_MAP.get(element_name))
 
     def send_validation_for_each_disease(self, value, organisation_id):
-        date_week_start, date_week_end = self.fetch_info_from_updated_data(value)
+        date_week_start, date_week_end = self.week_range_in_updated_data(value)
+
         for rule_id, rule_info in self.fetch_default_validation_rules().items():
-            should_alert = self.should_alert(value.device_id, rule_id)
             rule_group_id = rule_info[0]
             rule_org_unit_level = rule_info[1]
-
             validated_organisation_id = get_matched_org_id_by_rule(organisation_id, rule_org_unit_level)
             logger.critical(
-                'each: device_id = %s, rule_id = %s: should_alert = %s, rule_group_id = %s, start = %s, end = %s ' % (
-                    value.device_id, rule_id, should_alert, rule_group_id, date_week_start, date_week_end))
+                'each: device_id = %s, rule_id = %s: rule_group_id = %s, start = %s, end = %s ' % (
+                    value.device_id, rule_id, rule_group_id, date_week_start, date_week_end))
 
+            should_alert = self.alerted_last_time(value.device_id, rule_id)
             response = self.send_validation_request(rule_group_id, date_week_start, date_week_end, validated_organisation_id,
                                                     should_alert)
 
@@ -160,17 +160,16 @@ class DataElementValuesValidationService(object):
             if response.status_code != HTTP_200_OK:
                 logger.critical('validate request failed, response = %s' % response)
 
-    def should_alert(self, device_id, rule_id):
-        if self.should_alert_by_facility.get(device_id) is None:
+    def alerted_last_time(self, device_id, rule_id):
+        if self.alerted_history_for_org_unit.get(device_id) is None:
             return True
-        return self.should_alert_by_facility.get(device_id).get(rule_id, True)
+        return self.alerted_history_for_org_unit.get(device_id).get(rule_id, True)
 
     def update_alert_status_by_facility_and_rule(self, device_id, rule_id, response):
-        should_alert_next_time = self.__should_alert_next_time(response)
-        if self.should_alert_by_facility.get(device_id) is None:
-            self.should_alert_by_facility[device_id] = {rule_id: should_alert_next_time}
+        if self.__should_alert_next_time(response):
+            self.alerted_history_for_org_unit[device_id] = {rule_id: True}
         else:
-            self.should_alert_by_facility[device_id][rule_id] = should_alert_next_time
+            self.alerted_history_for_org_unit[device_id] = {rule_id: False}
 
     @staticmethod
     def __should_alert_next_time(response):
@@ -207,7 +206,7 @@ class DataElementValuesValidationService(object):
         average_malaria_in_recent_years = mean(malaria_case_in_same_period_of_recent_years)
         std_dev_in_recent_years_malaria = stdev(malaria_case_in_same_period_of_recent_years)
 
-        _, date_week_end = self.fetch_info_from_updated_data(value)
+        _, date_week_end = self.week_range_in_updated_data(value)
         date_week_start = self.change_date_to_days_before(date_week_end,
                                                           (weeks_before + weeks_after + 1) * ONE_WEEK_DAYS - 1)
 
@@ -215,7 +214,7 @@ class DataElementValuesValidationService(object):
             rule_id = self.customized_rule_type_to_rule_ids.get(CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES))
             rule_group_id = self.customized_rule_type_to_rule_groups.get(
                 CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES))
-            should_alert = self.should_alert(value.device_id, rule_id)
+            should_alert = self.alerted_last_time(value.device_id, rule_id)
 
             logger.critical('malaria: rule_group_id = %s, case_in_last_five_weeks=%s,average_in_recent_years=%s' % (
                 rule_group_id, malaria_case_in_last_five_weeks, average_malaria_in_recent_years))
@@ -241,12 +240,12 @@ class DataElementValuesValidationService(object):
         average_five_years_dysentery = mean(dysentery_five_years_same_week)
         std_dev_five_years_dysentery = stdev(dysentery_five_years_same_week)
 
-        data_week_start, data_week_end = self.fetch_info_from_updated_data(value)
+        data_week_start, data_week_end = self.week_range_in_updated_data(value)
         if dysentery_in_current_week > average_five_years_dysentery + std_dev * std_dev_five_years_dysentery:
             rule_id = self.customized_rule_type_to_rule_ids.get(CUSTOMIZED_VALIDATION_RULE_TYPE.get(DYSENTERY_CASES))
             rule_group_id = self.customized_rule_type_to_rule_groups.get(
                 CUSTOMIZED_VALIDATION_RULE_TYPE.get(DYSENTERY_CASES))
-            should_alert = self.should_alert(value.device_id, rule_id)
+            should_alert = self.alerted_last_time(value.device_id, rule_id)
 
             logger.critical(
                 'dysentery: rule_group_id = %s, start=%s, end=%s, average_five_years=%s, std_dev_five_years=%s' % (
@@ -259,7 +258,7 @@ class DataElementValuesValidationService(object):
     def send_validation_for_sarampo_in_recent_weeks(self, value, organisation_id):
         current_year = value.bes_year.year
         week_num = value.bes_number
-        start, data_week_end = self.fetch_info_from_updated_data(value)
+        start, data_week_end = self.week_range_in_updated_data(value)
 
         week_offset = self.customized_rule_type_to_addition_rules.get(
             CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES)).get(
@@ -281,7 +280,7 @@ class DataElementValuesValidationService(object):
             logger.critical('sarampo: rule_group_id = %s, start=%s, end=%s, cases_in_a_month=%s' % (
                 rule_group_id, data_week_start, data_week_end, sarampo_cases_in_a_month))
 
-            should_alert = self.should_alert(value.device_id, rule_id)
+            should_alert = self.alerted_last_time(value.device_id, rule_id)
             district_organisation_id = get_district_organisation_id(organisation_id)
             logger.critical('district organisation unit id: %s' %district_organisation_id)
             response = self.send_validation_request(rule_group_id,
@@ -309,9 +308,9 @@ class DataElementValuesValidationService(object):
             rule_group_id = self.customized_rule_type_to_rule_groups.get(
                 CUSTOMIZED_VALIDATION_RULE_TYPE.get(MENINGITIS_CASES))
 
-            _, data_week_end = self.fetch_info_from_updated_data(value)
+            _, data_week_end = self.week_range_in_updated_data(value)
             data_week_start = self.change_date_to_days_before(data_week_end, THREE_WEEKS_DAYS)
-            should_alert = self.should_alert(value.device_id, rule_id)
+            should_alert = self.alerted_last_time(value.device_id, rule_id)
             response = self.send_validation_request(rule_group_id, data_week_start, data_week_end, organisation_id,
                                                     should_alert)
             self.update_alert_status_by_facility_and_rule(value.device_id, rule_id, response)
