@@ -12,6 +12,7 @@ from dsd.models.category import Category
 from dsd.models.category_combination import CategoryCombination
 from dsd.models.coc_relation import COCRelation
 from dsd.models.historical_coc_relation import HistoricalCOCRelation
+from dsd.models.alert import Alert
 
 
 __all__ = [
@@ -29,4 +30,5 @@ __all__ = [
     'CategoryCombination',
     'COCRelation',
     'HistoricalCOCRelation',
+    'Alert'
 ]
