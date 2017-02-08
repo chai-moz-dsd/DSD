@@ -31,14 +31,43 @@ FETCH_CUSTOMIZED_VALIDATION_RULES_REQUEST_PARAMS = 'fields=id' \
 
 FETCH_DEFAULT_VALIDATION_RULES_REQUEST_PARAMS = 'fields=id' \
                                                 '&fields=validationRuleGroups' \
+                                                '&fields=organisationUnitLevel' \
                                                 '&filter=additionalRuleType:eq:Default'
 
 DATAVALUE_INDEX = 2
+
+MOH_LEVEL = 1
+PROVINCE_LEVEL = 2
+DISTRICT_LEVEL = 3
+FACILITY_LEVEL = 4
 
 
 def calculate_values_by_rows_data(rows):
     values = sum(map(lambda x: int(float(x[DATAVALUE_INDEX])), rows))
     return values
+
+
+def get_district_id(facility_id):
+    facility = Facility.objects.filter(uid=facility_id).first()
+    return facility.district.uid
+
+
+def get_province_id(facility_id):
+    facility = Facility.objects.filter(uid=facility_id).first()
+    return facility.province.uid
+
+
+ORGANISATION_UNIT_LEVEL_FUNC = {
+    MOH_LEVEL: lambda x: MOH_UID,
+    PROVINCE_LEVEL: get_province_id,
+    DISTRICT_LEVEL: get_district_id,
+    FACILITY_LEVEL: lambda x: x,
+}
+
+
+def get_matched_org_id_by_rule(facility_id, level):
+    org_func = ORGANISATION_UNIT_LEVEL_FUNC.get(level)
+    return org_func(facility_id)
 
 
 class DataElementValuesValidationService(object):
@@ -57,7 +86,7 @@ class DataElementValuesValidationService(object):
                 if not facility:
                     continue
                 organization_id = facility.uid
-                self.send_validation_for_each_disease(value, MOH_UID)
+                self.send_validation_for_each_disease(value, organization_id)
                 self.send_validation_for_sarampo_in_recent_weeks(value, organization_id)
                 self.send_validation_for_meningitis_every_two_weeks(value, organization_id)
                 self.send_validation_malaria_in_recent_years_average(value, organization_id)
@@ -113,13 +142,17 @@ class DataElementValuesValidationService(object):
 
     def send_validation_for_each_disease(self, value, organisation_id):
         date_week_start, date_week_end = self.fetch_info_from_updated_data(value)
-        for rule_id, rule_group_id in self.fetch_default_validation_rules().items():
+        for rule_id, rule_info in self.fetch_default_validation_rules().items():
             should_alert = self.should_alert(value.device_id, rule_id)
+            rule_group_id = rule_info[0]
+            rule_org_unit_level = rule_info[1]
+
+            validated_organisation_id = get_matched_org_id_by_rule(organisation_id, rule_org_unit_level)
             logger.critical(
                 'each: device_id = %s, rule_id = %s: should_alert = %s, rule_group_id = %s, start = %s, end = %s ' % (
                     value.device_id, rule_id, should_alert, rule_group_id, date_week_start, date_week_end))
 
-            response = self.send_validation_request(rule_group_id, date_week_start, date_week_end, organisation_id,
+            response = self.send_validation_request(rule_group_id, date_week_start, date_week_end, validated_organisation_id,
                                                     should_alert)
 
             self.update_alert_status_by_facility_and_rule(value.device_id, rule_id, response)
@@ -440,8 +473,10 @@ class DataElementValuesValidationService(object):
         response_json = response.json()
         for rule in response_json.get('validationRules'):
             validationRuleGroups = rule.get('validationRuleGroups')
-            result.update({rule.get('id'): validationRuleGroups[0].get('id')}) if len(
+            rule_organisationunit_level = rule.get('organisationUnitLevel')
+            result.update({rule.get('id'): (validationRuleGroups[0].get('id'), rule_organisationunit_level)}) if len(
                 validationRuleGroups) > 0 else None
+            print(result)
         return result
 
     @staticmethod

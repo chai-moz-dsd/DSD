@@ -16,11 +16,13 @@ from dsd.repositories import dhis2_remote_repository
 from dsd.services.bes_middleware_core_service import fetch_updated_data_element_values
 from dsd.services.data_value_validation_service import DataElementValuesValidationService, \
     FETCH_CUSTOMIZED_VALIDATION_RULES_REQUEST_PARAMS, FETCH_DEFAULT_VALIDATION_RULES_REQUEST_PARAMS, \
-    calculate_values_by_rows_data
+    calculate_values_by_rows_data, get_matched_org_id_by_rule
 from dsd.test.factories.bes_middleware_core_factory import BesMiddlewareCoreFactory
 from dsd.test.factories.coc_relation_factory import COCRelationFactory
+from dsd.test.factories.district_factory import DistrictFactory
 from dsd.test.factories.element_factory import ElementFactory
 from dsd.test.factories.facility_factory import FacilityFactory
+from dsd.test.factories.province_factory import ProvinceFactory
 from dsd.test.helpers.fake_datetime import FakeDatetime
 
 logger = logging.getLogger(__name__)
@@ -257,7 +259,7 @@ class DataValueValidationServiceTest(TestCase):
         mock_get_validation_results.return_value = MagicMock(status_code=HTTP_200_OK,
                                                              text='<div id="validationResults">')
         mock_fetch_default_validation_rules.return_value = {
-            'eKuAVF39NpL': 'nk1ljBLyhOr'
+            'eKuAVF39NpL': ('nk1ljBLyhOr', 4)
         }
         device_id = '356670060310976'
         BesMiddlewareCoreFactory(bes_year=datetime.datetime.today(), bes_number=52, device_id=device_id)
@@ -282,7 +284,7 @@ class DataValueValidationServiceTest(TestCase):
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_results')
     def test_should_be_true_if_mismatch_rule(self, mock_get_validation_results, mock_fetch_default_validation_rules):
         mock_fetch_default_validation_rules.return_value = {
-            'eKuAVF39NpL': 'nk1ljBLyhOr'
+            'eKuAVF39NpL': ('nk1ljBLyhOr', 4)
         }
 
         mock_get_validation_results.return_value = MagicMock(status_code=HTTP_200_OK,
@@ -390,9 +392,9 @@ class DataValueValidationServiceTest(TestCase):
     def test_should_fetch_all_default_validation_rules(self, mock_get_validation_rules):
         rules = {
             "validationRules": [
-                {"id": "zGpdNR7JSqj", "validationRuleGroups": [{"id": "rzNBJgj9Li9"}]},
-                {"id": "gAKQ6qdKFxN", "validationRuleGroups": [{"id": "rzNBJgj9Li9"}]},
-                {"id": "CbneQn7QHG3", "validationRuleGroups": [{"id": "YWW6Z9IW41t"}]},
+                {"id": "zGpdNR7JSqj", "validationRuleGroups": [{"id": "rzNBJgj9Li9"}], "organisationUnitLevel": 4},
+                {"id": "gAKQ6qdKFxN", "validationRuleGroups": [{"id": "rzNBJgj9Li9"}], "organisationUnitLevel": 3},
+                {"id": "CbneQn7QHG3", "validationRuleGroups": [{"id": "YWW6Z9IW41t"}], "organisationUnitLevel": 4},
                 {"id": "CbneQn7Q8f3", "validationRuleGroups": []}
             ]
         }
@@ -400,9 +402,9 @@ class DataValueValidationServiceTest(TestCase):
                                                            status_code=HTTP_200_OK)
         default_validation_rules = self.data_element_values_validation_service.fetch_default_validation_rules()
         self.assertEquals(len(default_validation_rules), 3)
-        self.assertEquals(default_validation_rules.get('zGpdNR7JSqj'), 'rzNBJgj9Li9')
-        self.assertEquals(default_validation_rules.get('gAKQ6qdKFxN'), 'rzNBJgj9Li9')
-        self.assertEquals(default_validation_rules.get('CbneQn7QHG3'), 'YWW6Z9IW41t')
+        self.assertEquals(default_validation_rules.get('zGpdNR7JSqj'), ('rzNBJgj9Li9', 4))
+        self.assertEquals(default_validation_rules.get('gAKQ6qdKFxN'), ('rzNBJgj9Li9', 3))
+        self.assertEquals(default_validation_rules.get('CbneQn7QHG3'), ('YWW6Z9IW41t', 4))
 
     @patch('dsd.repositories.dhis2_remote_repository.get_validation_rules')
     def test_should_fetch_all_customized_validation_rules(self, mock_get_validation_rules):
@@ -516,6 +518,16 @@ class DataValueValidationServiceTest(TestCase):
 
     def test_calculate_values_by_rows_data(self):
         self.assertEqual(2011, calculate_values_by_rows_data(ROWS_DATA))
+
+    def test_get_matched_org_id_by_rule(self):
+        province = ProvinceFactory(uid='shaanxi')
+        district = DistrictFactory(uid='xian')
+        FacilityFactory(uid='ox0101', district=district, province=province)
+
+        self.assertEqual(MOH_UID, get_matched_org_id_by_rule('ox0101', 1))
+        self.assertEqual('shaanxi', get_matched_org_id_by_rule('ox0101', 2))
+        self.assertEqual('xian', get_matched_org_id_by_rule('ox0101', 3))
+        self.assertEqual('ox0101', get_matched_org_id_by_rule('ox0101', 4))
 
 
 ROWS_DATA = [[
