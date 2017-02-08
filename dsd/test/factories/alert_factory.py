@@ -8,7 +8,6 @@ class AlertFactory(factory.DjangoModelFactory):
     class Meta:
         model = Alert
 
-    rule_group = generate_id()
-    rule_level = 4
-    org_unit = 25
+    rule_group_id = generate_id()
+    org_unit_uid = generate_id()
     should_alert = True
