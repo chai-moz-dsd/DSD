@@ -475,7 +475,6 @@ class DataElementValuesValidationService(object):
             rule_organisationunit_level = rule.get('organisationUnitLevel')
             result.update({rule.get('id'): (validationRuleGroups[0].get('id'), rule_organisationunit_level)}) if len(
                 validationRuleGroups) > 0 else None
-            print(result)
         return result
 
     @staticmethod
