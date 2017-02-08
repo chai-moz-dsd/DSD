@@ -9,6 +9,6 @@ class AlertFactory(factory.DjangoModelFactory):
         model = Alert
 
     rule_group = generate_id()
-    rule_type = 4
+    rule_level = 4
     org_unit = 25
     should_alert = True
