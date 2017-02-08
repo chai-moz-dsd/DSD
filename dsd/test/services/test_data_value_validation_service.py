@@ -509,7 +509,8 @@ class DataValueValidationServiceTest(TestCase):
 
     def test_should_get_default_validation_rules_request_params(self):
         self.assertEqual(FETCH_DEFAULT_VALIDATION_RULES_REQUEST_PARAMS,
-                         'fields=id&fields=validationRuleGroups&filter=additionalRuleType:eq:Default')
+                         'fields=id&fields=validationRuleGroups&fields=organisationUnitLevel'
+                         '&filter=additionalRuleType:eq:Default')
 
     def test_should_get_customized_validation_rules_request_params(self):
         self.assertEqual(FETCH_CUSTOMIZED_VALIDATION_RULES_REQUEST_PARAMS,
