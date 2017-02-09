@@ -31,9 +31,6 @@ logging.getLogger().setLevel(logging.CRITICAL)
 
 fetch_disease_in_year_weeks_result = Mock(return_value=10)
 
-alerted_last_time_return_value = Mock(return_value=True)
-update_alert_status_by_facility_and_rule_return_value = Mock()
-
 VALIDATION_GROUP_ID_MEASLES_CASES = 'xi89jfkd9o1'
 VALIDATION_GROUP_ID_MENINGITIS_CASES = 'aik9j9kd9o1'
 VALIDATION_GROUP_ID_DYSENTERY_CASES = 'li89jfkd9o1'

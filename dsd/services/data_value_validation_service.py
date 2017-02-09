@@ -16,7 +16,6 @@ from dsd.models import Element
 from dsd.models import Facility
 from dsd.models.moh import MOH_UID
 from dsd.repositories import dhis2_remote_repository
-from dsd.repositories.dhis2_remote_repository import get_district_organisation_id
 from dsd.services.alert_service import should_send_alert, update_alert_status
 from dsd.services.dhis2_remote_service import construct_get_element_values_request_query_params
 
@@ -73,8 +72,6 @@ def get_matched_org_id_by_rule(facility_id, level):
 
 class DataElementValuesValidationService(object):
     def __init__(self):
-        self.alerted_history_for_org_unit = {}
-
         _, self.rule_group_name_id_map = self.fetch_all_rule_groups()
         customized_rule_type_to_addition_rules, self.customized_rule_type_to_rule_ids, self.customized_rule_type_to_rule_groups = self.fetch_customized_validation_rules()
         self.customized_rule_type_to_addition_rules = self.extract_params_from_customize_rules(
@@ -144,6 +141,7 @@ class DataElementValuesValidationService(object):
     def send_validation_request_to_dhis2(self, date_week_end, date_week_start,
                                          rule_group_id, validated_organisation_id):
         should_alert = should_send_alert(rule_group_id, validated_organisation_id)
+        print('should alert: %s' % should_alert)
         response = self.send_validation_request(rule_group_id, date_week_start, date_week_end,
                                                 validated_organisation_id,
                                                 should_alert)
@@ -169,17 +167,6 @@ class DataElementValuesValidationService(object):
                                                   date_week_start,
                                                   rule_group_id,
                                                   validated_organisation_id)
-
-    def alerted_last_time(self, device_id, rule_id):
-        if self.alerted_history_for_org_unit.get(device_id) is None:
-            return True
-        return self.alerted_history_for_org_unit.get(device_id).get(rule_id, True)
-
-    def update_alert_status_by_facility_and_rule(self, device_id, rule_id, response):
-        if self.__should_alert_next_time(response):
-            self.alerted_history_for_org_unit[device_id] = {rule_id: True}
-        else:
-            self.alerted_history_for_org_unit[device_id] = {rule_id: False}
 
     @staticmethod
     def __should_alert_next_time(response):
@@ -220,18 +207,19 @@ class DataElementValuesValidationService(object):
         data_week_start = self.change_date_to_days_before(data_week_end,
                                                           (weeks_before + weeks_after + 1) * ONE_WEEK_DAYS - 1)
 
+        rule_group_id = self.customized_rule_type_to_rule_groups.get(CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES))
+        validated_organisation_id = get_matched_org_id_by_rule(organisation_id, FACILITY_LEVEL)
         if malaria_case_in_last_five_weeks > average_malaria_in_recent_years + std_dev * std_dev_in_recent_years_malaria:
-            rule_group_id = self.customized_rule_type_to_rule_groups.get(
-                CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES))
 
             logger.critical('malaria: rule_group_id = %s, case_in_last_five_weeks=%s,average_in_recent_years=%s' % (
                 rule_group_id, malaria_case_in_last_five_weeks, average_malaria_in_recent_years))
 
-            validated_organisation_id = get_matched_org_id_by_rule(organisation_id, FACILITY_LEVEL)
             self.send_validation_request_to_dhis2(data_week_end,
                                                   data_week_start,
                                                   rule_group_id,
                                                   validated_organisation_id)
+        else:
+            update_alert_status(rule_group_id, validated_organisation_id, True)
 
     def send_validation_dysentery_recent_years_average(self, value, organisation_id):
         current_year = value.bes_year.year
@@ -251,20 +239,20 @@ class DataElementValuesValidationService(object):
         std_dev_five_years_dysentery = stdev(dysentery_five_years_same_week)
 
         data_week_start, data_week_end = self.week_range_in_updated_data(value)
+        rule_group_id = self.customized_rule_type_to_rule_groups.get(CUSTOMIZED_VALIDATION_RULE_TYPE.get(DYSENTERY_CASES))
+        validated_organisation_id = get_matched_org_id_by_rule(organisation_id, FACILITY_LEVEL)
         if dysentery_in_current_week > average_five_years_dysentery + std_dev * std_dev_five_years_dysentery:
-            rule_group_id = self.customized_rule_type_to_rule_groups.get(
-                CUSTOMIZED_VALIDATION_RULE_TYPE.get(DYSENTERY_CASES))
-
             logger.critical(
                 'dysentery: rule_group_id = %s, start=%s, end=%s, average_five_years=%s, std_dev_five_years=%s' % (
                     rule_group_id, data_week_start, data_week_end, average_five_years_dysentery,
                     std_dev_five_years_dysentery))
 
-            validated_organisation_id = get_matched_org_id_by_rule(organisation_id, FACILITY_LEVEL)
             self.send_validation_request_to_dhis2(data_week_end,
                                                   data_week_start,
                                                   rule_group_id,
                                                   validated_organisation_id)
+        else:
+            update_alert_status(rule_group_id, validated_organisation_id, True)
 
     def send_validation_for_sarampo_in_recent_weeks(self, value, organisation_id):
         current_year = value.bes_year.year
@@ -281,20 +269,20 @@ class DataElementValuesValidationService(object):
         sarampo_cases_in_a_month = self.fetch_sarampo_by_period(current_year, week_num, week_offset, organisation_id)
         logger.critical('sarampo_cases_in_a_month values: %d threshold: %d' % (sarampo_cases_in_a_month, threshold))
 
+        rule_group_id = self.customized_rule_type_to_rule_groups.get(CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES))
+        validated_organisation_id = get_matched_org_id_by_rule(organisation_id, DISTRICT_LEVEL)
         if sarampo_cases_in_a_month >= threshold:
-            rule_group_id = self.customized_rule_type_to_rule_groups.get(
-                CUSTOMIZED_VALIDATION_RULE_TYPE.get(MEASLES_CASES))
-
             data_week_start = self.change_date_to_days_before(start, THREE_WEEKS_DAYS)
 
             logger.critical('sarampo: rule_group_id = %s, start=%s, end=%s, cases_in_a_month=%s' % (
                 rule_group_id, data_week_start, data_week_end, sarampo_cases_in_a_month))
 
-            validated_organisation_id = get_matched_org_id_by_rule(organisation_id, DISTRICT_LEVEL)
             self.send_validation_request_to_dhis2(data_week_end,
                                                   data_week_start,
                                                   rule_group_id,
                                                   validated_organisation_id)
+        else:
+            update_alert_status(rule_group_id, validated_organisation_id, True)
 
     def send_validation_for_meningitis_every_two_weeks(self, value, organisation_id):
         current_year = value.bes_year.year
@@ -309,18 +297,19 @@ class DataElementValuesValidationService(object):
         is_rule_matched = self.is_meningitis_increasement_rule_match(current_year, week_num, organisation_id,
                                                                      increased_times,
                                                                      recent_weeks)
-        if is_rule_matched:
-            rule_group_id = self.customized_rule_type_to_rule_groups.get(
-                CUSTOMIZED_VALIDATION_RULE_TYPE.get(MENINGITIS_CASES))
 
+        rule_group_id = self.customized_rule_type_to_rule_groups.get(CUSTOMIZED_VALIDATION_RULE_TYPE.get(MENINGITIS_CASES))
+        validated_organisation_id = get_matched_org_id_by_rule(organisation_id, FACILITY_LEVEL)
+        if is_rule_matched:
             _, data_week_end = self.week_range_in_updated_data(value)
             data_week_start = self.change_date_to_days_before(data_week_end, THREE_WEEKS_DAYS)
 
-            validated_organisation_id = get_matched_org_id_by_rule(organisation_id, FACILITY_LEVEL)
             self.send_validation_request_to_dhis2(data_week_end,
                                                   data_week_start,
                                                   rule_group_id,
                                                   validated_organisation_id)
+        else:
+            update_alert_status(rule_group_id, validated_organisation_id, True)
 
     @staticmethod
     def is_meningitis_increasement_rule_match(year, week, organisation_id, increased_times, week_offset):
