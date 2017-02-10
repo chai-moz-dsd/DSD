@@ -108,8 +108,11 @@ def post_data_element_values(date_element_values):
             logger.info('POST DATA VALUE RESPONSE: {}'.format(response.text))
         except Exception as e:
             logger.error('post data element =%s, error occur =  %s' % (data_element, e))
-    time.sleep(30)
+    # Wait db finished to save data
+    time.sleep(5)
     dhis2_remote_repository.send_analysis_request()
+    # Wait dhis2 finished data analysis
+    time.sleep(10)
 
 
 def build_data_element_values_request_body_as_dict(bes_middleware_core):
