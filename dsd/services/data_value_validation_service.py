@@ -70,6 +70,49 @@ def get_matched_org_id_by_rule(facility_id, level):
     return org_func(facility_id)
 
 
+def fetch_malaria_in_previous_weeks(year, week_num, week_offset, organisation_id):
+    period_weeks = ['%sW%s' % (DataElementValuesValidationService.calculate_year_week_by_offset(year, week_num, i))
+                    for i in range(-week_offset, 1)]
+
+    return fetch_malaria_by_year_weeks(period_weeks, organisation_id)
+
+
+def fetch_same_period_in_recent_years(current_year, year_offset, week_num, weeks_before, weeks_after,
+                                      organisation_id):
+    five_years_malaria = []
+    for year in range(current_year - year_offset, current_year):
+        malaria = fetch_malaria_by_year_and_weeks_range('%s' % year,
+                                                        week_num, weeks_before,
+                                                        weeks_after,
+                                                        organisation_id)
+        five_years_malaria.append(malaria)
+
+    return five_years_malaria
+
+
+def fetch_malaria_by_year_weeks(period_weeks, organisation_id):
+    confirmed_ids = DataElementValuesValidationService.get_element_ids(disease_code='MALARIA_CONFIRMADA',
+                                                                       query_name_prefix='cases_malaria')
+    confirmed_cases = DataElementValuesValidationService.fetch_disease_in_year_weeks(organisation_id,
+                                                                                     confirmed_ids,
+                                                                                     period_weeks)
+
+    clinic_ids = DataElementValuesValidationService.get_element_ids(disease_code='MALARIA_CLINICA',
+                                                                    query_name_prefix='cases_malaria')
+    clinic_cases = DataElementValuesValidationService.fetch_disease_in_year_weeks(organisation_id,
+                                                                                  clinic_ids,
+                                                                                  period_weeks)
+
+    return confirmed_cases + clinic_cases
+
+
+def fetch_malaria_by_year_and_weeks_range(year, week_num, weeks_before, after_weeks, organisation_id):
+    period_weeks = ['%sW%s' % (DataElementValuesValidationService.calculate_year_week_by_offset(year, week_num, i))
+                    for i in range(-weeks_before, after_weeks + 1)]
+
+    return fetch_malaria_by_year_weeks(period_weeks, organisation_id)
+
+
 class DataElementValuesValidationService(object):
     def __init__(self):
         _, self.rule_group_name_id_map = self.fetch_all_rule_groups()
@@ -185,26 +228,9 @@ class DataElementValuesValidationService(object):
         return dhis2_remote_repository.get_validation_results(validate_params)
 
     def send_validation_malaria_in_recent_years_average(self, value, organisation_id):
-        current_year = value.bes_year.year
-        week_num = value.bes_number
-
         rule_type = CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES)
         weeks_before = self.customized_rule_type_to_addition_rules.get(rule_type).get('weeks_before')
         weeks_after = self.customized_rule_type_to_addition_rules.get(rule_type).get('weeks_after')
-        recent_years = self.customized_rule_type_to_addition_rules.get(rule_type).get('recent_years')
-        std_dev = self.customized_rule_type_to_addition_rules.get(rule_type).get('std_dev')
-
-        malaria_case_in_last_five_weeks = self.fetch_malaria_in_previous_weeks(current_year, week_num,
-                                                                               weeks_before + weeks_after,
-                                                                               organisation_id)
-        malaria_case_in_same_period_of_recent_years = self.fetch_same_period_in_recent_years(current_year, recent_years,
-                                                                                             week_num,
-                                                                                             weeks_before,
-                                                                                             weeks_after,
-                                                                                             organisation_id)
-
-        average_malaria_in_recent_years = mean(malaria_case_in_same_period_of_recent_years)
-        std_dev_in_recent_years_malaria = stdev(malaria_case_in_same_period_of_recent_years)
 
         _, data_week_end = self.week_range_in_updated_data(value)
         data_week_start = self.change_date_to_days_before(data_week_end,
@@ -212,10 +238,8 @@ class DataElementValuesValidationService(object):
 
         rule_group_id = self.customized_rule_type_to_rule_groups.get(CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES))
         validated_org_id = get_matched_org_id_by_rule(organisation_id, FACILITY_LEVEL)
-        if malaria_case_in_last_five_weeks > average_malaria_in_recent_years + std_dev * std_dev_in_recent_years_malaria:
-            logger.debug('malaria: rule_group_id = %s, case_in_last_five_weeks=%s,average_in_recent_years=%s' % (
-                rule_group_id, malaria_case_in_last_five_weeks, average_malaria_in_recent_years))
 
+        if self.matched_malaria_customized_rule(organisation_id, rule_type, value, weeks_after, weeks_before):
             response = self.send_validation_request_to_dhis2(data_week_start,
                                                              data_week_end,
                                                              rule_group_id,
@@ -228,6 +252,33 @@ class DataElementValuesValidationService(object):
             update_alert_status(rule_group_id, validated_org_id, self.__should_alert_next_time(response))
         else:
             update_alert_status(rule_group_id, validated_org_id, True)
+
+    def matched_malaria_customized_rule(self, organisation_id, rule_type, value, weeks_after, weeks_before):
+        current_year = value.bes_year.year
+        week_num = value.bes_number
+        recent_years = self.customized_rule_type_to_addition_rules.get(rule_type).get('recent_years')
+        std_dev_factor = self.customized_rule_type_to_addition_rules.get(rule_type).get('std_dev')
+
+        reporting_period_cases = fetch_malaria_in_previous_weeks(current_year,
+                                                                 week_num,
+                                                                 weeks_before + weeks_after,
+                                                                 organisation_id)
+
+        recent_years_cases = fetch_same_period_in_recent_years(current_year,
+                                                               recent_years,
+                                                               week_num,
+                                                               weeks_before,
+                                                               weeks_after,
+                                                               organisation_id)
+        average_cases_in_recent_years = mean(recent_years_cases)
+        std_dev_cases_in_recent_years = stdev(recent_years_cases)
+
+        logger.debug('customized malaria rule: reporting_period_cases = {}, average_cases_in_recent_years = {}'
+                     'std_dev_cases_in_recent_years = {}'.format(reporting_period_cases,
+                                                                 average_cases_in_recent_years,
+                                                                 std_dev_cases_in_recent_years))
+
+        return reporting_period_cases > average_cases_in_recent_years + std_dev_factor * std_dev_cases_in_recent_years
 
     def send_validation_dysentery_recent_years_average(self, value, organisation_id):
         current_year = value.bes_year.year
@@ -391,25 +442,6 @@ class DataElementValuesValidationService(object):
                                                                               period_weeks)
 
     @staticmethod
-    def fetch_malaria_in_previous_weeks(year, week_num, week_offset, organisation_id):
-        period_weeks = ['%sW%s' % (DataElementValuesValidationService.calculate_year_week_by_offset(year, week_num, i))
-                        for i in range(-week_offset, 1)]
-
-        element_ids = DataElementValuesValidationService.get_element_ids(disease_code='MALARIA_CONFIRMADA',
-                                                                         query_name_prefix='cases_malaria')
-        return DataElementValuesValidationService.fetch_disease_in_year_weeks(organisation_id, element_ids,
-                                                                              period_weeks)
-
-    @staticmethod
-    def fetch_malaria_by_year_and_weeks_range(year, week_num, weeks_before, after_weeks, organisation_id):
-        period_weeks = ['%sW%s' % (DataElementValuesValidationService.calculate_year_week_by_offset(year, week_num, i))
-                        for i in range(-weeks_before, after_weeks + 1)]
-        element_ids = DataElementValuesValidationService.get_element_ids(disease_code='MALARIA_CONFIRMADA',
-                                                                         query_name_prefix='cases_malaria')
-        return DataElementValuesValidationService.fetch_disease_in_year_weeks(organisation_id, element_ids,
-                                                                              period_weeks)
-
-    @staticmethod
     def fetch_dysentery_in_week_num(current_year, week_num, organisation_id):
         period_weeks = ['%sW%s' % (current_year, week_num)]
         element_ids = DataElementValuesValidationService.get_element_ids(disease_code='009.2_DISENTERIA',
@@ -441,19 +473,6 @@ class DataElementValuesValidationService(object):
                                                                          query_name_prefix=query_name_prefix)
         expression_units = ['#{%s}' % element_id for element_id in element_ids]
         return '+'.join(expression_units)
-
-    @staticmethod
-    def fetch_same_period_in_recent_years(current_year, year_offset, week_num, weeks_before, weeks_after,
-                                          organisation_id):
-        five_years_malaria = []
-        for year in range(current_year - year_offset, current_year):
-            malaria = DataElementValuesValidationService.fetch_malaria_by_year_and_weeks_range('%s' % year,
-                                                                                               week_num, weeks_before,
-                                                                                               weeks_after,
-                                                                                               organisation_id)
-            five_years_malaria.append(malaria)
-
-        return five_years_malaria
 
     @staticmethod
     def fetch_dysentery_same_week_in_recent_five_years(current_year, year_offset, week_num, organisation_id):
