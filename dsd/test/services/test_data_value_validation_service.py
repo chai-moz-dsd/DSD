@@ -68,7 +68,7 @@ class DataValueValidationServiceTest(TestCase):
         mock_get_element_ids.return_value = element_ids
         fetch_malaria_by_year_and_weeks_range(2016, 25, 2, 2, MOH_UID)
         mock_get_element_ids.assert_called_with(disease_code='MALARIA_CLINICA', query_name_prefix='cases_malaria')
-        fetch_disease_in_year_weeks_result.assert_called_with(MOH_UID, element_ids,
+        fetch_disease_in_year_weeks_result.assert_called_with(MOH_UID, element_ids + element_ids,
                                                               ['2016W23', '2016W24', '2016W25', '2016W26', '2016W27'])
 
     @patch.object(DataElementValuesValidationService, 'get_element_ids')
@@ -129,13 +129,14 @@ class DataValueValidationServiceTest(TestCase):
     def test_should_fetch_malaria_last_five_weeks(self, mock_get_data_element_values):
         ElementFactory(id=1, code='MALARIA_CONFIRMADA', category_combo=CategoryCombinationFactory(id='m6a86d030e8'))
         ElementFactory(id=2, code='MALARIA_CLINICA', category_combo=CategoryCombinationFactory(id='aa776715a56'))
-        response = {'rows': [["rf040c9a7ab.GRIMsGFQHUc", "MOH12345678", "15.0"]]}
+        response = {'rows': [["rf040c9a7ab.m6a86d030e8", "MOH12345678", "15.0"],
+                             ["rf040c9a7ab.aa776715a56", "MOH12345678", "14.0"]]}
         mock_get_data_element_values.return_value = MagicMock(json=MagicMock(return_value=response),
                                                               status_code=HTTP_200_OK)
 
         result = fetch_malaria_in_previous_weeks(2016, 25, 4, MOH_UID)
 
-        self.assertEqual(result, 30)
+        self.assertEqual(result, 29)
 
     @override_settings(DHIS2_SSL_VERIFY=False)
     @patch('dsd.repositories.dhis2_remote_repository.get_data_element_values')

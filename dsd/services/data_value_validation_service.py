@@ -34,7 +34,7 @@ FETCH_DEFAULT_VALIDATION_RULES_REQUEST_PARAMS = 'fields=id' \
                                                 '&fields=organisationUnitLevel' \
                                                 '&filter=additionalRuleType:eq:Default'
 
-DATAVALUE_INDEX = 2
+DATA_VALUE_INDEX = 2
 
 MOH_LEVEL = 1
 PROVINCE_LEVEL = 2
@@ -43,7 +43,7 @@ FACILITY_LEVEL = 4
 
 
 def calculate_values_by_rows_data(rows):
-    values = sum(map(lambda x: int(float(x[DATAVALUE_INDEX])), rows))
+    values = sum(map(lambda x: int(float(x[DATA_VALUE_INDEX])), rows))
     return values
 
 
@@ -93,17 +93,12 @@ def fetch_same_period_in_recent_years(current_year, year_offset, week_num, weeks
 def fetch_malaria_by_year_weeks(period_weeks, organisation_id):
     confirmed_ids = DataElementValuesValidationService.get_element_ids(disease_code='MALARIA_CONFIRMADA',
                                                                        query_name_prefix='cases_malaria')
-    confirmed_cases = DataElementValuesValidationService.fetch_disease_in_year_weeks(organisation_id,
-                                                                                     confirmed_ids,
-                                                                                     period_weeks)
-
     clinic_ids = DataElementValuesValidationService.get_element_ids(disease_code='MALARIA_CLINICA',
                                                                     query_name_prefix='cases_malaria')
-    clinic_cases = DataElementValuesValidationService.fetch_disease_in_year_weeks(organisation_id,
-                                                                                  clinic_ids,
-                                                                                  period_weeks)
 
-    return confirmed_cases + clinic_cases
+    return DataElementValuesValidationService.fetch_disease_in_year_weeks(organisation_id,
+                                                                          confirmed_ids + clinic_ids,
+                                                                          period_weeks)
 
 
 def fetch_malaria_by_year_and_weeks_range(year, week_num, weeks_before, after_weeks, organisation_id):
