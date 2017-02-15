@@ -211,7 +211,7 @@ class DataElementValuesValidationService(object):
 
     @staticmethod
     def __should_alert_next_time(response):
-        return 'Validation passed successfully' in response.text
+        return ('Validation passed successfully' in response.text) or ('Validado com sucesso' in response.text)
 
     @staticmethod
     def send_validation_request(rule_group_id, start_date, end_date, organisation_id, should_alert):
