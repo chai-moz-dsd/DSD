@@ -171,8 +171,8 @@ def add_sarampo_case():
     disease_code = 'SARAMPO_055'
     date_element_ids = [Element.objects.get(code=disease_code).id]
     left_side_expression = '%s+%s' % (
-    DataElementValuesValidationService.assemble_left_side_expression(disease_code, 'cases_measles'),
-    DataElementValuesValidationService.assemble_left_side_expression(disease_code, 'cases_nv_measles'))
+        DataElementValuesValidationService.assemble_left_side_expression(disease_code, 'cases_measles'),
+        DataElementValuesValidationService.assemble_left_side_expression(disease_code, 'cases_nv_measles'))
 
     post_validation_rule(rule_id=rule_id,
                          rule_name='Sarampo case in a HF in a week',
@@ -182,7 +182,8 @@ def add_sarampo_case():
                          left_side_expression=left_side_expression,
                          left_side_description='Sarampo caso',
                          date_element_ids=date_element_ids,
-                         right_side_expression='0')
+                         right_side_expression='3',
+                         operator=OPERATOR.less_than)
     post_validation_rule_group(group_id='L72yTgEawjF', name='Sarampo case in a HF in a week grupo',
                                validation_rule_id=rule_id)
 
@@ -215,8 +216,8 @@ def add_malaria_case():
     date_element_id2 = Element.objects.get(code=disease_code2).id
 
     left_side_expression = '%s+%s' % (
-    DataElementValuesValidationService.assemble_left_side_expression(disease_code1, 'cases_malaria_clinic')
-    , DataElementValuesValidationService.assemble_left_side_expression(disease_code2, 'cases_malaria_confirmed'))
+        DataElementValuesValidationService.assemble_left_side_expression(disease_code1, 'cases_malaria_clinic')
+        , DataElementValuesValidationService.assemble_left_side_expression(disease_code2, 'cases_malaria_confirmed'))
 
     post_validation_rule(rule_id=rule_id,
                          rule_name='Malária: Casos > average from current week + (A) ealiar weeks to current week - (B) weeks later weeks in past (C) years + (D) * std dev',
@@ -288,8 +289,8 @@ def add_complex_sarampo_case():
     disease_code = 'SARAMPO_055'
     date_element_ids = [Element.objects.get(code=disease_code).id]
     left_side_expression = '%s+%s' % (
-    DataElementValuesValidationService.assemble_left_side_expression(disease_code, 'cases_measles'),
-    DataElementValuesValidationService.assemble_left_side_expression(disease_code, 'cases_nv_measles'))
+        DataElementValuesValidationService.assemble_left_side_expression(disease_code, 'cases_measles'),
+        DataElementValuesValidationService.assemble_left_side_expression(disease_code, 'cases_nv_measles'))
 
     post_validation_rule(rule_id=rule_id,
                          rule_name='Sarampo case in a district a month',
