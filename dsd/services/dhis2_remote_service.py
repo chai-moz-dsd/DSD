@@ -159,7 +159,7 @@ def build_data_set_request_body_as_dict():
         'mobile': False,
         'id': dhis2_config.DATA_SET_ID,
         'name': dhis2_config.DATA_SET_NAME,
-        'openFuturePeriods': 0,
+        'openFuturePeriods': 1,
         'organisationUnits': organisation_units,
         'periodType': dhis2_config.DATA_SET_PERIOD_TYPES,
         'shortName': dhis2_config.DATA_SET_NAME,
