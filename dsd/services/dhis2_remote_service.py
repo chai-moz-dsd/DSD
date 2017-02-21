@@ -44,7 +44,7 @@ def post_elements():
                                                               aggregation_type=element.aggregation_type,
                                                               name=element.name)
         response = post_element(json.dumps(request_body_dict))
-        logger.info('response status = %s' % response)
+        logger.info('response status = %s' % response.status_code)
 
 
 def post_organization_units():
