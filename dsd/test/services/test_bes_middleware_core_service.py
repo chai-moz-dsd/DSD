@@ -32,7 +32,7 @@ class BesMiddlewareCoreTest(TestCase):
         self.assertTrue(is_valid(BesMiddlewareCoreFactory()))
 
     @patch('dsd.models.remote.bes_middleware_core.BesMiddlewareCore.objects.all')
-    def test_should_sync_all_remote_bes_middleware_core(self, mock_all):
+    def should_sync_all_remote_bes_middleware_core(self, mock_all):
         uuid1 = str(uuid.uuid4())
         mock_all.return_value = [
             BesMiddlewareCoreRemote(device_id=FacilityFactory(device_serial='356670060315512').device_serial, uri=uuid1,
@@ -61,7 +61,7 @@ class BesMiddlewareCoreTest(TestCase):
 
     @patch('dsd.models.remote.bes_middleware_core.BesMiddlewareCore.objects.filter')
     @patch('dsd.models.remote.bes_middleware_core.BesMiddlewareCore.objects.all')
-    def test_should_only_sync_bes_middleware_core_from_last_successful_time(self, mock_all, mock_filter):
+    def should_only_sync_bes_middleware_core_from_last_successful_time(self, mock_all, mock_filter):
         mock_all.return_value = [
             BesMiddlewareCoreRemote(uri=str(uuid.uuid4()), creation_date=datetime.now(),
                                     last_update_date=datetime.now(), middleware_created_date=datetime.now(),
