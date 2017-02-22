@@ -33,6 +33,8 @@ def sync_metadata_and_data_with_dhis2():
     assign_all_org_to_user()
     set_org_unit_level()
     sync_business_with_dhis2()
+
+    logger.info('post historical data to DHIS2')
     post_historical_data_element_values_to_dhis2()
 
 
