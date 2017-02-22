@@ -15,12 +15,12 @@ def sync_metadata_with_bes():
     sync_metadata_to_local()
     sync_business_data_to_local()
     if SyncRecord.objects.filter(status='Success').count() == 1:
-        logger.info('Sync metadata start...')
-        sync_metadata_with_dhis2()
-        logger.info('Sync metadata end...')
+        logger.info('push metadata and data to DHIS2 start...')
+        sync_metadata_and_data_with_dhis2()
+        logger.info('push metadata and data to DHIS2 end...')
 
 
-def sync_metadata_with_dhis2():
+def sync_metadata_and_data_with_dhis2():
     post_attributes()
     post_organization_units()
     post_category_options()
