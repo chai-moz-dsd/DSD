@@ -1,11 +1,5 @@
 [
   {
-    "code": "province_capital_dist",
-    "valueType": "TEXT",
-    "organisationUnitAttribute": true,
-    "name": "province_capital_dist"
-  },
-  {
     "code": "device_serial_opt",
     "valueType": "TEXT",
     "organisationUnitAttribute": true,
@@ -88,7 +82,20 @@
     "valueType": "TEXT",
     "organisationUnitAttribute": true,
     "name": "device_number"
-  }
+  },
+  {
+    "code": "contact_person",
+    "valueType": "TEXT",
+    "organisationUnitAttribute": true,
+    "name": "contact_person"
+  },
+  {
+    "code": "phone_contact",
+    "valueType": "TEXT",
+    "organisationUnitAttribute": true,
+    "name": "phone_contact"
+  },
+
 ]
 
 

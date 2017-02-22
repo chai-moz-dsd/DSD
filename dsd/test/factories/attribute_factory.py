@@ -9,7 +9,7 @@ class AttributeFactory(factory.DjangoModelFactory):
         model = Attribute
 
     uid = generate_id()
-    name = factory.Iterator(['province_capital_dist', 'device_serial_opt', 'code_us', 'device_serial', 'sim_serial'])
+    name = factory.Iterator(['device_serial_opt', 'code_us', 'device_serial', 'sim_serial'])
     code = name
     value_type = factory.Iterator(['TEXT', 'NUMBER'])
     attr_type = "organisationUnit"

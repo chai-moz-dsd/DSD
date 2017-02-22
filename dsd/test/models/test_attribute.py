@@ -12,11 +12,11 @@ class AttributeTest(TestCase):
         self.assertEqual(Attribute.objects.count(), 2)
 
     def test_should_find_specific_attribute(self):
-        AttributeFactory(name='province_capital_dist')
+        AttributeFactory(name='sim_serial_opt')
         AttributeFactory(name='device_serial_opt')
         self.assertEqual(Attribute.objects.count(), 2)
 
-        actual_attributes = Attribute.objects.filter(name='province_capital_dist')
+        actual_attributes = Attribute.objects.filter(name='sim_serial_opt')
         self.assertEqual(actual_attributes.count(), 1)
 
         actual_attributes = Attribute.objects.filter(name='null')

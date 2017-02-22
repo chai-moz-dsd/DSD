@@ -19,7 +19,6 @@ class FacilityFactory(factory.DjangoModelFactory):
     sorting_us = 'HEALTH POST'
     level_us = 'LEVEL 1'
     fea_us = ''
-    province_capital_dist = None
     device_serial = ''
     sim_number = None
     sim_serial = None
@@ -31,6 +30,9 @@ class FacilityFactory(factory.DjangoModelFactory):
     mac_number = ''
     device_serial_opt = ''
     state = 1
+
+    contact_person = ''
+    phone_contact = ''
 
     province = factory.SubFactory(ProvinceFactory)
     district = factory.SubFactory(DistrictFactory, province=factory.SelfAttribute('..province'))

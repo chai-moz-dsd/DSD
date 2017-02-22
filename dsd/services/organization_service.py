@@ -35,8 +35,6 @@ def convert_facility_to_dict(facility, parent_id):
                          {'value': facility.sorting_us, 'attribute': {'id': "YssKBQ4E4Mh", 'name': "sorting_us"}},
                          {'value': facility.level_us, 'attribute': {'id': "A5NJOV9CQyR", 'name': "level_us"}},
                          {'value': facility.fea_us, 'attribute': {'id': "TzkNvhmYuKo", 'name': "fea_us"}},
-                         {'value': facility.province_capital_dist,
-                          'attribute': {'id': "wPuwpLLX1Gd", 'name': "province_capital_dist"}},
                          {'value': facility.device_serial, 'attribute': {'id': "Sv6JXRJ9wVe", 'name': "device_serial"}},
                          {'value': facility.sim_number, 'attribute': {'id': "MKoA22RCFfC", 'name': "sim_number"}},
                          {'value': facility.sim_serial, 'attribute': {'id': "WlfBODOi2NW", 'name': "sim_serial"}},
@@ -53,6 +51,10 @@ def convert_facility_to_dict(facility, parent_id):
                          {'value': facility.mac_number, 'attribute': {'id': "nP1UXtpMXxE", 'name': "mac_number"}},
                          {'value': facility.device_serial_opt,
                           'attribute': {'id': "hOzWEm3MT0u", 'name': "device_serial_opt"}},
+                         {'value': facility.contact_person,
+                          'attribute': {'id': "eb3801c5bde", 'name': "contact_person"}},
+                         {'value': facility.phone_contact,
+                          'attribute': {'id': "a1c182fc0a9", 'name': "phone_contact"}},
                      ],
                      'parent': {'id': parent_id}}
     if facility.latitude and facility.longitude:

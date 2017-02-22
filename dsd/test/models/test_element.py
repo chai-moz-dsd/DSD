@@ -14,13 +14,13 @@ class ElementTest(TestCase):
         self.assertEqual(Element.objects.count(), 2)
 
     def test_should_find_specific_element(self):
-        ElementFactory(name='province_capital_dist', id=generate_id(),
+        ElementFactory(name='sim_serial_opt', id=generate_id(),
                        category_combo=CategoryCombinationFactory(id=generate_id()))
         ElementFactory(name='device_serial_opt', id=generate_id(),
                        category_combo=CategoryCombinationFactory(id=generate_id()))
         self.assertEqual(Element.objects.count(), 2)
 
-        actual_elements = Element.objects.filter(name='province_capital_dist')
+        actual_elements = Element.objects.filter(name='sim_serial_opt')
         self.assertEqual(actual_elements.count(), 1)
 
         actual_elements = Element.objects.filter(name='null')

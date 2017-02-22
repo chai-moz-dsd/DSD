@@ -3,17 +3,6 @@
     "model": "dsd.attribute",
     "pk": 1,
     "fields": {
-      "uid": "wPuwpLLX1Gd",
-      "code": "province_capital_dist",
-      "value_type": "TEXT",
-      "attr_type": "organisationUnit",
-      "name": "Province Capital Dist"
-    }
-  },
-  {
-    "model": "dsd.attribute",
-    "pk": 2,
-    "fields": {
       "uid": "hZVWv6sIcSR",
       "code": "sim_serial_opt",
       "value_type": "TEXT",
@@ -23,7 +12,7 @@
   },
   {
     "model": "dsd.attribute",
-    "pk": 3,
+    "pk": 2,
     "fields": {
       "uid": "hOzWEm3MT0u",
       "code": "device_serial_opt",
@@ -34,7 +23,7 @@
   },
   {
     "model": "dsd.attribute",
-    "pk": 4,
+    "pk": 3,
     "fields": {
       "uid": "OyKR2g4eHOr",
       "code": "phone_contact_opt",
@@ -45,7 +34,7 @@
   },
   {
     "model": "dsd.attribute",
-    "pk": 5,
+    "pk": 4,
     "fields": {
       "uid": "spyJiurH5ax",
       "code": "state",
@@ -56,7 +45,7 @@
   },
   {
     "model": "dsd.attribute",
-    "pk": 6,
+    "pk": 5,
     "fields": {
       "uid": "TnUcnzIcllL",
       "code": "code_us",
@@ -67,7 +56,7 @@
   },
   {
     "model": "dsd.attribute",
-    "pk": 7,
+    "pk": 6,
     "fields": {
       "uid": "nP1UXtpMXxE",
       "code": "mac_number",
@@ -78,7 +67,7 @@
   },
   {
     "model": "dsd.attribute",
-    "pk": 8,
+    "pk": 7,
     "fields": {
       "uid": "TzkNvhmYuKo",
       "code": "fea_us",
@@ -89,7 +78,7 @@
   },
   {
     "model": "dsd.attribute",
-    "pk": 9,
+    "pk": 8,
     "fields": {
       "uid": "Sv6JXRJ9wVe",
       "code": "device_serial",
@@ -100,7 +89,7 @@
   },
   {
     "model": "dsd.attribute",
-    "pk": 10,
+    "pk": 9,
     "fields": {
       "uid": "YssKBQ4E4Mh",
       "code": "sorting_us",
@@ -111,7 +100,7 @@
   },
   {
     "model": "dsd.attribute",
-    "pk": 11,
+    "pk": 10,
     "fields": {
       "uid": "WlfBODOi2NW",
       "code": "sim_serial",
@@ -122,7 +111,7 @@
   },
   {
     "model": "dsd.attribute",
-    "pk": 12,
+    "pk": 11,
     "fields": {
       "uid": "LBPEcehsQnq",
       "code": "person_contact_opt",
@@ -133,7 +122,7 @@
   },
   {
     "model": "dsd.attribute",
-    "pk": 13,
+    "pk": 12,
     "fields": {
       "uid": "A5NJOV9CQyR",
       "code": "level_us",
@@ -144,7 +133,7 @@
   },
   {
     "model": "dsd.attribute",
-    "pk": 14,
+    "pk": 13,
     "fields": {
       "uid": "MKoA22RCFfC",
       "code": "sim_number",
@@ -155,7 +144,7 @@
   },
   {
     "model": "dsd.attribute",
-    "pk": 15,
+    "pk": 14,
     "fields": {
       "uid": "Jf8hMzLNjdO",
       "code": "sim_number_opt",
@@ -166,7 +155,7 @@
   },
   {
     "model": "dsd.attribute",
-    "pk": 16,
+    "pk": 15,
     "fields": {
       "uid": "CYZM1npI6Uo",
       "code": "device_number",
@@ -177,7 +166,7 @@
   },
   {
     "model": "dsd.attribute",
-    "pk": 17,
+    "pk": 16,
     "fields": {
       "uid": "rfwSPrLa87r",
       "code": "notes",
@@ -188,7 +177,7 @@
   },
   {
     "model": "dsd.attribute",
-    "pk": 18,
+    "pk": 17,
     "fields": {
       "uid": "WYmSEEEYEMc",
       "code": "organisation_name",
@@ -199,7 +188,7 @@
   },
   {
     "model": "dsd.attribute",
-    "pk": 19,
+    "pk": 18,
     "fields": {
       "uid": "rbKTkvRvYLU",
       "code": "organisation_type",
@@ -210,13 +199,35 @@
   },
   {
     "model": "dsd.attribute",
-    "pk": 20,
+    "pk": 19,
     "fields": {
       "uid": "wdzFeWVOhhc",
       "code": "work_phone",
       "value_type": "TEXT",
       "attr_type": "user",
       "name": "Work Phone"
+    }
+  },
+  {
+    "model": "dsd.attribute",
+    "pk": 20,
+    "fields": {
+      "uid": "eb3801c5bde",
+      "code": "contact_person",
+      "value_type": "TEXT",
+      "attr_type": "organisationUnit",
+      "name": "Contact person"
+    }
+  },
+  {
+    "model": "dsd.attribute",
+    "pk": 21,
+    "fields": {
+      "uid": "a1c182fc0a9",
+      "code": "phone_contact",
+      "value_type": "TEXT",
+      "attr_type": "organisationUnit",
+      "name": "Phone contact"
     }
   }
 ]

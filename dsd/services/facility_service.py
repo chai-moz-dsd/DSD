@@ -59,7 +59,6 @@ def is_updated(facility_remote):
            facility_remote.sorting_us != facility.sorting_us or \
            facility_remote.level_us != facility.level_us or \
            facility_remote.fea_us != facility.fea_us or \
-           facility_remote.province_capital_dist != facility.province_capital_dist or \
            facility_remote.device_serial != facility.device_serial or \
            facility_remote.sim_number != facility.sim_number or \
            facility_remote.sim_serial != facility.sim_serial or \
@@ -70,4 +69,6 @@ def is_updated(facility_remote):
            facility_remote.sim_number_opt != facility.sim_number_opt or \
            facility_remote.sim_serial_opt != facility.sim_serial_opt or \
            facility_remote.mac_number != facility.mac_number or \
-           facility_remote.device_serial_opt != facility.device_serial_opt
+           facility_remote.device_serial_opt != facility.device_serial_opt or \
+           facility_remote.contact_person != facility.contact_person or \
+           facility_remote.phone_contact != facility.phone_contact
