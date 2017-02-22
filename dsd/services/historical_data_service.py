@@ -1,11 +1,12 @@
 import json
 import logging
+import time
 
 from dsd.config import dhis2_config
 from dsd.models import District
 from dsd.models.remote.historical_data import HistoricalData as HistoricalDataRemote
 from dsd.models import HistoricalCOCRelation
-from datetime import date, timedelta, time
+from datetime import date, timedelta
 
 from dsd.repositories import dhis2_remote_repository
 
@@ -13,8 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_all_historical_data():
-    historical_datas = HistoricalDataRemote.objects.all()
-    return historical_datas
+    return HistoricalDataRemote.objects.all()
 
 
 def build_historical_data_element_values_request_body_as_dict(historical_data_element_value):
@@ -49,6 +49,7 @@ def post_historical_data_element_values(historical_data_element_values):
 
 
 def post_historical_data_element_values_to_dhis2():
+    logger.info('post historical data to DHIS2')
     historical_data_element_values = get_all_historical_data()
     post_historical_data_element_values(historical_data_element_values)
     time.sleep(5)
