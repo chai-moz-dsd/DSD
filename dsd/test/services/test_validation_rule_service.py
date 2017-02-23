@@ -15,13 +15,15 @@ class ValidationRuleServiceTest(TestCase):
         name = 'Cólera Casos Group'
         description = 'Threshold around Colera casos group'
         validation_rule_id = 'KtRVbWqZqNU'
+        user_group = 'nPnFngJI2S7'
         result = generate_validation_rule_group_xml(group_id=group_id, name=name, description=description,
-                                                    validation_rule_id=validation_rule_id)
+                                                    validation_rule_id=validation_rule_id, user_group=user_group)
         validation_rule_group = result.find('validationRuleGroups/validationRuleGroup')
         self.assertEqual(validation_rule_group.find('id').text, group_id)
         self.assertEqual(validation_rule_group.find('name').text, name)
         self.assertEqual(validation_rule_group.find('description').text, description)
         self.assertEqual(validation_rule_group.find('validationRules/validationRule/id').text, validation_rule_id)
+        self.assertEqual(validation_rule_group.find('userGroupsToAlert/userGroup/id').text, user_group)
 
     def test_should_generate_validation_rule_xml(self):
         rule_id = 'KtRVbWqZqNU'

@@ -26,6 +26,7 @@ KEY_POST_METADATA = '_key_post_metadata'
 KEY_GET_ORGANISATIONUNITS = '_get_organisationunits'
 KEY_POST_USER_ROLES = '_post_user_roles'
 KEY_POST_USER_GROUPS = '_post_user_groups'
+KEY_GET_USER_GROUPS = KEY_POST_USER_GROUPS
 KEY_POST_SYSTEM_SETTINGS = '_post_system_settings'
 
 OAUTH2_TOKEN = 'oauth2_token'
@@ -62,7 +63,7 @@ DHIS2_STATIC_URLS = {
     KEY_GET_ORGANISATIONUNITS: '%sapi/organisationUnits' % DHIS2_BASE_URL,
     KEY_POST_USER_ROLES: '%sapi/%s/userRoles' % (DHIS2_BASE_URL, VERSION),
     KEY_POST_USER_GROUPS: '%sapi/%s/userGroups' % (DHIS2_BASE_URL, VERSION),
-    KEY_POST_SYSTEM_SETTINGS: '%sapi/%s/systemSettings' %(DHIS2_BASE_URL, VERSION)
+    KEY_POST_SYSTEM_SETTINGS: '%sapi/%s/systemSettings' % (DHIS2_BASE_URL, VERSION)
 }
 
 DATA_SET_ID = 'TTLoO39Scy9'
@@ -124,10 +125,26 @@ CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS = {
                                                          'std_dev': 'D'},
 }
 
+VALIDATION_RULE_GROUP = {'tOCXddkXkw0': {'group_id': 'ahkz0JjYY3U', 'name': 'Cólera grupo'},
+                         'iz4ccOJSd4l': {'group_id': 'Tk0L27C81tj', 'name': 'Cólera morte grupo'},
+                         'NGNXRZoeBgj': {'group_id': 'FGVVEJ2rQaQ', 'name': 'Diarreia adulto death Case grupo'},
+                         'QhVKtePYsLu': {'group_id': 'g0AWTpbBv2o', 'name': 'Disenteria (Shigella): Caso > 0 grupo'},
+                         'GzblVtRJAQD': {'group_id': 'rBCKKqjIuuR', 'name': 'Paralesia flacida aguda (PFA) > 0 grupo'},
+                         'MlHtb3yxsJn': {'group_id': 'mrAYBxgnXfE', 'name': 'Peste caso > 0 grupo'},
+                         'SBm9jfYqwFc': {'group_id': 'e1pmwU7g6Xs', 'name': 'Raiva caso > 0 grupo'},
+                         'AhTAFtw7sM4': {'group_id': 'DroI496nwkw', 'name': 'Raiva morte > 0 grupo'},
+                         'C0U9HaMlefd': {'group_id': 'L72yTgEawjF', 'name': 'Sarampo case in a HF in a week grupo'},
+                         'Q9Ko2HFaPJm': {'group_id': 'z42zF2yCkUv', 'name': 'Tétano no recém nascido caso > 0 grupo'},
+                         'm9vqJzIXCcr': {'group_id': 'VcKxBPAsrC4',
+                                         'name': 'Malária: Casos > average from current week + (A) ealiar weeks to current week - (B) weeks later weeks in past (C)years + (D) * std dev grupo'},
+                         'vKERgxn2ycf': {'group_id': 'hObttGvUJOE',
+                                         'name': 'Disenteria: Cases > average for same week in last ( A ) years + ( B ) * std dev grupo'},
+                         'JTiPI2lUKp0': {'group_id': 'rkreV2RQAoY',
+                                         'name': 'Meningite (inclui suspeitas) week1 < week2 * 2 < week3 * 2 grupo'},
+                         'FU31nh8lfLn': {'group_id': 'L23BjGdJeKD', 'name': 'Sarampo case in a district a month grupo'}}
 
 USER_ROLE_NAME = 'Data Viewer'
 ADMIN_ID = 'M5zQapPyTZI'
-
 
 USER_ROLE_AUTH_PROPS = [
     "F_USER_VIEW", "M_dhis-web-dataentry", "M_dhis-web-pivot", "M_dhis-web-usage-analytics",

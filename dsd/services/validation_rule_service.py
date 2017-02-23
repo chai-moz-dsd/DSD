@@ -81,7 +81,7 @@ def generate_validation_rule_xml(rule_id, rule_name, rule_description, rule_inst
     return root
 
 
-def generate_validation_rule_group_xml(group_id, name, description, validation_rule_id):
+def generate_validation_rule_group_xml(group_id, name, description, validation_rule_id, user_group):
     name_space = 'http://dhis2.org/schema/dxf/2.0'
     root = ElementTree.Element('{%s}meteData' % name_space, nsmap={None: name_space})
     validation_rule_groups = ElementTree.SubElement(root, 'validationRuleGroups')
@@ -93,6 +93,9 @@ def generate_validation_rule_group_xml(group_id, name, description, validation_r
     validation_rules = ElementTree.SubElement(validation_rule_group, 'validationRules')
     validation_rule = ElementTree.SubElement(validation_rules, 'validationRule')
     ElementTree.SubElement(validation_rule, 'id').text = validation_rule_id
+    user_groups_to_alerts = ElementTree.SubElement(validation_rule_group, 'userGroupsToAlert')
+    user_group_to_alert = ElementTree.SubElement(user_groups_to_alerts, 'userGroup')
+    ElementTree.SubElement(user_group_to_alert, 'id').text = user_group
     return root
 
 
@@ -124,8 +127,8 @@ def post_validation_rule(rule_id, rule_name, rule_description, rule_instruction,
     return dhis2_remote_repository.post_metadata(request_body)
 
 
-def post_validation_rule_group(group_id, name, validation_rule_id, description=''):
+def post_validation_rule_group(group_id, name, validation_rule_id, description='', user_group=''):
     doc = generate_validation_rule_group_xml(group_id=group_id, name=name, description=description,
-                                             validation_rule_id=validation_rule_id)
+                                             validation_rule_id=validation_rule_id, user_group=user_group)
 
     return dhis2_remote_repository.post_metadata(ElementTree.tostring(doc))

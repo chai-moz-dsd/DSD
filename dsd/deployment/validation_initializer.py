@@ -1,6 +1,8 @@
 import logging
 
+from dsd.config.dhis2_config import VALIDATION_RULE_GROUP
 from dsd.models import Element
+from dsd.repositories.dhis2_remote_repository import get_user_groups
 from dsd.services.data_value_validation_service import DataElementValuesValidationService
 from dsd.services.validation_rule_service import ORGANISATION_UNIT_LEVEL, post_validation_rule, \
     post_validation_rule_group, OPERATOR, ADDITIONAL_RULE_TYPE
@@ -24,7 +26,7 @@ def add_colera_case():
                          left_side_description='Cólera caso',
                          date_element_ids=date_element_ids,
                          right_side_expression='0')
-    post_validation_rule_group(group_id='ahkz0JjYY3U', name='Cólera grupo', validation_rule_id=rule_id)
+
 
 
 def add_colera_deth():
@@ -43,7 +45,7 @@ def add_colera_deth():
                          left_side_description='Cólera morte',
                          date_element_ids=date_element_ids,
                          right_side_expression='2')
-    post_validation_rule_group(group_id='Tk0L27C81tj', name='Cólera morte grupo', validation_rule_id=rule_id)
+
 
 
 def add_diarreia_death():
@@ -63,8 +65,6 @@ def add_diarreia_death():
                          left_side_description='Diarreia',
                          date_element_ids=date_element_ids,
                          right_side_expression='2')
-    post_validation_rule_group(group_id='FGVVEJ2rQaQ', name='Diarreia adulto death Case grupo',
-                               validation_rule_id=rule_id)
 
 
 def add_disenteria_case():
@@ -83,9 +83,6 @@ def add_disenteria_case():
                          left_side_description='Disenteria saso',
                          date_element_ids=date_element_ids,
                          right_side_expression='0')
-    post_validation_rule_group(group_id='g0AWTpbBv2o', name='Disenteria (Shigella): Caso > 0 grupo',
-                               validation_rule_id=rule_id)
-
 
 def add_pfa_case():
     rule_id = 'GzblVtRJAQD'
@@ -102,8 +99,6 @@ def add_pfa_case():
                          left_side_description='Paralesia flacida aguda (PFA) caso',
                          date_element_ids=date_element_ids,
                          right_side_expression='0')
-    post_validation_rule_group(group_id='rBCKKqjIuuR', name='Paralesia flacida aguda (PFA) > 0 grupo',
-                               validation_rule_id=rule_id)
 
 
 def add_peste_case():
@@ -122,8 +117,6 @@ def add_peste_case():
                          left_side_description='Peste caso',
                          date_element_ids=date_element_ids,
                          right_side_expression='0')
-    post_validation_rule_group(group_id='mrAYBxgnXfE', name='Peste caso > 0 grupo',
-                               validation_rule_id=rule_id)
 
 
 def add_raiva_case():
@@ -142,8 +135,6 @@ def add_raiva_case():
                          left_side_description='Raiva caso',
                          date_element_ids=date_element_ids,
                          right_side_expression='0')
-    post_validation_rule_group(group_id='e1pmwU7g6Xs', name='Raiva caso > 0 grupo',
-                               validation_rule_id=rule_id)
 
 
 def add_raiva_death():
@@ -162,8 +153,6 @@ def add_raiva_death():
                          left_side_description='Raiva morte',
                          date_element_ids=date_element_ids,
                          right_side_expression='0')
-    post_validation_rule_group(group_id='DroI496nwkw', name='Raiva morte > 0 grupo',
-                               validation_rule_id=rule_id)
 
 
 def add_sarampo_case():
@@ -184,8 +173,6 @@ def add_sarampo_case():
                          date_element_ids=date_element_ids,
                          right_side_expression='3',
                          operator=OPERATOR.less_than)
-    post_validation_rule_group(group_id='L72yTgEawjF', name='Sarampo case in a HF in a week grupo',
-                               validation_rule_id=rule_id)
 
 
 def add_tetanus_case():
@@ -204,8 +191,6 @@ def add_tetanus_case():
                          left_side_description='Tétano no recém nascido caseo',
                          date_element_ids=date_element_ids,
                          right_side_expression='0')
-    post_validation_rule_group(group_id='z42zF2yCkUv', name='Tétano no recém nascido caso > 0 grupo',
-                               validation_rule_id=rule_id)
 
 
 def add_malaria_case():
@@ -231,9 +216,6 @@ def add_malaria_case():
                          additional_rule_type=ADDITIONAL_RULE_TYPE.MalariaCaseInYears,
                          additional_rule='A:2\r\nB:2\r\nC:5\r\nD:2'
                          )
-    post_validation_rule_group(group_id='VcKxBPAsrC4',
-                               name='Malária: Casos > average from current week + (A) ealiar weeks to current week - (B) weeks later weeks in past (C) years + (D) * std dev grupo',
-                               validation_rule_id=rule_id)
 
 
 def add_complex_disenteria_case():
@@ -255,9 +237,6 @@ def add_complex_disenteria_case():
                          additional_rule_type=ADDITIONAL_RULE_TYPE.DisenteriaCaseInYears,
                          additional_rule='A: 5\r\nB: 2'
                          )
-    post_validation_rule_group(group_id='hObttGvUJOE',
-                               name='Disenteria: Cases > average for same week in last ( A ) years + ( B ) * std dev grupo',
-                               validation_rule_id=rule_id)
 
 
 def add_meningite_case():
@@ -279,9 +258,6 @@ def add_meningite_case():
                          additional_rule_type=ADDITIONAL_RULE_TYPE.MeningiteIncreasedInWeeks,
                          additional_rule='A:2\r\nB:3'
                          )
-    post_validation_rule_group(group_id='rkreV2RQAoY',
-                               name='Meningite (inclui suspeitas) week1 < week2 * 2 < week3 * 2 grupo',
-                               validation_rule_id=rule_id)
 
 
 def add_complex_sarampo_case():
@@ -304,11 +280,19 @@ def add_complex_sarampo_case():
                          additional_rule_type=ADDITIONAL_RULE_TYPE.SarampoCaseInMonths,
                          additional_rule='A:4\r\nB:5'
                          )
-    post_validation_rule_group(group_id='L23BjGdJeKD', name='Sarampo case in a district a month grupo',
-                               validation_rule_id=rule_id)
 
 
-def post_all_validation_rule_and_group():
+def post_all_validation_groups():
+    user_groups = get_user_groups().json().get('userGroups')
+    user_group = user_groups[0].get('id')
+
+    for rule_id in VALIDATION_RULE_GROUP:
+        group_id = VALIDATION_RULE_GROUP.get(rule_id).get('group_id')
+        name = VALIDATION_RULE_GROUP.get(rule_id).get('name')
+        post_validation_rule_group(group_id=group_id, name=name, validation_rule_id=rule_id, user_group=user_group)
+
+
+def post_all_validation_rules():
     add_colera_case()
     add_colera_deth()
     add_diarreia_death()
