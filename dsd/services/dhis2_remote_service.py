@@ -4,6 +4,7 @@ import time
 import logging
 
 from dsd.config import dhis2_config
+from dsd.config.dhis2_config import ADMIN_ID
 from dsd.models import Attribute
 from dsd.models import COCRelation
 from dsd.models import Category
@@ -72,6 +73,12 @@ def set_user_roles():
     logger.info('=== SET USER ROLES ===')
     user_roles = json.dumps(build_user_roles_dict())
     dhis2_remote_repository.post_user_roles(user_roles)
+
+
+def set_user_groups():
+    logger.info('=== SET USER GROUPS ===')
+    user_groups = json.dumps({'name': 'Grupo de alerta', 'users': [{'id': ADMIN_ID}]})
+    dhis2_remote_repository.post_user_groups(user_groups)
 
 
 def set_org_unit_level():
