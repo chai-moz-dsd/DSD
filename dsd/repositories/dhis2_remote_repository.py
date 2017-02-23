@@ -160,3 +160,13 @@ def post_user_groups(json_data):
                          auth=(settings.USERNAME, settings.PASSWORD),
                          headers=HEADERS_CONTENT_TYPE_APPLICATION_JSON,
                          verify=False)
+
+
+def post_system_settings(json_data):
+    url = dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_SYSTEM_SETTINGS)
+    return requests.post(url=url,
+                         data=json_data,
+                         auth=(settings.USERNAME, settings.PASSWORD),
+                         headers=HEADERS_CONTENT_TYPE_APPLICATION_JSON,
+                         verify=False)
+

@@ -26,6 +26,7 @@ KEY_POST_METADATA = '_key_post_metadata'
 KEY_GET_ORGANISATIONUNITS = '_get_organisationunits'
 KEY_POST_USER_ROLES = '_post_user_roles'
 KEY_POST_USER_GROUPS = '_post_user_groups'
+KEY_POST_SYSTEM_SETTINGS = '_post_system_settings'
 
 OAUTH2_TOKEN = 'oauth2_token'
 OAUTH2_CREATE = 'oauth2_create'
@@ -60,7 +61,8 @@ DHIS2_STATIC_URLS = {
     KEY_POST_METADATA: '%sapi/metaData' % DHIS2_BASE_URL,
     KEY_GET_ORGANISATIONUNITS: '%sapi/organisationUnits' % DHIS2_BASE_URL,
     KEY_POST_USER_ROLES: '%sapi/%s/userRoles' % (DHIS2_BASE_URL, VERSION),
-    KEY_POST_USER_GROUPS: '%sapi/%s/userGroups' % (DHIS2_BASE_URL, VERSION)
+    KEY_POST_USER_GROUPS: '%sapi/%s/userGroups' % (DHIS2_BASE_URL, VERSION),
+    KEY_POST_SYSTEM_SETTINGS: '%sapi/%s/systemSettings' %(DHIS2_BASE_URL, VERSION)
 }
 
 DATA_SET_ID = 'TTLoO39Scy9'

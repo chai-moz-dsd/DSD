@@ -81,6 +81,12 @@ def set_user_groups():
     dhis2_remote_repository.post_user_groups(user_groups)
 
 
+def set_system_settings():
+    logger.info('=== SET SYSTEM SETTINGS ===')
+    system_settings = json.dumps(build_system_settings())
+    dhis2_remote_repository.post_system_settings(system_settings)
+
+
 def set_org_unit_level():
     dhis2_remote_repository.post_to_set_org_level(json.dumps(build_org_level_dict()))
 
@@ -270,4 +276,19 @@ def build_user_roles_dict():
         'dataSets': [
             {'id': dhis2_config.DATA_SET_ID}
         ]
+    }
+
+
+def build_system_settings():
+    return {
+        'keyMessageSmsNotification': 'true',
+        'keyEmailHostName': 'smtp.gmail.com',
+        'keyEmailSender': 'do.not.reply.chai@gmail.com',
+        'keyEmailUsername': 'do.not.reply.chai@gmail.com',
+        'keyEmailPassword': 'CHA!_d3d',
+        'keyEmailPort': '587',
+        'keyEmailTls': 'true',
+        'keyMessageEmailNotification': 'true',
+        'keyCacheStrategy': 'CACHE_15_MINUTES',
+        'keyAccountRecovery': 'true'
     }
