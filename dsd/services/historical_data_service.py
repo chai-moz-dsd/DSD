@@ -43,9 +43,13 @@ def build_historical_data_element_values_request_body_as_dict(historical_data_el
 
 def post_historical_data_element_values(historical_data_element_values):
     for historical_data_element_value in historical_data_element_values:
-        json_dumps = json.dumps(
-            build_historical_data_element_values_request_body_as_dict(historical_data_element_value))
-        dhis2_remote_repository.post_data_elements_value(json_dumps)
+        try:
+            json_dumps = json.dumps(
+                build_historical_data_element_values_request_body_as_dict(historical_data_element_value))
+            response = dhis2_remote_repository.post_data_elements_value(json_dumps)
+            logger.info('post historical data response {}'.format(response.text))
+        except Exception as e:
+            logger.error('post historical data error {}'.format(e))
 
 
 def post_historical_data_element_values_to_dhis2():

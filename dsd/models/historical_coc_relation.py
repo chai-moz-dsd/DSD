@@ -2,6 +2,7 @@ from django.db import models
 
 from dsd.models import COCRelation
 
+
 class HistoricalCOCRelation(models.Model):
     class Meta:
         app_label = 'dsd'
