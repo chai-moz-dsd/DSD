@@ -89,7 +89,8 @@ def get_data_element_values(query_params):
 
 
 def get_district_organisation_id(facility_organisation_id):
-    url = '%s/%s' %(dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_ORGANISATIONUNITS), facility_organisation_id)
+    url = '%s/%s' % (
+        dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_ORGANISATIONUNITS), facility_organisation_id)
     organisationunit_res = __get_request(url)
     return organisationunit_res.json().get('parent').get('id')
 
@@ -141,3 +142,12 @@ def __get_request(url):
                             verify=False)
     except ConnectionError:
         raise RemoteRequestException()
+
+
+def post_user_roles(json_data):
+    url = dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_USER_ROLES)
+    return requests.post(url=url,
+                         data=json_data,
+                         auth=(settings.USERNAME, settings.PASSWORD),
+                         headers=HEADERS_CONTENT_TYPE_APPLICATION_JSON,
+                         verify=False)

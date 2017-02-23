@@ -68,6 +68,12 @@ def assign_all_org_to_user():
     dhis2_remote_repository.update_user(json.dumps(user_update_body(surname, first_name)), user_id)
 
 
+def set_user_roles():
+    logger.info('=== SET USER ROLES ===')
+    user_roles = json.dumps(build_user_roles_dict())
+    dhis2_remote_repository.post_user_roles(user_roles)
+
+
 def set_org_unit_level():
     dhis2_remote_repository.post_to_set_org_level(json.dumps(build_org_level_dict()))
 
@@ -244,5 +250,17 @@ def build_org_level_dict():
             {'name': 'Province', 'level': 2, 'offlineLevels': 2},
             {'name': 'District', 'level': 3, 'offlineLevels': 3},
             {'name': 'Facility', 'level': 4, 'offlineLevels': 4}
+        ]
+    }
+
+
+def build_user_roles_dict():
+    return {
+        'name': dhis2_config.USER_ROLE_NAME,
+        'displayName': dhis2_config.USER_ROLE_NAME,
+        'description': dhis2_config.USER_ROLE_NAME,
+        'authorities': dhis2_config.USER_ROLE_AUTH_PROPS,
+        'dataSets': [
+            {'id': dhis2_config.DATA_SET_ID}
         ]
     }
