@@ -1,6 +1,6 @@
 import logging
 
-from dsd.deployment.validation_initializer import post_all_validation_rule, post_all_validation_groups, \
+from dsd.deployment.validation_initializer import post_all_validation_groups, \
     post_all_validation_rules
 from dsd.models import SyncRecord
 from dsd.scheduler import sync_business_data_to_local, sync_metadata_to_local
