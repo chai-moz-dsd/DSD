@@ -24,6 +24,8 @@ KEY_RUN_VALIDATION_ACTION = '_key_run_validation_action'
 KEY_SEND_ANALYSIS_ACTION = '_key_send_analysis_action'
 KEY_POST_METADATA = '_key_post_metadata'
 KEY_GET_ORGANISATIONUNITS = '_get_organisationunits'
+KEY_POST_USER_ROLES = '_post_user_roles'
+KEY_POST_USER_GROUPS = '_post_user_groups'
 
 OAUTH2_TOKEN = 'oauth2_token'
 OAUTH2_CREATE = 'oauth2_create'
@@ -57,6 +59,8 @@ DHIS2_STATIC_URLS = {
     KEY_RUN_VALIDATION_ACTION: '%sdhis-web-validationrule/runValidationAction.action' % DHIS2_BASE_URL,
     KEY_POST_METADATA: '%sapi/metaData' % DHIS2_BASE_URL,
     KEY_GET_ORGANISATIONUNITS: '%sapi/organisationUnits' % DHIS2_BASE_URL,
+    KEY_POST_USER_ROLES: '%sapi/%s/userRoles' % (DHIS2_BASE_URL, VERSION),
+    KEY_POST_USER_GROUPS: '%sapi/%s/userGroups' % (DHIS2_BASE_URL, VERSION)
 }
 
 DATA_SET_ID = 'TTLoO39Scy9'
@@ -117,6 +121,23 @@ CUSTOMIZED_VALIDATION_RULE_TYPE_PARAMS = {
     CUSTOMIZED_VALIDATION_RULE_TYPE.get(MALARIA_CASES): {'weeks_before': 'A', 'weeks_after': 'B', 'recent_years': 'C',
                                                          'std_dev': 'D'},
 }
+
+
+USER_ROLE_NAME = 'Data Viewer'
+ADMIN_ID = 'M5zQapPyTZI'
+
+
+USER_ROLE_AUTH_PROPS = [
+    "F_USER_VIEW", "M_dhis-web-dataentry", "M_dhis-web-pivot", "M_dhis-web-usage-analytics",
+    "M_dhis-web-validationrule", "M_dhis-web-maintenance-dataset", "F_USERROLE_LIST", "M_dhis-web-light",
+    "M_dhis-web-importexport", "M_dhis-web-settings", "M_reporting-page", "M_dhis-web-maintenance-mobile",
+    "F_VIEW_DATABROWSER", "M_dhis-web-api-fred", "M_dhis-web-tracker-capture", "M_dhis-web-event-capture",
+    "M_dhis-web-sms", "M_dhis-web-visualizer", "M_dhis-web-maintenance-user", "M_dhis-web-reporting",
+    "M_dhis-web-maintenance-dataadmin", "M_dhis-web-event-reports", "F_VIEW_UNAPPROVED_DATA", "M_dhis-web-mobile",
+    "M_dhis-web-maintenance", "F_USERGROUP_MANAGING_RELATIONSHIPS_VIEW", "M_dhis-web-dashboard-integration",
+    "M_dhis-web-cache-cleaner", "M_dhis-web-event-visualizer", "M_dhis-web-app-management",
+    "M_dhis-web-maintenance-program", "M_dhis-web-mapping"
+]
 
 
 def key_get_cocid(category_comb_id):
