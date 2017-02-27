@@ -1,12 +1,10 @@
 import logging
 
-from dsd.deployment.validation_initializer import post_all_validation_groups, \
-    post_all_validation_rules
+from dsd.deployment.validation_initializer import post_all_validation_groups, post_all_validation_rules
 from dsd.models import SyncRecord
 from dsd.scheduler import sync_business_data_to_local, sync_metadata_to_local
 from dsd.services.bes_middleware_core_service import fetch_updated_data_element_values
-from dsd.services.dhis2_remote_service import post_attributes, post_organization_units, post_category_options, post_categories, post_category_combinations, post_elements, post_data_set, assign_all_org_to_user, set_org_unit_level, post_data_element_values, \
-    set_user_roles, set_user_groups, set_system_settings
+from dsd.services.dhis2_remote_service import post_attributes, post_organization_units, post_category_options, post_categories, post_category_combinations, post_elements, post_data_set, assign_all_org_to_user, set_org_unit_level, post_data_element_values, set_user_roles, set_user_groups, set_system_settings
 from dsd.services.historical_data_service import post_historical_data_element_values_to_dhis2
 from dsd.services.sync_cocid_service import set_coc_id
 
