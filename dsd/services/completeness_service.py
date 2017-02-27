@@ -81,8 +81,6 @@ def get_sql_subtable_command(ous, year_num, week_num, area):
         inner_join_table = 'INNER JOIN "%ss" as p ON f.%s_id = p.id ' % \
                            (area, area)
 
-    print(inner_join_table)
-
     return 'SELECT distinct on (facility_name) facility_name, "_SUBMISSION_DATE", (' \
            '%s ) AS syncStatus ' \
            'FROM facilities as f ' \
