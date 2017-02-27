@@ -288,7 +288,7 @@ def build_system_settings():
         'keyEmailUsername': config['DHIS2_EMAIL']['USERNAME'],
         'keyEmailPassword': config['DHIS2_EMAIL']['PASSWORD'],
         'keyEmailPort': config['DHIS2_EMAIL']['PORT'],
-        'keyEmailTls': config['DHIS2_EMAIL']['TTLS'],
+        'keyEmailTls': config['DHIS2_EMAIL']['TLS'],
         'keyMessageEmailNotification': 'true',
         'keyCacheStrategy': 'CACHE_15_MINUTES',
         'keyAccountRecovery': 'true'
