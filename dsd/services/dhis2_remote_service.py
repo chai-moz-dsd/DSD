@@ -3,6 +3,7 @@ import json
 import time
 import logging
 
+from chai.settings import config
 from dsd.config import dhis2_config
 from dsd.config.dhis2_config import ADMIN_ID
 from dsd.models import Attribute
@@ -282,12 +283,12 @@ def build_user_roles_dict():
 def build_system_settings():
     return {
         'keyMessageSmsNotification': 'true',
-        'keyEmailHostName': 'smtp.gmail.com',
-        'keyEmailSender': 'do.not.reply.chai@gmail.com',
-        'keyEmailUsername': 'do.not.reply.chai@gmail.com',
-        'keyEmailPassword': 'CHA!_d3d',
-        'keyEmailPort': '587',
-        'keyEmailTls': 'true',
+        'keyEmailHostName': config['DHIS2_EMAIL']['HOST_NAME'],
+        'keyEmailSender': config['DHIS2_EMAIL']['SENDER'],
+        'keyEmailUsername': config['DHIS2_EMAIL']['USERNAME'],
+        'keyEmailPassword': config['DHIS2_EMAIL']['PASSWORD'],
+        'keyEmailPort': config['DHIS2_EMAIL']['PORT'],
+        'keyEmailTls': config['DHIS2_EMAIL']['TTLS'],
         'keyMessageEmailNotification': 'true',
         'keyCacheStrategy': 'CACHE_15_MINUTES',
         'keyAccountRecovery': 'true'

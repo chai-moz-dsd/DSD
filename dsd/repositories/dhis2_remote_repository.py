@@ -123,8 +123,6 @@ def post_metadata(request_body):
 
 def __post_request(url, data):
     try:
-        print(url)
-        print(data)
         return requests.post(url=url,
                              data=data,
                              auth=(settings.USERNAME, settings.PASSWORD),
