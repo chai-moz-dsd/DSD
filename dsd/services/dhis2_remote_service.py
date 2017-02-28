@@ -70,25 +70,25 @@ def assign_all_org_to_user():
     dhis2_remote_repository.update_user(json.dumps(user_update_body(surname, first_name)), user_id)
 
 
-def set_user_roles():
+def post_user_roles():
     logger.info('=== SET USER ROLES ===')
     user_roles = json.dumps(build_user_roles_dict())
     dhis2_remote_repository.post_user_roles(user_roles)
 
 
-def set_user_groups():
+def post_user_groups():
     logger.info('=== SET USER GROUPS ===')
     user_groups = json.dumps({'name': 'Grupo de alerta', 'users': [{'id': ADMIN_ID}]})
     dhis2_remote_repository.post_user_groups(user_groups)
 
 
-def set_system_settings():
+def post_system_settings():
     logger.info('=== SET SYSTEM SETTINGS ===')
     system_settings = json.dumps(build_system_settings())
     dhis2_remote_repository.post_system_settings(system_settings)
 
 
-def set_org_unit_level():
+def post_org_unit_level():
     dhis2_remote_repository.post_to_set_org_level(json.dumps(build_org_level_dict()))
 
 

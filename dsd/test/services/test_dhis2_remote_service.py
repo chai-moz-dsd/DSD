@@ -45,7 +45,7 @@ class DHIS2RemoteServiceTest(TestCase):
     @patch('dsd.repositories.dhis2_remote_repository.post_to_set_org_level')
     def test_should_set_org_unit_level(self, mock_post_to_set_org_level):
         mock_post_to_set_org_level.return_value = MagicMock(status_code=HTTP_201_CREATED)
-        dhis2_remote_service.set_org_unit_level()
+        dhis2_remote_service.post_org_unit_level()
         mock_post_to_set_org_level.assert_called_once_with(json.dumps(build_org_level_dict()))
 
     @patch('datetime.date', FakeDate)
