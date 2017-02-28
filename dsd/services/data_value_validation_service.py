@@ -510,8 +510,8 @@ class DataElementValuesValidationService(object):
         response_json = response.json()
         for rule in response_json.get('validationRules'):
             validationRuleGroups = rule.get('validationRuleGroups')
-            rule_organisationunit_level = rule.get('organisationUnitLevel')
-            result.update({rule.get('id'): (validationRuleGroups[0].get('id'), rule_organisationunit_level)}) if len(
+            rule_org_unit_level = rule.get('organisationUnitLevel')
+            result.update({rule.get('id'): (validationRuleGroups[0].get('id'), rule_org_unit_level)}) if len(
                 validationRuleGroups) > 0 else None
         return result
 
