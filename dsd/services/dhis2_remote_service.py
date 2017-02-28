@@ -114,7 +114,7 @@ def post_category_combinations():
 
 
 def post_data_set():
-    logger.info('=== START SYNC DATASET ===')
+    logger.info('=== START SYNC DATA SET ===')
     dhis2_remote_repository.post_data_set(json.dumps(build_data_set_request_body_as_dict()))
 
 
