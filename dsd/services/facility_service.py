@@ -42,7 +42,7 @@ def save_facilities(facilities):
             continue
 
         if is_updated(facility):
-            existing_facility = Facility.objects.get(district_name=facility.facility_name)
+            existing_facility = Facility.objects.get(facility_name=facility.facility_name)
             facility.id = existing_facility.id
             facility.province = existing_facility.province
             facility.district = existing_facility.district
