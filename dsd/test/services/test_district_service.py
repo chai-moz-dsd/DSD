@@ -4,9 +4,11 @@ from datetime import datetime, timedelta
 from django.core.exceptions import ObjectDoesNotExist
 from django.test import TestCase
 
+from dsd.models import District
 from dsd.models.remote.district import District as DistrictRemote
-from dsd.services.district_service import is_updated
+from dsd.services.district_service import is_updated, save_districts
 from dsd.test.factories.district_factory import DistrictFactory
+from dsd.test.factories.province_factory import ProvinceFactory
 
 logger = logging.getLogger(__name__)
 
@@ -61,3 +63,36 @@ class DistrictServiceTest(TestCase):
 
         with self.assertRaises(ObjectDoesNotExist):
             is_updated(district_remote)
+
+    def test_should_create_district(self):
+        data_creation = datetime.today().date()
+        province = ProvinceFactory()
+        district = District(district_name='NIASSA1', description='description',
+                            data_creation=data_creation, user_creation=1, state=1,
+                            province=province)
+        save_districts([district])
+
+        filter_result = District.objects.filter(district_name='NIASSA1')
+        self.assertEqual(filter_result.count(), 1)
+
+    def test_should_update_district(self):
+        data_creation = datetime.today().date()
+        province = ProvinceFactory()
+        district = District(district_name='NIASSA1', description='description',
+                            data_creation=data_creation, user_creation=1, state=1,
+                            province=province)
+        save_districts([district])
+
+        filter_result = District.objects.filter(district_name='NIASSA1')
+        self.assertEqual(filter_result.count(), 1)
+
+        district = District(district_name='NIASSA1', description='description2',
+                            data_creation=data_creation, user_creation=13, state=12)
+        save_districts([district])
+
+        filter_result = District.objects.filter(district_name='NIASSA1')
+        self.assertEqual(filter_result.count(), 1)
+        self.assertEqual(filter_result[0].description, 'description2')
+        self.assertEqual(filter_result[0].user_creation, 13)
+        self.assertEqual(filter_result[0].state, 12)
+
