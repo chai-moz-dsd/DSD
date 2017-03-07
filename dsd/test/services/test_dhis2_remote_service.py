@@ -13,6 +13,7 @@ from rest_framework.status import HTTP_201_CREATED
 from dsd.config import dhis2_config
 from dsd.models import BesMiddlewareCore
 from dsd.models.moh import MoH, MOH_UID
+from dsd.models.remote.facility import Facility
 from dsd.repositories import dhis2_remote_repository
 from dsd.repositories.dhis2_remote_repository import PATH_TO_CERT
 from dsd.repositories.request_template.add_element_template import AddElementRequestTemplate
@@ -154,19 +155,20 @@ class DHIS2RemoteServiceTest(TestCase):
     def test_should_build_post_element_value_as_dict(self):
         id_test1 = generate_id()
         id_test2 = generate_id()
-        device_serial = '353288063681856'
+        facility_id = 446
         uid = '8dd73ldj0ld'
         name1 = 'cases_nv_measles'
         name2 = 'cases_rabies'
         element1 = ElementFactory(name=name1, id=id_test1, category_combo=CategoryCombinationFactory(id=generate_id()))
         element2 = ElementFactory(name=name2, id=id_test2, category_combo=CategoryCombinationFactory(id=generate_id()))
-        FacilityFactory(device_serial=device_serial, uid=uid)
         bes_middleware_core = BesMiddlewareCore(submission_date=datetime.datetime.today(), cases_rabies=2,
-                                                cases_nv_measles=5, device_id=device_serial)
+                                                cases_nv_measles=5, middleware_facility_id=facility_id)
+        FacilityFactory(id=facility_id, uid=uid)
         COCRelationFactory(name_in_bes='cases_nv_measles', element_id=element1.id,
                            name_of_coc='9-23 meses(Não Vacinados), C', coc_id=generate_id())
         COCRelationFactory(name_in_bes='cases_rabies', element_id=element2.id,
                            name_of_coc='C', coc_id=generate_id())
+
         result = build_data_element_values_request_body_as_dict(bes_middleware_core)
         logger.info('*' * 100)
         logger.info(result)
@@ -262,17 +264,17 @@ class DHIS2RemoteServiceTest(TestCase):
         self.assertTrue(category2.id in ids)
 
     def test_should_be_false_when_data_element_not_belongs_to_facility(self):
-        device_id = '356670060315512'
-        device_id2 = '356670060315522'
-        BesMiddlewareCoreFactory(device_id=device_id)
-        FacilityFactory(device_serial=device_id2)
+        facility_id = 446
+        facility_id2 = 447
+        BesMiddlewareCoreFactory(middleware_facility_id=facility_id)
+        FacilityFactory(id=facility_id2)
         date_element_value = BesMiddlewareCore.objects.first()
         self.assertFalse(is_data_element_belongs_to_facility(date_element_value))
 
     def test_should_be_true_when_data_element_not_belongs_to_facility(self):
-        device_id = '356670060315512'
-        BesMiddlewareCoreFactory(device_id=device_id)
-        FacilityFactory(device_serial=device_id)
+        facility_id = 446
+        BesMiddlewareCoreFactory(middleware_facility_id=facility_id)
+        FacilityFactory(id=facility_id)
         date_element_value = BesMiddlewareCore.objects.first()
         self.assertTrue(is_data_element_belongs_to_facility(date_element_value))
 

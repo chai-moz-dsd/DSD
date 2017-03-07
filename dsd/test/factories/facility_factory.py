@@ -12,6 +12,8 @@ class FacilityFactory(factory.DjangoModelFactory):
 
     facility_name = factory.Iterator(['CENTRO DE SAUDE DE CHINETE', 'POSTO DE SAUDE DE KATAPUA',
                                       'HOSPITAL DISTRITAL DE MACOMIA', 'DESCONHECIDO','DESCONHECHOO'])
+
+    id = factory.Iterator([446, 447, 480, 555])
     uid = generate_id()
     latitude = ''
     longitude = ''

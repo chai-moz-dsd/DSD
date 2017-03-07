@@ -68,4 +68,4 @@ def fetch_updated_data_element_values():
 
 
 def is_data_element_belongs_to_facility(date_element_value):
-    return bool(Facility.objects.filter(device_serial=date_element_value.device_id).count())
+    return bool(Facility.objects.filter(id=date_element_value.middleware_facility_id).count())

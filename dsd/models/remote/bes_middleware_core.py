@@ -88,3 +88,6 @@ class BesMiddlewareCore(models.Model):
     today_test_output = models.CharField(max_length=255, db_column='TODAY_TEST_OUTPUT', null=True)
     middleware_created_date = models.DateTimeField(db_column='MIDDLEWARE_CREATED_DATE', null=True)
     middleware_updated_date = models.DateTimeField(db_column='MIDDLEWARE_UPDATED_DATE', null=True)
+    middleware_facility_id = models.IntegerField(db_column='MIDDLEWARE_FACILITY_ID', null=True)
+    middleware_district_id = models.IntegerField(db_column='MIDDLEWARE_DISTRICT_ID', null=True)
+    middleware_province_id = models.IntegerField(db_column='MIDDLEWARE_PROVINCE_ID', null=True)

@@ -155,7 +155,7 @@ def build_data_element_values_request_body_as_dict(bes_middleware_core):
         'dataSet': dhis2_config.DATA_SET_ID,
         'completeData': str(bes_middleware_core.submission_date),
         'period': start_week,
-        'orgUnit': Facility.objects.get(device_serial=bes_middleware_core.device_id).uid,
+        'orgUnit': Facility.objects.get(id=bes_middleware_core.middleware_facility_id).uid,
         'dataValues': data_values
     }
 

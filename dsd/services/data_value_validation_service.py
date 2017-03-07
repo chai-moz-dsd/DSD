@@ -118,7 +118,7 @@ class DataElementValuesValidationService(object):
     def validate_values(self, date_element_values):
         for value in date_element_values:
             try:
-                facility = Facility.objects.filter(device_serial=value.device_id).first()
+                facility = Facility.objects.get(id=value.middleware_facility_id)
                 if not facility:
                     continue
                 organization_id = facility.uid
@@ -195,8 +195,8 @@ class DataElementValuesValidationService(object):
             rule_group_id, rule_org_unit_level = rule_info
             validated_org_id = get_matched_org_id_by_rule(organisation_id, rule_org_unit_level)
             logger.debug(
-                'each: device_id = %s, rule_id = %s: rule_group_id = %s, start = %s, end = %s ' % (
-                    value.device_id, rule_id, rule_group_id, date_week_start, date_week_end))
+                'each: middleware_facility_id = %s, rule_id = %s: rule_group_id = %s, start = %s, end = %s ' % (
+                    value.middleware_facility_id, rule_id, rule_group_id, date_week_start, date_week_end))
 
             response = self.send_validation_request_to_dhis2(date_week_start,
                                                              date_week_end,

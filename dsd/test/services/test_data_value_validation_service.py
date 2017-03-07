@@ -226,9 +226,8 @@ class DataValueValidationServiceTest(TestCase):
         mock_fetch_sarampo_by_period.return_value = 10
         mock_fetch_dysentery_in_week_num.return_value = 10
 
-        device_serial1 = '356670060315512'
-        FacilityFactory(device_serial=device_serial1, uid=MOH_UID)
-        BesMiddlewareCoreFactory(device_id=device_serial1)
+        facility_id = 446
+        BesMiddlewareCoreFactory(middleware_facility_id=facility_id)
         mock_get_validation_results.return_value = MagicMock(status_code=HTTP_200_OK, text=REAL_HTML_RESPONSE)
 
         data_element_values = fetch_updated_data_element_values()

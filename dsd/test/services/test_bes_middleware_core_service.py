@@ -34,27 +34,30 @@ class BesMiddlewareCoreTest(TestCase):
     @patch('dsd.models.remote.bes_middleware_core.BesMiddlewareCore.objects.all')
     def test_should_sync_all_remote_bes_middleware_core(self, mock_all):
         uuid1 = str(uuid.uuid4())
+        facility_id = 446
         mock_all.return_value.order_by.return_value = [
-            BesMiddlewareCoreRemote(device_id=FacilityFactory(device_serial='356670060315512').device_serial, uri=uuid1,
+            BesMiddlewareCoreRemote(middleware_facility_id=facility_id, uri=uuid1,
                                     creation_date=datetime.now(), last_update_date=datetime.now(),
                                     middleware_created_date=datetime.now(), middleware_updated_date=datetime.now()),
-            BesMiddlewareCoreRemote(device_id=FacilityFactory(device_serial='356670060315512').device_serial,
+            BesMiddlewareCoreRemote(middleware_facility_id=facility_id,
                                     uri=str(uuid.uuid4()), creation_date=datetime.now(),
                                     last_update_date=datetime.now(), middleware_created_date=datetime.now(),
                                     middleware_updated_date=datetime.now()),
-            BesMiddlewareCoreRemote(device_id=FacilityFactory(device_serial='356670060315512').device_serial,
+            BesMiddlewareCoreRemote(middleware_facility_id=facility_id,
                                     uri=str(uuid.uuid4()), creation_date=datetime.now(),
                                     last_update_date=datetime.now(), middleware_created_date=datetime.now(),
                                     middleware_updated_date=datetime.now()),
-            BesMiddlewareCoreRemote(device_id=FacilityFactory(device_serial='356670060315512').device_serial,
+            BesMiddlewareCoreRemote(middleware_facility_id=facility_id,
                                     uri=str(uuid.uuid4()), creation_date=datetime.now(),
                                     last_update_date=datetime.now(), middleware_created_date=datetime.now(),
                                     middleware_updated_date=datetime.now()),
-            BesMiddlewareCoreRemote(device_id=FacilityFactory(device_serial='356670060315512').device_serial,
+            BesMiddlewareCoreRemote(middleware_facility_id=facility_id,
                                     uri=str(uuid.uuid4()), creation_date=datetime.now(),
                                     last_update_date=datetime.now(), middleware_created_date=datetime.now(),
                                     middleware_updated_date=datetime.now()),
         ]
+
+        FacilityFactory(id=facility_id)
 
         bes_middleware_core_service.sync(None)
         self.assertEqual(BesMiddlewareCore.objects.count(), 5)
@@ -62,18 +65,23 @@ class BesMiddlewareCoreTest(TestCase):
 
     @patch('dsd.models.remote.bes_middleware_core.BesMiddlewareCore.objects.filter')
     def test_should_only_sync_bes_middleware_core_from_last_successful_time(self, mock_filter):
+        facility_id1 = 446
+        facility_id2 = 447
         mock_filter.return_value.order_by.return_value = [
-            BesMiddlewareCoreRemote(device_id=FacilityFactory(device_serial='356670060315512').device_serial,
+            BesMiddlewareCoreRemote(middleware_facility_id=facility_id1,
                                     uri=str(uuid.uuid4()),
                                     creation_date=datetime.now(),
                                     last_update_date=datetime.now(), middleware_created_date=datetime.now(),
                                     middleware_updated_date=datetime(2016, 8, 31, 3, 0, 0, 0, timezone.utc)),
-            BesMiddlewareCoreRemote(device_id=FacilityFactory(device_serial='356670060315512').device_serial,
+            BesMiddlewareCoreRemote(middleware_facility_id=facility_id2,
                                     uri=str(uuid.uuid4()),
                                     creation_date=datetime.now(),
                                     last_update_date=datetime.now(), middleware_created_date=datetime.now(),
                                     middleware_updated_date=datetime(2016, 8, 31, 3, 30, 0, 0, timezone.utc)),
         ]
+
+        FacilityFactory(id=facility_id1)
+        FacilityFactory(id=facility_id2)
 
         bes_middleware_core_service.sync(datetime(2016, 8, 31, 2, 30, 0, 0, timezone.utc))
         self.assertEqual(BesMiddlewareCore.objects.count(), 2)
