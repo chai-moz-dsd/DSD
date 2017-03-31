@@ -8,7 +8,7 @@ MOH = None
 PROVINCE = 'province'
 DISTRICT = 'district'
 FACILITY = 'facility'
-USED_FACILITY_CONDITION = ' AND device_serial IS NOT NULL'
+USED_FACILITY_CONDITION = ' AND device_serial <> \'\''
 
 MAX_RECORDS = 1000
 COMPLETED = 0

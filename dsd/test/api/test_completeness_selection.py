@@ -80,7 +80,7 @@ class CompletenessDataTest(TestCase):
 
     def test_should_sql_used_facility_province_be_gaza(self):
         expected_str = 'SELECT COUNT(*) FROM facilities AS f INNER JOIN provinces AS p ON f.province_id = p.id ' \
-                       'WHERE p.province_name = \'GAZA\' AND device_serial IS NOT NULL;'
+                       'WHERE p.province_name = \'GAZA\' AND device_serial <> \'\';'
         sql_used_facility = sql_facilities_in_area('GAZA', PROVINCE, USED_FACILITY_CONDITION)
         self.assertEqual(sql_used_facility, expected_str)
 
