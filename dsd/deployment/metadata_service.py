@@ -1,6 +1,7 @@
 import logging
 
-from dsd.deployment.validation_initializer import post_all_validation_groups, post_all_validation_rules
+from dsd.deployment.validation_initializer import post_all_validation_groups, post_all_validation_rules, \
+    post_alert_configuration
 from dsd.models import SyncRecord
 from dsd.scheduler import sync_business_data_to_local, sync_metadata_to_local
 from dsd.services.bes_middleware_core_service import fetch_updated_data_element_values
@@ -36,6 +37,7 @@ def sync_metadata_and_data_with_dhis2():
     post_system_settings()
     post_all_validation_rules()
     post_all_validation_groups()
+    post_alert_configuration()
     sync_business_with_dhis2()
     post_historical_data_element_values_to_dhis2()
 

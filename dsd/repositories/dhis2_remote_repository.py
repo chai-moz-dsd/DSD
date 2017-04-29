@@ -187,3 +187,15 @@ def post_system_settings(json_data):
                              verify=False)
     except ConnectionError:
         raise RemoteRequestException()
+
+
+def post_alert_date_time(json_data):
+    url = dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_ALERT_CONFIG)
+    try:
+        return requests.post(url=url,
+                             data=json_data,
+                             auth=(settings.USERNAME, settings.PASSWORD),
+                             headers=HEADERS_CONTENT_TYPE_APPLICATION_JSON,
+                             verify=False)
+    except ConnectionError:
+        raise RemoteRequestException()

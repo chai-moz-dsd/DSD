@@ -2,7 +2,7 @@ import logging
 
 from dsd.config.dhis2_config import VALIDATION_RULE_GROUP
 from dsd.models import Element
-from dsd.repositories.dhis2_remote_repository import get_user_groups
+from dsd.repositories.dhis2_remote_repository import get_user_groups, post_alert_date_time
 from dsd.services.data_value_validation_service import DataElementValuesValidationService
 from dsd.services.validation_rule_service import ORGANISATION_UNIT_LEVEL, post_validation_rule, \
     post_validation_rule_group, OPERATOR, ADDITIONAL_RULE_TYPE
@@ -291,7 +291,6 @@ def post_all_validation_groups():
         name = VALIDATION_RULE_GROUP.get(rule_id).get('name')
         post_validation_rule_group(group_id=group_id, name=name, validation_rule_id=rule_id, user_group=user_group)
 
-
 def post_all_validation_rules():
     add_colera_case()
     add_colera_deth()
@@ -308,3 +307,8 @@ def post_all_validation_rules():
     add_complex_disenteria_case()
     add_complex_sarampo_case()
     add_meningite_case()
+
+
+def post_alert_configuration():
+    logger.info('=== SET USER ROLES ===')
+    post_alert_date_time({})
