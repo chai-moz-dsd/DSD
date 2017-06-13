@@ -48,6 +48,7 @@ def get_week_of_year_selection():
 def get_day_of_week():
     return 'date_part(\'isodow\', "_SUBMISSION_DATE") AS dayOfWeek'
 
+
 def get_comments_of_indicator():
     return '"SKIPABLE_CAMPO_ABERTO"'
 
