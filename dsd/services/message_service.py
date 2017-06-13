@@ -93,7 +93,7 @@ def get_facility_name_selection():
 
 
 def get_message_selection():
-    return '"CAMPO_ABERTO"'
+    return '"SKIPABLE_CAMPO_ABERTO"'
 
 
 def get_create_selection():
@@ -105,7 +105,7 @@ def get_submitted_selection():
 
 
 def get_from_clause():
-    return '"REMETENTE_MIDDLEWARE_CORE"'
+    return '"BES_MIDDLEWARE_CORE"'
 
 
 def get_where_clause(start_day, end_day):
