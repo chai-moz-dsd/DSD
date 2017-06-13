@@ -45,18 +45,21 @@ def data_message_endpoint(request):
 
 
 def get_message_info(row, cursor):
-    cursor.execute(sql_find_location_name(row[0], 'province', 'provinces'))
-    provinces = cursor.fetchall()
-    province = provinces[0][0] if provinces[0][0] else ' '
+    # cursor.execute(sql_find_location_name(row[0], 'province', 'provinces'))
+    # provinces = cursor.fetchall()
+    # province = provinces[0][0] if provinces[0][0] else ' '
+    #
+    # cursor.execute(sql_find_location_name(row[1], 'district', 'districts'))
+    # districts = cursor.fetchall()
+    # district = districts[0][0] if districts[0][0] else ' '
+    #
+    # cursor.execute(sql_find_location_name(row[2], 'facility', 'facilities'))
+    # facilities = cursor.fetchall()
+    # facility = facilities[0][0] if facilities[0][0] else ' '
 
-    cursor.execute(sql_find_location_name(row[1], 'district', 'districts'))
-    districts = cursor.fetchall()
-    district = districts[0][0] if districts[0][0] else ' '
-
-    cursor.execute(sql_find_location_name(row[2], 'facility', 'facilities'))
-    facilities = cursor.fetchall()
-    facility = facilities[0][0] if facilities[0][0] else ' '
-
+    province = row[0] if row[0] else ' '
+    district = row[1] if row[1] else ' '
+    facility = row[2] if row[2] else ' '
     message = row[3] if row[3] else ' '
     created = row[4].strftime('%Y-%m-%d %H:%M:%S') if row[4] else ' '
     submitted = row[5].strftime('%Y-%m-%d %H:%M:%S') if row[5] else ' '
