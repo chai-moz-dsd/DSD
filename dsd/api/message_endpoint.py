@@ -9,7 +9,7 @@ from rest_framework import status
 
 from dsd.exceptions.illegal_arguments_exception import IllegalArgumentException
 from dsd.services.message_service import START_DAY, END_DAY, LOCATION, fetch_ou_id_by_ou_uid, sql_get_moh_data, \
-    sql_get_data_by_filter, sql_find_location_name
+    sql_get_data_by_filter
 
 
 @csrf_exempt
@@ -33,7 +33,8 @@ def data_message_endpoint(request):
                 rows = cursor.fetchall()
 
             for row in rows:
-                response.append(get_message_info(row))
+                if row[3] is not '':
+                    response.append(get_message_info(row))
 
         return Response(response, status=status.HTTP_200_OK)
 
