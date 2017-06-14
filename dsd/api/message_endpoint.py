@@ -33,8 +33,7 @@ def data_message_endpoint(request):
                 rows = cursor.fetchall()
 
             for row in rows:
-                if row[3] is not '':
-                    response.append(get_message_info(row))
+                response.append(get_message_info(row))
 
         return Response(response, status=status.HTTP_200_OK)
 

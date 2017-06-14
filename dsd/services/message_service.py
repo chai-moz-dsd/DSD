@@ -54,6 +54,7 @@ def sql_get_data_by_filter(location_level, location_id, start_day, end_day):
            ' LEFT JOIN "districts" ON "BES_MIDDLEWARE_CORE"."MIDDLEWARE_DISTRICT_ID" = "districts"."id"' \
            ' LEFT JOIN "facilities" ON "BES_MIDDLEWARE_CORE"."MIDDLEWARE_FACILITY_ID" = "facilities"."id"' \
            ' WHERE "BES_MIDDLEWARE_CORE"."SKIPABLE_CAMPO_ABERTO" IS NOT NULL' \
+           ' AND "BES_MIDDLEWARE_CORE"."SKIPABLE_CAMPO_ABERTO" != \'\' ' \
            ' AND "BES_MIDDLEWARE_CORE"."_SUBMISSION_DATE"' + ' ' + \
            get_where_clause(start_day, end_day) + ' ' + \
            get_location_clause(location_level, location_id) + ' ' + \
@@ -70,6 +71,7 @@ def sql_get_moh_data(start_day, end_day):
            ' LEFT JOIN "districts" ON "BES_MIDDLEWARE_CORE"."MIDDLEWARE_DISTRICT_ID" = "districts"."id"' \
            ' LEFT JOIN "facilities" ON "BES_MIDDLEWARE_CORE"."MIDDLEWARE_FACILITY_ID" = "facilities"."id"' \
            ' WHERE "BES_MIDDLEWARE_CORE"."SKIPABLE_CAMPO_ABERTO" IS NOT NULL' \
+           ' AND "BES_MIDDLEWARE_CORE"."SKIPABLE_CAMPO_ABERTO" != \'\' ' \
            ' AND "BES_MIDDLEWARE_CORE"."_SUBMISSION_DATE"' + ' ' + \
            get_where_clause(start_day, end_day) + ' ' + \
            'ORDER BY ' + \
