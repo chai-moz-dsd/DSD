@@ -47,15 +47,15 @@ def sql_find_location(ou_id, area):
 
 def sql_get_data_by_filter(location_level, location_id, start_day, end_day):
     return 'SELECT "provinces"."province_name", "districts"."district_name",' \
-           '"facilities"."facility_name", "BES_MIDDLEWARE_CORE"."SKIPABLE_CAMPO_ABERTO",' \
-           '"BES_MIDDLEWARE_CORE"."_CREATION_DATE", "BES_MIDDLEWARE_CORE"."_SUBMISSION_DATE"' \
-           ' FROM "BES_MIDDLEWARE_CORE"' \
-           ' LEFT JOIN "provinces" ON "BES_MIDDLEWARE_CORE"."MIDDLEWARE_PROVINCE_ID" = "provinces"."id"' \
-           ' LEFT JOIN "districts" ON "BES_MIDDLEWARE_CORE"."MIDDLEWARE_DISTRICT_ID" = "districts"."id"' \
-           ' LEFT JOIN "facilities" ON "BES_MIDDLEWARE_CORE"."MIDDLEWARE_FACILITY_ID" = "facilities"."id"' \
-           ' WHERE "BES_MIDDLEWARE_CORE"."SKIPABLE_CAMPO_ABERTO" IS NOT NULL' \
-           ' AND "BES_MIDDLEWARE_CORE"."SKIPABLE_CAMPO_ABERTO" != \'\' ' \
-           ' AND "BES_MIDDLEWARE_CORE"."_SUBMISSION_DATE"' + ' ' + \
+           '"facilities"."facility_name", "REMETENTE_MIDDLEWARE_CORE"."CAMPO_ABERTO",' \
+           '"REMETENTE_MIDDLEWARE_CORE"."_CREATION_DATE", "REMETENTE_MIDDLEWARE_CORE"."_SUBMISSION_DATE"' \
+           ' FROM "REMETENTE_MIDDLEWARE_CORE"' \
+           ' LEFT JOIN "provinces" ON "REMETENTE_MIDDLEWARE_CORE"."MIDDLEWARE_PROVINCE_ID" = "provinces"."id"' \
+           ' LEFT JOIN "districts" ON "REMETENTE_MIDDLEWARE_CORE"."MIDDLEWARE_DISTRICT_ID" = "districts"."id"' \
+           ' LEFT JOIN "facilities" ON "REMETENTE_MIDDLEWARE_CORE"."MIDDLEWARE_FACILITY_ID" = "facilities"."id"' \
+           ' WHERE "REMETENTE_MIDDLEWARE_CORE"."CAMPO_ABERTO" IS NOT NULL' \
+           ' AND "REMETENTE_MIDDLEWARE_CORE"."CAMPO_ABERTO" != \'\' ' \
+           ' AND "REMETENTE_MIDDLEWARE_CORE"."_SUBMISSION_DATE"' + ' ' + \
            get_where_clause(start_day, end_day) + ' ' + \
            get_location_clause(location_level, location_id) + ' ' + \
            'ORDER BY ' + \
@@ -64,15 +64,15 @@ def sql_get_data_by_filter(location_level, location_id, start_day, end_day):
 
 def sql_get_moh_data(start_day, end_day):
     return 'SELECT "provinces"."province_name", "districts"."district_name",' \
-           '"facilities"."facility_name", "BES_MIDDLEWARE_CORE"."SKIPABLE_CAMPO_ABERTO",' \
-           '"BES_MIDDLEWARE_CORE"."_CREATION_DATE", "BES_MIDDLEWARE_CORE"."_SUBMISSION_DATE"' \
-           ' FROM "BES_MIDDLEWARE_CORE"' \
-           ' LEFT JOIN "provinces" ON "BES_MIDDLEWARE_CORE"."MIDDLEWARE_PROVINCE_ID" = "provinces"."id"' \
-           ' LEFT JOIN "districts" ON "BES_MIDDLEWARE_CORE"."MIDDLEWARE_DISTRICT_ID" = "districts"."id"' \
-           ' LEFT JOIN "facilities" ON "BES_MIDDLEWARE_CORE"."MIDDLEWARE_FACILITY_ID" = "facilities"."id"' \
-           ' WHERE "BES_MIDDLEWARE_CORE"."SKIPABLE_CAMPO_ABERTO" IS NOT NULL' \
-           ' AND "BES_MIDDLEWARE_CORE"."SKIPABLE_CAMPO_ABERTO" != \'\' ' \
-           ' AND "BES_MIDDLEWARE_CORE"."_SUBMISSION_DATE"' + ' ' + \
+           '"facilities"."facility_name", "REMETENTE_MIDDLEWARE_CORE"."CAMPO_ABERTO",' \
+           '"REMETENTE_MIDDLEWARE_CORE"."_CREATION_DATE", "REMETENTE_MIDDLEWARE_CORE"."_SUBMISSION_DATE"' \
+           ' FROM "REMETENTE_MIDDLEWARE_CORE"' \
+           ' LEFT JOIN "provinces" ON "REMETENTE_MIDDLEWARE_CORE"."MIDDLEWARE_PROVINCE_ID" = "provinces"."id"' \
+           ' LEFT JOIN "districts" ON "REMETENTE_MIDDLEWARE_CORE"."MIDDLEWARE_DISTRICT_ID" = "districts"."id"' \
+           ' LEFT JOIN "facilities" ON "REMETENTE_MIDDLEWARE_CORE"."MIDDLEWARE_FACILITY_ID" = "facilities"."id"' \
+           ' WHERE "REMETENTE_MIDDLEWARE_CORE"."CAMPO_ABERTO" IS NOT NULL' \
+           ' AND "REMETENTE_MIDDLEWARE_CORE"."CAMPO_ABERTO" != \'\' ' \
+           ' AND "REMETENTE_MIDDLEWARE_CORE"."_SUBMISSION_DATE"' + ' ' + \
            get_where_clause(start_day, end_day) + ' ' + \
            'ORDER BY ' + \
            get_order_clause()
@@ -83,7 +83,7 @@ def get_where_clause(start_day, end_day):
 
 
 def get_location_clause(location_level, location_id):
-    return 'AND "BES_MIDDLEWARE_CORE"."MIDDLEWARE_' + location_level + '_ID" = \'' + str(location_id) + '\''
+    return 'AND "REMETENTE_MIDDLEWARE_CORE"."MIDDLEWARE_' + location_level + '_ID" = \'' + str(location_id) + '\''
 
 
 def get_order_clause():
