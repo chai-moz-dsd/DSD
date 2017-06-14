@@ -46,17 +46,15 @@ def sql_find_location(ou_id, area):
 
 
 def sql_get_data_by_filter(location_level, location_id, start_day, end_day):
-    return 'SELECT ' + \
-           get_province_name_selection() + ',' + \
-           get_district_name_selection() + ',' + \
-           get_facility_name_selection() + ',' + \
-           get_message_selection() + ',' + \
-           get_create_selection() + ',' + \
-           get_submitted_selection() + ' ' + \
-           'FROM ' + \
-           get_from_clause() + ' ' + \
-           'WHERE ' + \
-           get_submitted_selection() + ' ' + \
+    return 'SELECT "provinces"."province_name", "districts"."district_name",' \
+           '"facilities"."facility_name", "BES_MIDDLEWARE_CORE"."SKIPABLE_CAMPO_ABERTO",' \
+           '"BES_MIDDLEWARE_CORE"."_CREATION_DATE", "BES_MIDDLEWARE_CORE"."_SUBMISSION_DATE"' \
+           ' FROM "BES_MIDDLEWARE_CORE"' \
+           ' LEFT JOIN "provinces" ON "BES_MIDDLEWARE_CORE"."MIDDLEWARE_PROVINCE_ID" = "provinces"."id"' \
+           ' LEFT JOIN "districts" ON "BES_MIDDLEWARE_CORE"."MIDDLEWARE_DISTRICT_ID" = "districts"."id"' \
+           ' LEFT JOIN "facilities" ON "BES_MIDDLEWARE_CORE"."MIDDLEWARE_FACILITY_ID" = "facilities"."id"' \
+           ' WHERE "BES_MIDDLEWARE_CORE"."SKIPABLE_CAMPO_ABERTO" IS NOT NULL' \
+           ' AND "BES_MIDDLEWARE_CORE"."_SUBMISSION_DATE"' + ' ' + \
            get_where_clause(start_day, end_day) + ' ' + \
            get_location_clause(location_level, location_id) + ' ' + \
            'ORDER BY ' + \
@@ -64,48 +62,18 @@ def sql_get_data_by_filter(location_level, location_id, start_day, end_day):
 
 
 def sql_get_moh_data(start_day, end_day):
-    return 'SELECT ' + \
-           get_province_name_selection() + ',' + \
-           get_district_name_selection() + ',' + \
-           get_facility_name_selection() + ',' + \
-           get_message_selection() + ',' + \
-           get_create_selection() + ',' + \
-           get_submitted_selection() + ' ' + \
-           'FROM ' + \
-           get_from_clause() + ' ' + \
-           'WHERE ' + \
-           get_submitted_selection() + ' ' + \
+    return 'SELECT "provinces"."province_name", "districts"."district_name",' \
+           '"facilities"."facility_name", "BES_MIDDLEWARE_CORE"."SKIPABLE_CAMPO_ABERTO",' \
+           '"BES_MIDDLEWARE_CORE"."_CREATION_DATE", "BES_MIDDLEWARE_CORE"."_SUBMISSION_DATE"' \
+           ' FROM "BES_MIDDLEWARE_CORE"' \
+           ' LEFT JOIN "provinces" ON "BES_MIDDLEWARE_CORE"."MIDDLEWARE_PROVINCE_ID" = "provinces"."id"' \
+           ' LEFT JOIN "districts" ON "BES_MIDDLEWARE_CORE"."MIDDLEWARE_DISTRICT_ID" = "districts"."id"' \
+           ' LEFT JOIN "facilities" ON "BES_MIDDLEWARE_CORE"."MIDDLEWARE_FACILITY_ID" = "facilities"."id"' \
+           ' WHERE "BES_MIDDLEWARE_CORE"."SKIPABLE_CAMPO_ABERTO" IS NOT NULL' \
+           ' AND "BES_MIDDLEWARE_CORE"."_SUBMISSION_DATE"' + ' ' + \
            get_where_clause(start_day, end_day) + ' ' + \
            'ORDER BY ' + \
            get_order_clause()
-
-
-def get_province_name_selection():
-    return '"MIDDLEWARE_PROVINCE_ID"'
-
-
-def get_district_name_selection():
-    return '"MIDDLEWARE_DISTRICT_ID"'
-
-
-def get_facility_name_selection():
-    return '"MIDDLEWARE_FACILITY_ID"'
-
-
-def get_message_selection():
-    return '"SKIPABLE_CAMPO_ABERTO"'
-
-
-def get_create_selection():
-    return '"_CREATION_DATE"'
-
-
-def get_submitted_selection():
-    return '"_SUBMISSION_DATE"'
-
-
-def get_from_clause():
-    return '"BES_MIDDLEWARE_CORE"'
 
 
 def get_where_clause(start_day, end_day):
@@ -113,7 +81,7 @@ def get_where_clause(start_day, end_day):
 
 
 def get_location_clause(location_level, location_id):
-    return 'AND "MIDDLEWARE_' + location_level + '_ID" = \'' + str(location_id) + '\''
+    return 'AND "BES_MIDDLEWARE_CORE"."MIDDLEWARE_' + location_level + '_ID" = \'' + str(location_id) + '\''
 
 
 def get_order_clause():
