@@ -109,5 +109,5 @@ def get_location_clause(location_level, location_id):
 
 
 def get_order_clause():
-    return '"BES_MIDDLEWARE_CORE"."BES_YEAR" DESC'
+    return '"BES_MIDDLEWARE_CORE"."BES_YEAR" DESC, "BES_MIDDLEWARE_CORE"."BES_NUMBER" DESC'
 
