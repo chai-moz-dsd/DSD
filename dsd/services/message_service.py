@@ -37,10 +37,6 @@ def fetch_ou_id_by_ou_uid(uid):
     return level, rows[0][0]
 
 
-def sql_find_location_name(id, column, table):
-    return 'SELECT %s_name FROM %s WHERE id = \'%s\';' % (column, table, id)
-
-
 def sql_find_location(ou_id, area):
     return 'SELECT id FROM dsd_%s WHERE uid = \'%s\';' % (area, ou_id)
 
