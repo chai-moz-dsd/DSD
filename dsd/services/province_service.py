@@ -8,9 +8,14 @@ logger = logging.getLogger(__name__)
 
 
 def sync():
+    print('ProvinceRemote.objects', ProvinceRemote.province_name)
+    print('ProvinceRemote.objects', ProvinceRemote.objects.all())
     all_remote_provinces = ProvinceRemote.objects.all()
+    print('all_remote_provinces--', all_remote_provinces)
     all_local_provinces = get_all_local_provinces(all_remote_provinces)
+    print('all_local_provinces--', all_local_provinces)
     all_valid_local_provinces = list(filter(is_valid_province, all_local_provinces))
+    print('all_valid_local_provinces--', all_valid_local_provinces)
     save_provinces(all_valid_local_provinces)
 
 
@@ -22,7 +27,9 @@ def is_valid_province(province):
 
 def get_all_local_provinces(all_remote_provinces):
     all_local_provinces = []
+    print('=========all_remote_provinces', all_remote_provinces)
     for remote_province in all_remote_provinces:
+        print("222222222remote_province", remote_province)
         remote_province.__dict__.pop('_state')
         local_province = Province(**remote_province.__dict__)
         local_province.uid = id_generator.generate_md5_id(local_province.province_name)

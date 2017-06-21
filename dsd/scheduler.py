@@ -20,15 +20,20 @@ logger = logging.getLogger(__name__)
 def start():
     updated_bes_middleware_cores = None
     try:
+        print('----------------0-----------------')
         sync_metadata_to_local()
+        print('----------------1-----------------')
         # updated_bes_middleware_cores = fetch_updated_data_element_values()
         updated_bes_middleware_cores = sync_business_data_to_local()
+        print('----------------2-----------------')
         logger.critical('updated_bes_middleware_cores count = %s' % len(updated_bes_middleware_cores))
     except Exception as e:
         logger.error('Sync error: %s!' % e)
         SyncRecord.get_fail_instance().save()
-        send_msg_when_error_happened(('Sync error: %s!' % e), ['sjyuan@thoughtworks.com'])
+        send_msg_when_error_happened(('Sync error: %s!' % e), ['yuewang@thoughtworks.com'])
 
+    print("updated_bes_middleware_cores")
+    print(updated_bes_middleware_cores)
     post_and_validate_data_element(updated_bes_middleware_cores) if updated_bes_middleware_cores else None
 
 
@@ -40,6 +45,8 @@ def post_and_validate_data_element(updated_bes_middleware_cores):
 
 def sync_business_data_to_local():
     last_successfully_sync_start_time = SyncRecord.get_last_successful_sync_start_time()
+    print("last_successfully_sync_start_time")
+    print(last_successfully_sync_start_time)
 
     sync_start_time = datetime.datetime.now()
     logger.info('sync_business_data_to_local start time === %s' % sync_start_time)
@@ -52,11 +59,14 @@ def sync_business_data_to_local():
 
 
 def sync_metadata_to_local():
-    logger.info('Sync meta data start...')
+    print('Sync meta data start...')
     province_service.sync()
+    print('--------province------')
     district_service.sync()
+    print('--------district_service------')
     facility_service.sync()
-    logger.info('Sync meta data end...')
+    print('--------facility_service------')
+    print('Sync meta data end...')
 
 
 def send_msg_when_error_happened(content, receivers):
