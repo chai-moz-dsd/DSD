@@ -24,17 +24,17 @@ logger = logging.getLogger(__name__)
 
 
 def post_attributes():
-    logger.info('=== START SYNC ATTRIBUTES ===')
+    logger.critical('=== START SYNC ATTRIBUTES ===')
     attributes = Attribute.objects.all()
     for attribute in attributes:
         request_body_dict = convert_attribute_to_dict(attribute)
-        logger.info(request_body_dict)
+        logger.critical(request_body_dict)
         response = post_attribute(json.dumps(request_body_dict))
-        logger.info('response status = %s' % response.status_code)
+        logger.critical('response status = %s' % response.status_code)
 
 
 def post_elements():
-    logger.info('=== START SYNC DATA ELEMENTS ===')
+    logger.critical('=== START SYNC DATA ELEMENTS ===')
     elements = Element.objects.all()
     for element in elements:
         request_body_dict = AddElementRequestTemplate().build(id=element.id,
@@ -46,16 +46,16 @@ def post_elements():
                                                               aggregation_type=element.aggregation_type,
                                                               name=element.name)
         response = post_element(json.dumps(request_body_dict))
-        logger.info('response status = %s' % response.status_code)
+        logger.critical('response status = %s' % response.status_code)
 
 
 def post_organization_units():
-    logger.info('=== START SYNC ORGANIZATION UNITS ===')
+    logger.critical('=== START SYNC ORGANIZATION UNITS ===')
     organization_units = MoH().get_organization_as_list()
     for organization_unit in organization_units:
-        logger.info('response unit = %s' % organization_unit)
+        logger.critical('response unit = %s' % organization_unit)
         response = post_organization_unit(json.dumps(organization_unit))
-        logger.info('response status = %s' % response.status_code)
+        logger.critical('response status = %s' % response.status_code)
 
 
 def get_user_profile():
@@ -65,25 +65,25 @@ def get_user_profile():
 
 
 def assign_all_org_to_user():
-    logger.info('=== ASSIGN ALL ORG TO USER ===')
+    logger.critical('=== ASSIGN ALL ORG TO USER ===')
     user_id, surname, first_name = get_user_profile()
     dhis2_remote_repository.update_user(json.dumps(user_update_body(surname, first_name)), user_id)
 
 
 def post_user_roles():
-    logger.info('=== SET USER ROLES ===')
+    logger.critical('=== SET USER ROLES ===')
     user_roles = json.dumps(build_user_roles_dict())
     dhis2_remote_repository.post_user_roles(user_roles)
 
 
 def post_user_groups():
-    logger.info('=== SET USER GROUPS ===')
+    logger.critical('=== SET USER GROUPS ===')
     user_groups = json.dumps({'name': 'Grupo de alerta', 'users': [{'id': ADMIN_ID}]})
     dhis2_remote_repository.post_user_groups(user_groups)
 
 
 def post_system_settings():
-    logger.info('=== SET SYSTEM SETTINGS ===')
+    logger.critical('=== SET SYSTEM SETTINGS ===')
     system_settings = json.dumps(build_system_settings())
     dhis2_remote_repository.post_system_settings(system_settings)
 
@@ -93,41 +93,42 @@ def post_org_unit_level():
 
 
 def post_category_options():
-    logger.info('=== START SYNC CATEGORY OPTIONS ===')
+    logger.critical('=== START SYNC CATEGORY OPTIONS ===')
     for category_option in CategoryOption.objects.all():
         request_body_dict = build_category_options_request_body_as_dict(category_option)
         dhis2_remote_repository.post_category_options(json.dumps(request_body_dict))
 
 
 def post_categories():
-    logger.info('=== START SYNC CATEGORIES ===')
+    logger.critical('=== START SYNC CATEGORIES ===')
     for category in Category.objects.all():
         request_body_dict = build_categories_request_body_as_dict(category)
         dhis2_remote_repository.post_categories(json.dumps(request_body_dict))
 
 
 def post_category_combinations():
-    logger.info('=== START SYNC CATEGORY COMBINATIONS ===')
+    logger.critical('=== START SYNC CATEGORY COMBINATIONS ===')
     for category_combination in CategoryCombination.objects.all():
         request_body_dict = build_category_combinations_request_body_as_dict(category_combination)
         dhis2_remote_repository.post_category_combinations(json.dumps(request_body_dict))
 
 
 def post_data_set():
-    logger.info('=== START SYNC DATA SET ===')
+    logger.critical('=== START SYNC DATA SET ===')
     dhis2_remote_repository.post_data_set(json.dumps(build_data_set_request_body_as_dict()))
 
 
 def post_data_element_values(date_element_values):
-    logger.info('=== START POST DATA VALUE ===')
+    logger.critical('=== START POST DATA VALUE ===')
     for data_element in date_element_values:
         try:
             json_dumps = json.dumps(build_data_element_values_request_body_as_dict(data_element))
-            logger.info(json_dumps)
+            logger.critical("json_dumps")
+            logger.critical(json_dumps)
             response = dhis2_remote_repository.post_data_elements_value(json_dumps)
-            logger.info('POST DATA VALUE RESPONSE: {}'.format(response.text))
+            logger.critical('POST DATA VALUE RESPONSE: {}'.format(response.text))
         except Exception as e:
-            logger.error('post data element =%s, error occur =  %s' % (data_element, e))
+            logger.critical('post data element =%s, error occur =  %s' % (data_element, e))
     # Wait db finished to save data
     time.sleep(5)
     dhis2_remote_repository.send_analysis_request()
