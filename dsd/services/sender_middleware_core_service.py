@@ -9,20 +9,33 @@ logger = logging.getLogger(__name__)
 
 def sync(sync_time):
     if not sync_time:
+        logger.info('-------all_remote_sender_middleware_cores_start--------')
         all_remote_sender_middleware_cores = SenderMiddlewareCoreRemote.objects.all()
+        logger.info('-------all_remote_sender_middleware_cores_end--------')
+        logger.info('-------all_remote_sender_middleware_cores--------', all_remote_sender_middleware_cores)
         logger.debug('sync all sender_middleware_cores at %s' % sync_time)
     else:
+        logger.info('-------all_remote_sender_middleware_cores_start--------')
         all_remote_sender_middleware_cores = SenderMiddlewareCoreRemote.objects.filter(
             middleware_updated_date__gte=sync_time)
+        logger.info('-------all_remote_sender_middleware_cores_end--------')
+        logger.info('-------all_remote_sender_middleware_cores--------', all_remote_sender_middleware_cores)
         logger.debug('sync sender_middleware_cores from %s' % sync_time)
 
+    logger.info('-------all_local_sender_middleware_cores_start--------')
     all_local_sender_middleware_cores = get_all_from_local(all_remote_sender_middleware_cores)
+    logger.info('-------all_local_sender_middleware_cores_end--------')
+    logger.info('-------all_local_sender_middleware_cores--------', all_local_sender_middleware_cores)
     # all_valid_local_sender_middleware_cores = filter(is_valid, all_local_sender_middleware_cores)
 
+    logger.info('-------all_valid_local_sender_middleware_cores_start--------')
     all_valid_local_sender_middleware_cores = all_local_sender_middleware_cores
+    logger.info('-------all_valid_local_sender_middleware_cores_end--------')
+    logger.info('-------all_valid_local_sender_middleware_cores--------', all_valid_local_sender_middleware_cores)
     logger.info('all valid local sender data: %s' % len(all_valid_local_sender_middleware_cores))
 
     for sender_middleware_core in all_valid_local_sender_middleware_cores:
+        logger.info('-------sender_middleware_core--------', sender_middleware_core)
         save(sender_middleware_core)
 
 
@@ -33,6 +46,7 @@ def is_valid(sender_middleware_core):
 def get_all_from_local(all_remote_sender_middleware_cores):
     all_local_sender_middleware_cores = []
     for remote_sender_middleware_core in all_remote_sender_middleware_cores:
+        logger.info('------remote_sender_middleware_core-------', remote_sender_middleware_core)
         remote_sender_middleware_core.__dict__.pop('_state')
         local_sender_middleware_core = SenderMiddlewareCore(**remote_sender_middleware_core.__dict__)
         local_sender_middleware_core.uid = id_generator.generate_id()

@@ -61,7 +61,7 @@ def get_all_rule_groups():
 
 def get_validation_results(params):
     url = '%s?%s' % (dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_RUN_VALIDATION_ACTION), params)
-    logger.critical('url=%s' % url)
+    logger.info('url=%s' % url)
     return __get_request(url=url)
 
 
@@ -72,7 +72,7 @@ def get_data_element_values(query_params):
 
 def get_validation_rules(query_params):
     url = '%s?%s' % (dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_VALIDATION_RULES), query_params)
-    logger.critical('get_validation_rules url=%s' % url)
+    logger.info('get_validation_rules url=%s' % url)
     return __get_request(url=url)
 
 
@@ -84,7 +84,7 @@ def get_self_profile():
 
 def get_data_element_values(query_params):
     url = '%s?%s' % (dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_GET_DATA_ELEMENT_VALUES), query_params)
-    logger.critical('get data element values url = %s' % url)
+    logger.info('get data element values url = %s' % url)
     return __get_request(url=url)
 
 
@@ -96,8 +96,9 @@ def get_district_organisation_id(facility_organisation_id):
 
 
 def send_analysis_request():
-    logger.critical('send analysis request to dhis2')
+    logger.info('send analysis request to dhis2')
     url = dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_SEND_ANALYSIS_ACTION)
+    logger.info('send analysis request to dhis2 url========', url)
     return __get_request(url=url)
 
 

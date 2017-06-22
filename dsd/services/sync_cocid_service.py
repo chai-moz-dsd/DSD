@@ -32,7 +32,6 @@ def update_historical_coc_relation(coc_relation):
 
 def update_coc_relation(cc_id, coc):
     coc_relation = COCRelation.objects.filter(cc_id=cc_id, name_of_coc=coc["name"]).first()
-    logger.critical('get_category_combo_ids-----coc_relation', coc_relation)
     coc_relation.coc_id = coc["id"]
     coc_relation.save()
     update_historical_coc_relation(coc_relation)
@@ -40,9 +39,10 @@ def update_coc_relation(cc_id, coc):
 
 def set_coc_id():
     cc_ids = get_category_combo_ids()
-    logger.critical('get_category_combo_ids-----cc_ids', cc_ids)
+    logger.info('--------get_category_combo_ids----------', cc_ids)
     for cc_id in cc_ids:
+        logger.info('--------get_category_combo_id----------', cc_id)
         res = get_category_option_combos(cc_id)["categoryOptionCombos"]
-        logger.critical('get_category_combo_ids-----cc_id', cc_id)
+        logger.info('get_category_combo_ids-----cc_id', cc_id)
         for coc in res:
             update_coc_relation(cc_id, coc)

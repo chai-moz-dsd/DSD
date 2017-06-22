@@ -4,7 +4,7 @@ CRONTAB_DJANGO_SETTINGS_MODULE = 'chai.settings_dev'
 
 # run at every minute
 CRONJOBS = (
-    ('*/1 * * * *', 'dsd.scheduler.start'),
+    ('*/15 * * * *', 'dsd.scheduler.start'),
 )
 
 DATABASES = {

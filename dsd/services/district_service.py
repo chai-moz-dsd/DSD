@@ -8,9 +8,18 @@ logger = logging.getLogger(__name__)
 
 
 def sync():
+    logger.info('----------------all_remote_districts_start-----------------')
     all_remote_districts = DistrictRemote.objects.all()
+    logger.info('----------------all_remote_districts_end-----------------')
+    logger.info('---------all_remote_districts--------', all_remote_districts)
+    logger.info('----------------all_local_districts_start-----------------')
     all_local_districts = get_all_local_districts(all_remote_districts)
+    logger.info('----------------all_local_districts_end-----------------')
+    logger.info('---------all_local_districts--------', all_local_districts)
+    logger.info('----------------all_valid_local_districts_start-----------------')
     all_valid_local_districts = list(filter(is_valid_district, all_local_districts))
+    logger.info('----------------all_valid_local_districts_end-----------------')
+    logger.info('----all_valid_local_districts------', all_valid_local_districts)
 
     save_districts(all_valid_local_districts)
 
@@ -33,7 +42,9 @@ def get_all_local_districts(all_remote_districts):
 
 
 def save_districts(districts):
+    logger.info('----districts-----', districts)
     for district in districts:
+        logger.info('----district-----', district)
         filter_result = District.objects.filter(district_name=district.district_name)
         if not filter_result.count():
             district.save()
