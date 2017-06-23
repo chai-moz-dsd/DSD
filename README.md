@@ -23,6 +23,14 @@ $ virtualenv -p /usr/local/bin/python3 dsd
 $ source dsd/bin/activate
 ```
 
+#### Install dependencies
+1. `PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"`
+2. `pip install -r requirements.txt`
+
+#### Create database and do database migration
+1. `createdb dsd` # run it in bash after Postgres.app installed 
+2. `python manage.py migrate --settings=chai.settings_dev`
+
 #### Run Server
 ``` bash
 $ ./go rs
