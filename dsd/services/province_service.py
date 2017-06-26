@@ -8,13 +8,10 @@ logger = logging.getLogger(__name__)
 
 
 def sync():
-    logger.info('-------ProvinceRemote.objects.all()---------', ProvinceRemote.objects.all())
     all_remote_provinces = ProvinceRemote.objects.all()
-    logger.info('---------all_remote_provinces-------', all_remote_provinces)
     all_local_provinces = get_all_local_provinces(all_remote_provinces)
-    logger.info('-------all_local_provinces------', all_local_provinces)
     all_valid_local_provinces = list(filter(is_valid_province, all_local_provinces))
-    logger.info('------all_valid_local_provinces-----', all_valid_local_provinces)
+
     save_provinces(all_valid_local_provinces)
 
 
@@ -36,9 +33,7 @@ def get_all_local_provinces(all_remote_provinces):
 
 
 def save_provinces(provinces):
-    logger.info('--------save_provinces--------', provinces)
     for province in provinces:
-        logger.info('--------save_province--------', province)
         filter_result = Province.objects.filter(province_name=province.province_name)
         if not filter_result.count():
             province.save()

@@ -39,10 +39,7 @@ def update_coc_relation(cc_id, coc):
 
 def set_coc_id():
     cc_ids = get_category_combo_ids()
-    logger.info('--------get_category_combo_ids----------', cc_ids)
     for cc_id in cc_ids:
-        logger.info('--------get_category_combo_id----------', cc_id)
         res = get_category_option_combos(cc_id)["categoryOptionCombos"]
-        logger.info('get_category_combo_ids-----cc_id', cc_id)
         for coc in res:
             update_coc_relation(cc_id, coc)

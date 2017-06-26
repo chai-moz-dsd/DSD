@@ -10,26 +10,15 @@ def sync(last_successfully_sync_start_time):
     if not last_successfully_sync_start_time:
         all_remote_bes_middleware_cores = BesMiddlewareCoreRemote.objects\
             .all().order_by('bes_year', 'bes_number', 'submission_date')
-        logger.info('=== sync %s items ===' % len(all_remote_bes_middleware_cores))
         logger.info('sync all bes_middleware_cores at %s' % last_successfully_sync_start_time)
     else:
-        logger.info('--------all_remote_bes_middleware_cores_start-------')
         all_remote_bes_middleware_cores = BesMiddlewareCoreRemote.objects\
             .filter(middleware_updated_date__gte=last_successfully_sync_start_time)\
             .order_by('bes_year', 'bes_number', 'submission_date')
-        logger.info('--------all_remote_bes_middleware_cores_end-------')
-        logger.info('--------all_remote_bes_middleware_cores-------', all_remote_bes_middleware_cores)
         logger.info('sync bes_middleware_cores from %s' % last_successfully_sync_start_time)
 
-    logger.info('--------all_translated_bes_middleware_cores_start-------')
     all_translated_bes_middleware_cores = translate_remote_bes_middleware_cores(all_remote_bes_middleware_cores)
-    logger.info('--------all_translated_bes_middleware_cores_end-------')
-    logger.info('--------all_translated_bes_middleware_cores-------', all_translated_bes_middleware_cores)
-
-    logger.info('--------all_translated_bes_middleware_cores_start-------')
     all_valid_local_bes_middleware_cores = filter(is_valid, all_translated_bes_middleware_cores)
-    logger.info('--------all_translated_bes_middleware_cores_end-------')
-    logger.info('--------all_valid_local_bes_middleware_cores-------', all_valid_local_bes_middleware_cores)
 
     bes_middleware_cores = []
     for bes_middleware_core in all_valid_local_bes_middleware_cores:

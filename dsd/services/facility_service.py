@@ -8,18 +8,9 @@ logger = logging.getLogger(__name__)
 
 
 def sync():
-    logger.info('----------all_remote_facilities_start---------')
     all_remote_facilities = FacilityRemote.objects.all()
-    logger.info('----------all_remote_facilities_end---------')
-    logger.info('----------all_remote_facilities---------', all_remote_facilities)
-    logger.info('----------all_local_facilities_start---------')
     all_local_facilities = get_all_local_facilities(all_remote_facilities)
-    logger.info('----------all_local_facilities_end---------')
-    logger.info('----------all_local_facilities---------', all_local_facilities)
-    logger.info('----------all_valid_local_facilities_start---------')
     all_valid_local_facilities = list(filter(is_valid_facility, all_local_facilities))
-    logger.info('----------all_valid_local_facilities_end---------')
-    logger.info('----------all_valid_local_facilities---------', all_valid_local_facilities)
 
     save_facilities(all_valid_local_facilities)
 
@@ -44,9 +35,7 @@ def get_all_local_facilities(all_remote_facilities):
 
 
 def save_facilities(facilities):
-    logger.info('-----------save_facilities-------', facilities)
     for facility in facilities:
-        logger.info('-----------facilitie-------', facility)
         filter_result = Facility.objects.filter(facility_name=facility.facility_name)
         if not filter_result.count():
             facility.save()
