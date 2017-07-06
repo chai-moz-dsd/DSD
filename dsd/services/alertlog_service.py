@@ -49,6 +49,8 @@ def sql_get_data_by_filter(location_level, location_id, start_day, end_day):
            ' LEFT JOIN "districts" ON "alertLog"."districtID" = "districts"."id" ' \
            ' LEFT JOIN "facilities" ON "alertLog"."facilityID" = "facilities"."id" ' \
            ' WHERE "alertLog"."facilityID" <> \'0\' AND "alertLog"."districtID" <> \'0\' AND "alertLog"."provinceID" <> \'0\'' \
+           ' AND "alertLog"."alert_text" IS NOT NULL' \
+           ' AND "alertLog"."alert_text" != \'\' ' \
            ' AND "alertLog"."dateSent"' + ' ' + \
            get_where_clause(start_day, end_day) + ' ' + \
            get_location_clause(location_level, location_id) + ' ' + \
@@ -64,6 +66,8 @@ def sql_get_moh_data(start_day, end_day):
            ' LEFT JOIN "districts" ON "alertLog"."districtID" = "districts"."id" ' \
            ' LEFT JOIN "facilities" ON "alertLog"."facilityID" = "facilities"."id" ' \
            ' WHERE "alertLog"."facilityID" <> \'0\' AND "alertLog"."districtID" <> \'0\' AND "alertLog"."provinceID" <> \'0\'' \
+           ' AND "alertLog"."alert_text" IS NOT NULL' \
+           ' AND "alertLog"."alert_text" != \'\' ' \
            ' AND "alertLog"."dateSent"' + ' ' + \
            get_where_clause(start_day, end_day) + ' ' + \
            ' ORDER BY ' + \
