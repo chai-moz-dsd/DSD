@@ -41,7 +41,7 @@ def sql_find_location(ou_id, area):
     return 'SELECT id FROM dsd_%s WHERE uid = \'%s\';' % (area, ou_id)
 
 
-def sql_get_data_by_filter(location_level, location_id, start_day, end_day):
+def default_sql():
     return 'SELECT "provinces"."province_name", "districts"."district_name",' \
            '"facilities"."facility_name", "REMETENTE_MIDDLEWARE_CORE"."CAMPO_ABERTO",' \
            '"REMETENTE_MIDDLEWARE_CORE"."_CREATION_DATE", "REMETENTE_MIDDLEWARE_CORE"."_SUBMISSION_DATE"' \
@@ -50,8 +50,15 @@ def sql_get_data_by_filter(location_level, location_id, start_day, end_day):
            ' LEFT JOIN "districts" ON "REMETENTE_MIDDLEWARE_CORE"."MIDDLEWARE_DISTRICT_ID" = "districts"."id"' \
            ' LEFT JOIN "facilities" ON "REMETENTE_MIDDLEWARE_CORE"."MIDDLEWARE_FACILITY_ID" = "facilities"."id"' \
            ' WHERE "REMETENTE_MIDDLEWARE_CORE"."CAMPO_ABERTO" IS NOT NULL' \
+           ' AND "REMETENTE_MIDDLEWARE_CORE"."MIDDLEWARE_PROVINCE_ID" <> \'0\' ' \
+           ' AND "REMETENTE_MIDDLEWARE_CORE"."MIDDLEWARE_DISTRICT_ID" <> \'0\' ' \
+           ' AND "REMETENTE_MIDDLEWARE_CORE"."MIDDLEWARE_FACILITY_ID" <> \'0\' ' \
            ' AND "REMETENTE_MIDDLEWARE_CORE"."CAMPO_ABERTO" != \'\' ' \
-           ' AND "REMETENTE_MIDDLEWARE_CORE"."_SUBMISSION_DATE"' + ' ' + \
+           ' AND "REMETENTE_MIDDLEWARE_CORE"."_SUBMISSION_DATE" '
+
+
+def sql_get_data_by_filter(location_level, location_id, start_day, end_day):
+    return default_sql() + ' ' + \
            get_where_clause(start_day, end_day) + ' ' + \
            get_location_clause(location_level, location_id) + ' ' + \
            'ORDER BY ' + \
@@ -59,16 +66,7 @@ def sql_get_data_by_filter(location_level, location_id, start_day, end_day):
 
 
 def sql_get_moh_data(start_day, end_day):
-    return 'SELECT "provinces"."province_name", "districts"."district_name",' \
-           '"facilities"."facility_name", "REMETENTE_MIDDLEWARE_CORE"."CAMPO_ABERTO",' \
-           '"REMETENTE_MIDDLEWARE_CORE"."_CREATION_DATE", "REMETENTE_MIDDLEWARE_CORE"."_SUBMISSION_DATE"' \
-           ' FROM "REMETENTE_MIDDLEWARE_CORE"' \
-           ' LEFT JOIN "provinces" ON "REMETENTE_MIDDLEWARE_CORE"."MIDDLEWARE_PROVINCE_ID" = "provinces"."id"' \
-           ' LEFT JOIN "districts" ON "REMETENTE_MIDDLEWARE_CORE"."MIDDLEWARE_DISTRICT_ID" = "districts"."id"' \
-           ' LEFT JOIN "facilities" ON "REMETENTE_MIDDLEWARE_CORE"."MIDDLEWARE_FACILITY_ID" = "facilities"."id"' \
-           ' WHERE "REMETENTE_MIDDLEWARE_CORE"."CAMPO_ABERTO" IS NOT NULL' \
-           ' AND "REMETENTE_MIDDLEWARE_CORE"."CAMPO_ABERTO" != \'\' ' \
-           ' AND "REMETENTE_MIDDLEWARE_CORE"."_SUBMISSION_DATE"' + ' ' + \
+    return default_sql() + ' ' + \
            get_where_clause(start_day, end_day) + ' ' + \
            'ORDER BY ' + \
            get_order_clause()

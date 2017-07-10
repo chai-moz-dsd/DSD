@@ -50,6 +50,9 @@ def default_sql():
            ' LEFT JOIN "districts" ON "BES_MIDDLEWARE_CORE"."MIDDLEWARE_DISTRICT_ID" = "districts"."id"' \
            ' LEFT JOIN "facilities" ON "BES_MIDDLEWARE_CORE"."MIDDLEWARE_FACILITY_ID" = "facilities"."id"' \
            ' WHERE "BES_MIDDLEWARE_CORE"."SKIPABLE_CAMPO_ABERTO" IS NOT NULL' \
+           ' AND "BES_MIDDLEWARE_CORE"."MIDDLEWARE_FACILITY_ID" <> \'0\' ' \
+           ' AND "BES_MIDDLEWARE_CORE"."MIDDLEWARE_DISTRICT_ID" <> \'0\' ' \
+           ' AND "BES_MIDDLEWARE_CORE"."MIDDLEWARE_PROVINCE_ID" <> \'0\' ' \
            ' AND "BES_MIDDLEWARE_CORE"."SKIPABLE_CAMPO_ABERTO" != \'\'' + ' '
 
 

@@ -41,7 +41,7 @@ def sql_find_location(ou_id, area):
     return 'SELECT id FROM dsd_%s WHERE uid = \'%s\';' % (area, ou_id)
 
 
-def sql_get_data_by_filter(location_level, location_id, start_day, end_day):
+def default_sql():
     return 'SELECT "provinces"."province_name", "districts"."district_name","facilities"."facility_name",' \
            ' "alertLog"."BES_NUMBER","alertLog"."BES_YEAR", "alertLog"."alert_text", "alertLog"."dateSent"' \
            ' FROM "alertLog"' \
@@ -51,7 +51,11 @@ def sql_get_data_by_filter(location_level, location_id, start_day, end_day):
            ' WHERE "alertLog"."facilityID" <> \'0\' AND "alertLog"."districtID" <> \'0\' AND "alertLog"."provinceID" <> \'0\'' \
            ' AND "alertLog"."alert_text" IS NOT NULL' \
            ' AND "alertLog"."alert_text" != \'\' ' \
-           ' AND "alertLog"."dateSent"' + ' ' + \
+           ' AND "alertLog"."dateSent" '
+
+
+def sql_get_data_by_filter(location_level, location_id, start_day, end_day):
+    return default_sql() + ' ' + \
            get_where_clause(start_day, end_day) + ' ' + \
            get_location_clause(location_level, location_id) + ' ' + \
            ' ORDER BY ' + \
@@ -59,16 +63,7 @@ def sql_get_data_by_filter(location_level, location_id, start_day, end_day):
 
 
 def sql_get_moh_data(start_day, end_day):
-    return 'SELECT "provinces"."province_name", "districts"."district_name","facilities"."facility_name",' \
-           ' "alertLog"."BES_NUMBER","alertLog"."BES_YEAR", "alertLog"."alert_text", "alertLog"."dateSent"' \
-           ' FROM "alertLog"' \
-           ' LEFT JOIN "provinces" ON "alertLog"."provinceID" = "provinces"."id" ' \
-           ' LEFT JOIN "districts" ON "alertLog"."districtID" = "districts"."id" ' \
-           ' LEFT JOIN "facilities" ON "alertLog"."facilityID" = "facilities"."id" ' \
-           ' WHERE "alertLog"."facilityID" <> \'0\' AND "alertLog"."districtID" <> \'0\' AND "alertLog"."provinceID" <> \'0\'' \
-           ' AND "alertLog"."alert_text" IS NOT NULL' \
-           ' AND "alertLog"."alert_text" != \'\' ' \
-           ' AND "alertLog"."dateSent"' + ' ' + \
+    return default_sql() + ' ' + \
            get_where_clause(start_day, end_day) + ' ' + \
            ' ORDER BY ' + \
            get_order_clause()

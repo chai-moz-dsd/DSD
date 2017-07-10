@@ -20,9 +20,6 @@ def data_comments_endpoint(request):
         start_year, start_week, end_year, end_week, ou = check_params(request.GET)
         location_level, location_id = fetch_ou_id_by_ou_uid(ou)
 
-        print(start_year, start_week, end_year, end_week, ou)
-        print(location_level, location_id)
-
         response = []
         with connections['chai'].cursor() as cursor:
             if location_level == 'COUNTRY':
