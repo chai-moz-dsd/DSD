@@ -90,4 +90,5 @@ class BesMiddlewareCore(models.Model):
     middleware_facility_id = models.IntegerField(null=True)
     middleware_district_id = models.IntegerField(null=True)
     middleware_province_id = models.IntegerField(null=True)
+    middleware_stale = models.IntegerField(null=True)
 
