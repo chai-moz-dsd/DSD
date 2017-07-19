@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 
 
 def post_attributes():
+    time.sleep(10)
     logger.info('=== START SYNC ATTRIBUTES ===')
     attributes = Attribute.objects.all()
     for attribute in attributes:
