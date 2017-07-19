@@ -31,7 +31,7 @@ def post_attributes():
         request_body_dict = convert_attribute_to_dict(attribute)
         logger.info(request_body_dict)
         response = post_attribute(json.dumps(request_body_dict))
-        logger.info('response status = %s' % response.status_code)
+        logger.info('response status = %s and response detail = %s' % (response.status_code, response.text))
 
 
 def post_elements():
