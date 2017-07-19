@@ -3,22 +3,22 @@
     "model": "dsd.attribute",
     "pk": 1,
     "fields": {
-      "uid": "hOzWEm3MT0u",
-      "code": "device_serial_opt",
+      "uid": "hZVWv6sIcSR",
+      "code": "sim_serial_opt",
       "value_type": "TEXT",
       "attr_type": "organisationUnit",
-      "name": "Device Serial Opt"
+      "name": "Sim Serial Opt"
     }
   },
   {
     "model": "dsd.attribute",
     "pk": 2,
     "fields": {
-      "uid": "hZVWv6sIcSR",
-      "code": "sim_serial_opt",
+      "uid": "hOzWEm3MT0u",
+      "code": "device_serial_opt",
       "value_type": "TEXT",
       "attr_type": "organisationUnit",
-      "name": "Sim Serial Opt"
+      "name": "Device Serial Opt"
     }
   },
   {
