@@ -12,6 +12,17 @@
   },
   {
     "model": "dsd.attribute",
+    "pk": 1,
+    "fields": {
+      "uid": "hZVWv6sIcSR",
+      "code": "sim_serial_opt",
+      "value_type": "TEXT",
+      "attr_type": "organisationUnit",
+      "name": "Sim Serial Opt"
+    }
+  },
+  {
+    "model": "dsd.attribute",
     "pk": 2,
     "fields": {
       "uid": "hOzWEm3MT0u",
