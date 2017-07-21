@@ -283,6 +283,7 @@ def add_complex_sarampo_case():
 
 
 def post_all_validation_groups():
+    logger.info('=== SET ALL VALIDATION GROUPS ===')
     user_groups = get_user_groups().json().get('userGroups')
     user_group = user_groups[0].get('id')
 
@@ -292,6 +293,7 @@ def post_all_validation_groups():
         post_validation_rule_group(group_id=group_id, name=name, validation_rule_id=rule_id, user_group=user_group)
 
 def post_all_validation_rules():
+    logger.info('=== SET ALL VALIDATION RULES ===')
     add_colera_case()
     add_colera_deth()
     add_diarreia_death()
@@ -310,5 +312,5 @@ def post_all_validation_rules():
 
 
 def post_alert_configuration():
-    logger.info('=== SET USER ROLES ===')
+    logger.info('=== SET ALERT CONFIGURATION ===')
     post_alert_date_time({})
