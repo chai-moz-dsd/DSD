@@ -124,11 +124,11 @@ def post_data_element_values(date_element_values):
     logger.info('=== START POST DATA VALUE ===')
     for data_element in date_element_values:
         try:
-            logger.info('-------data_element------', data_element)
+            logger.info('-------data_element------%s' % data_element)
             json_dumps = json.dumps(build_data_element_values_request_body_as_dict(data_element))
-            logger.info('---------json_dumps----------', json_dumps)
+            logger.info('---------json_dumps----------%s' % json_dumps)
             response = dhis2_remote_repository.post_data_elements_value(json_dumps)
-            logger.info('---------response----------', response)
+            logger.info('---------response----------%s' % response)
             logger.info('POST DATA VALUE RESPONSE: {}'.format(response.text))
         except Exception as e:
             logger.info('post data element =%s, error occur =  %s' % (data_element, e))
