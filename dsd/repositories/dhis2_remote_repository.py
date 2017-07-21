@@ -179,6 +179,7 @@ def get_user_groups():
 
 
 def post_system_settings(json_data):
+    logger.info('system settings start')
     url = dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_SYSTEM_SETTINGS)
     logger.info('system settings url = %s' % url)
     try:
