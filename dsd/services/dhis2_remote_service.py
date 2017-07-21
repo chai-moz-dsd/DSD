@@ -86,6 +86,7 @@ def post_user_groups():
 def post_system_settings():
     logger.info('=== SET SYSTEM SETTINGS ===')
     system_settings = json.dumps(build_system_settings())
+    logger.info('system_settings = %s' %system_settings)
     dhis2_remote_repository.post_system_settings(system_settings)
 
 

@@ -180,12 +180,15 @@ def get_user_groups():
 
 def post_system_settings(json_data):
     url = dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_POST_SYSTEM_SETTINGS)
+    logger.info('system settings url = %s' % url)
     try:
-        return requests.post(url=url,
+        response = requests.post(url=url,
                              data=json_data,
                              auth=(settings.USERNAME, settings.PASSWORD),
                              headers=HEADERS_CONTENT_TYPE_APPLICATION_JSON,
                              verify=False)
+        logger.info('system settings response code = {} detail = {}'.format(response.status_code,
+                                                                            response.text))
     except ConnectionError:
         raise RemoteRequestException()
 
