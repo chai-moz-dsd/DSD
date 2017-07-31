@@ -34,20 +34,20 @@ def get_all_local_provinces(all_remote_provinces):
 
 def save_provinces(provinces):
     for province in provinces:
-        filter_result = Province.objects.filter(province_name=province.province_name)
+        filter_result = Province.objects.filter(id=province.id)
         if not filter_result.count():
             province.save()
             continue
 
         if is_updated(province):
-            existing_province = Province.objects.get(province_name=province.province_name)
+            existing_province = Province.objects.get(id=province.id)
             province.id = existing_province.id
             province.uid = existing_province.uid
             province.save()
 
 
 def is_updated(province_remote):
-    province = Province.objects.get(province_name=province_remote.province_name)
+    province = Province.objects.get(id=province_remote.id)
     return province_remote.province_name != province.province_name or \
            province_remote.description != province.description or \
            province_remote.data_creation != province.data_creation or \
