@@ -16,9 +16,9 @@ def sync():
 
 
 def is_valid_facility(facility):
-    if not facility.facility_name:
+    if facility.district_id == 0:
         return False
-    if not facility.device_serial:
+    if facility.province_id == 0:
         return False
     return True
 
