@@ -36,13 +36,13 @@ def get_all_local_facilities(all_remote_facilities):
 
 def save_facilities(facilities):
     for facility in facilities:
-        filter_result = Facility.objects.filter(facility_name=facility.facility_name)
+        filter_result = Facility.objects.filter(id=facility.id)
         if not filter_result.count():
             facility.save()
             continue
 
         if is_updated(facility):
-            existing_facility = Facility.objects.get(facility_name=facility.facility_name)
+            existing_facility = Facility.objects.get(id=facility.id)
             facility.id = existing_facility.id
             facility.province = existing_facility.province
             facility.district = existing_facility.district
@@ -51,7 +51,7 @@ def save_facilities(facilities):
 
 
 def is_updated(facility_remote):
-    facility = Facility.objects.get(facility_name=facility_remote.facility_name)
+    facility = Facility.objects.get(id=facility_remote.id)
     return facility_remote.facility_name != facility.facility_name or \
            facility_remote.latitude != facility.latitude or \
            facility_remote.longitude != facility.longitude or \
