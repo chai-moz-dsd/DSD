@@ -34,13 +34,13 @@ def get_all_local_districts(all_remote_districts):
 
 def save_districts(districts):
     for district in districts:
-        filter_result = District.objects.filter(district_name=district.district_name)
+        filter_result = District.objects.filter(id=district.id)
         if not filter_result.count():
             district.save()
             continue
 
         if is_updated(district):
-            existing_district = District.objects.get(district_name=district.district_name)
+            existing_district = District.objects.get(id=district.id)
             district.id = existing_district.id
             district.province = existing_district.province
             district.uid = existing_district.uid
@@ -48,7 +48,7 @@ def save_districts(districts):
 
 
 def is_updated(district_remote):
-    district = District.objects.get(district_name=district_remote.district_name)
+    district = District.objects.get(id=district_remote.id)
     return district_remote.district_name != district.district_name or \
            district_remote.description != district.description or \
            district_remote.data_creation != district.data_creation or \
