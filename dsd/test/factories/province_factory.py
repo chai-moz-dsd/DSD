@@ -10,6 +10,7 @@ class ProvinceFactory(factory.DjangoModelFactory):
     class Meta:
         model = Province
 
+    id = factory.Iterator([446, 447, 480, 555])
     uid = uuid.uuid4()
     province_name = factory.Iterator(
         ['NIASSA', 'CABO DELGADO', 'NAMPULA', 'ZAMBEZIA', 'TETE', 'MANICA', 'SOFALA', 'INHAMBANE', 'GAZA',
