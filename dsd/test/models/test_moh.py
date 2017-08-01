@@ -15,10 +15,10 @@ class MoHTest(TestCase):
     def setUp(self):
         with open('dsd/test/data/organization_units.json') as organization_units:
             self.expected_dict = json.loads(organization_units.read())
+            self.expected_dict = sorted(self.expected_dict, key=lambda x: x['id'])
 
     @patch('datetime.date', FakeDate)
     def test_should_get_moh(self):
-
         province_1 = ProvinceFactory(uid='11111111111', province_name='NAMPULA', description='province 1',
                                      state=0, data_creation=datetime.date(2016, 8, 25))
         province_2 = ProvinceFactory(uid='22222222222', province_name='TETE', description='province 2', state=1,
@@ -33,7 +33,7 @@ class MoHTest(TestCase):
         FacilityFactory(uid='66666666666', facility_name='POSTO DE SAUDE', district=district_2, province=province_2)
 
         moh = MoH()
-        actual_dict = moh.get_organization_as_list()
+        actual_dict = sorted(moh.get_organization_as_list(), key=lambda x: x['id'])
 
         self.maxDiff = None
         self.assertEqual(actual_dict, self.expected_dict)
