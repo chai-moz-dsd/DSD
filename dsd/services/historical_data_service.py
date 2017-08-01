@@ -55,6 +55,9 @@ def post_historical_data_element_values_to_dhis2():
     logger.info('post historical data to DHIS2')
     historical_data_element_values = get_all_historical_data()
     post_historical_data_element_values(historical_data_element_values)
+
+    # Wait db finished to save data
+    logger.info('=== db finished to save data ===')
     time.sleep(5)
     dhis2_remote_repository.send_analysis_request()
     # Wait dhis2 finished data analysis

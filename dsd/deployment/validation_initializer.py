@@ -28,7 +28,6 @@ def add_colera_case():
                          right_side_expression='0')
 
 
-
 def add_colera_deth():
     rule_id = 'iz4ccOJSd4l'
     disease_code = '001_CÓLERA'
@@ -45,7 +44,6 @@ def add_colera_deth():
                          left_side_description='Cólera morte',
                          date_element_ids=date_element_ids,
                          right_side_expression='2')
-
 
 
 def add_diarreia_death():
@@ -291,6 +289,7 @@ def post_all_validation_groups():
         group_id = VALIDATION_RULE_GROUP.get(rule_id).get('group_id')
         name = VALIDATION_RULE_GROUP.get(rule_id).get('name')
         post_validation_rule_group(group_id=group_id, name=name, validation_rule_id=rule_id, user_group=user_group)
+
 
 def post_all_validation_rules():
     logger.info('=== SET ALL VALIDATION RULES ===')

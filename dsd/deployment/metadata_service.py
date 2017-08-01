@@ -34,7 +34,7 @@ def sync_metadata_and_data_with_dhis2():
     post_org_unit_level()
     post_user_roles()
     post_user_groups()
-    # post_system_settings()
+    post_system_settings()
     post_all_validation_rules()
     post_all_validation_groups()
     post_alert_configuration()

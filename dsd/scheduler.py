@@ -26,6 +26,7 @@ def start():
         logger.info('-------post_organization_units_start------')
         post_organization_units()
         logger.info('-------post_organization_units_end------')
+
         # updated_bes_middleware_cores = fetch_updated_data_element_values()
         updated_bes_middleware_cores = sync_business_data_to_local()
 
