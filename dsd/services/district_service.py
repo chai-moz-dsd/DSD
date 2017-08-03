@@ -1,4 +1,5 @@
 import logging
+import time
 
 from dsd.models import District
 from dsd.models.remote.district import District as DistrictRemote
@@ -26,7 +27,7 @@ def get_all_local_districts(all_remote_districts):
     for remote_district in all_remote_districts:
         remote_district.__dict__.pop('_state')
         local_district = District(**remote_district.__dict__)
-        local_district.uid = id_generator.generate_md5_id(local_district.district_name)
+        local_district.uid = id_generator.generate_md5_id(local_district.district_name + str(time.time()))
         all_local_districts.append(local_district)
 
     return all_local_districts
