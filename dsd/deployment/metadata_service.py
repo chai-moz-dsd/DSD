@@ -1,7 +1,6 @@
 import logging
 
-from dsd.deployment.validation_initializer import post_all_validation_groups, post_all_validation_rules, \
-    post_alert_configuration
+from dsd.deployment.validation_initializer import post_all_validation_groups, post_all_validation_rules, post_alert_configuration
 from dsd.models import SyncRecord
 from dsd.scheduler import sync_business_data_to_local, sync_metadata_to_local
 from dsd.services.bes_middleware_core_service import fetch_updated_data_element_values
@@ -10,15 +9,6 @@ from dsd.services.historical_data_service import post_historical_data_element_va
 from dsd.services.sync_cocid_service import set_coc_id
 
 logger = logging.getLogger(__name__)
-
-
-def sync_metadata_with_bes():
-    sync_metadata_to_local()
-    sync_business_data_to_local()
-    if SyncRecord.objects.filter(status='Success').count() == 1:
-        logger.info('push metadata and data to DHIS2 start...')
-        sync_metadata_and_data_with_dhis2()
-        logger.info('push metadata and data to DHIS2 end...')
 
 
 def sync_metadata_and_data_with_dhis2():
@@ -40,6 +30,15 @@ def sync_metadata_and_data_with_dhis2():
     post_alert_configuration()
     sync_business_with_dhis2()
     post_historical_data_element_values_to_dhis2()
+
+
+def sync_metadata_with_bes():
+    sync_metadata_to_local()
+    sync_business_data_to_local()
+    if SyncRecord.objects.filter(status='Success').count() == 1:
+        logger.info('push metadata and data to DHIS2 start...')
+        sync_metadata_and_data_with_dhis2()
+        logger.info('push metadata and data to DHIS2 end...')
 
 
 def sync_business_with_dhis2():
