@@ -286,12 +286,12 @@ def build_user_roles_dict():
 def build_system_settings():
     return {
         'keyMessageSmsNotification': True,
-        'keyEmailHostName': config['DHIS2_EMAIL']['HOST_NAME'],
-        'keyEmailSender': config['DHIS2_EMAIL']['SENDER'],
-        'keyEmailUsername': config['DHIS2_EMAIL']['USERNAME'],
-        'keyEmailPassword': config['DHIS2_EMAIL']['PASSWORD'],
-        'keyEmailPort': int(config['DHIS2_EMAIL']['PORT']),
-        'keyEmailTls': bool(config['DHIS2_EMAIL']['TLS']),
+        # 'keyEmailHostName': config['DHIS2_EMAIL']['HOST_NAME'],
+        # 'keyEmailSender': config['DHIS2_EMAIL']['SENDER'],
+        # 'keyEmailUsername': config['DHIS2_EMAIL']['USERNAME'],
+        # 'keyEmailPassword': config['DHIS2_EMAIL']['PASSWORD'],
+        # 'keyEmailPort': int(config['DHIS2_EMAIL']['PORT']),
+        # 'keyEmailTls': bool(config['DHIS2_EMAIL']['TLS']),
         'keyMessageEmailNotification': True,
         'keyCacheStrategy': 'CACHE_15_MINUTES',
         'keyAccountRecovery': True
