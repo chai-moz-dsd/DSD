@@ -47,6 +47,7 @@ def post_and_validate_data_element(updated_bes_middleware_cores):
 
 
 def sync_business_data_to_local():
+    logger.info('Sync business data start...')
     last_successfully_sync_start_time = SyncRecord.get_last_successful_sync_start_time()
     sync_start_time = datetime.datetime.now()
     updated_bes_middleware_cores = bes_middleware_core_service.sync(last_successfully_sync_start_time)
