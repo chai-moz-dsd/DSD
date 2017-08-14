@@ -9,12 +9,12 @@ logger = logging.getLogger(__name__)
 def sync(last_successfully_sync_start_time):
     if not last_successfully_sync_start_time:
         all_remote_bes_middleware_cores = BesMiddlewareCoreRemote.objects\
-            .all().order_by('bes_year', 'bes_number', 'submission_date')
+            .all().order_by('bes_year', 'bes_number', 'last_update_date')
         logger.info('sync all bes_middleware_cores at %s' % last_successfully_sync_start_time)
     else:
         all_remote_bes_middleware_cores = BesMiddlewareCoreRemote.objects\
             .filter(middleware_updated_date__gte=last_successfully_sync_start_time)\
-            .order_by('bes_year', 'bes_number', 'submission_date')
+            .order_by('bes_year', 'bes_number', 'last_update_date')
         logger.info('sync bes_middleware_cores from %s' % last_successfully_sync_start_time)
 
     all_translated_bes_middleware_cores = translate_remote_bes_middleware_cores(all_remote_bes_middleware_cores)
@@ -58,7 +58,7 @@ def should_be_synced(bes_middleware_core, last_sync_success_date):
 def fetch_updated_data_element_values():
     data_element_values = []
 
-    for value in BesMiddlewareCore.objects.all().order_by('bes_year', 'bes_number', 'submission_date'):
+    for value in BesMiddlewareCore.objects.all().order_by('bes_year', 'bes_number', 'last_update_date'):
         if is_data_element_belongs_to_facility(value):
             data_element_values.append(value)
 

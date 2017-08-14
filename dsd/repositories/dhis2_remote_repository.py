@@ -12,7 +12,7 @@ CONTENT_TYPE = {'Content-Type': 'application/json'}
 PATH_TO_CERT = '/opt/app/chai/volume/config/ssl/fullchain.pem'
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.CRITICAL)
+logger.setLevel(logging.DEBUG)
 
 
 def post_category_options(request_body):
