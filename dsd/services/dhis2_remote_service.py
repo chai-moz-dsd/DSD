@@ -121,14 +121,28 @@ def post_data_set():
 
 def post_data_element_values(date_element_values):
     logger.info('=== START POST DATA VALUE ===')
+    imported = 0
+    updated = 0
+    ignored = 0
+    deleted = 0
     for data_element in date_element_values:
         try:
             json_dumps = json.dumps(build_data_element_values_request_body_as_dict(data_element))
             response = dhis2_remote_repository.post_data_elements_value(json_dumps)
             logger.info('---------response----------%s' % response)
             logger.info('POST DATA VALUE RESPONSE: {}'.format(response.text))
+
+            imported += response.json()['importCount']['imported']
+            updated += response.json()['importCount']['updated']
+            ignored += response.json()['importCount']['ignored']
+            deleted += response.json()['importCount']['deleted']
         except Exception as e:
             logger.info('post data element =%s, error occur =  %s' % (data_element, e))
+
+    logger.info('post_data_element_values imported : %s' % imported)
+    logger.info('post_data_element_values updated : %s' % updated)
+    logger.info('post_data_element_values ignored : %s' % ignored)
+    logger.info('post_data_element_values deleted : %s' % deleted)
 
     # Wait db finished to save data
     logger.info('=== db finished to save data ===')
