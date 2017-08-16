@@ -143,7 +143,7 @@ def build_data_element_values_request_body_as_dict(bes_middleware_core):
     data_values = []
     for coc_relation in coc_relations:
         value = getattr(bes_middleware_core, coc_relation.name_in_bes)
-        if isinstance(value, int) and value >= 0:
+        if isinstance(value, int):
             data_values.append({
                 'dataElement': coc_relation.element_id,
                 'value': value,
