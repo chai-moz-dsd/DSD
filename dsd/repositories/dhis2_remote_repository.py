@@ -98,7 +98,7 @@ def get_district_organisation_id(facility_organisation_id):
 def send_analysis_request():
     logger.info('send analysis request to dhis2')
     url = dhis2_config.DHIS2_STATIC_URLS.get(dhis2_config.KEY_SEND_ANALYSIS_ACTION)
-    logger.info('send analysis request to dhis2 url========', url)
+    logger.info('send analysis request to dhis2 url========%s', url)
     return __get_request(url=url)
 
 

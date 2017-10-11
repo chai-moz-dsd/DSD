@@ -132,6 +132,14 @@ def post_data_element_values(date_element_values):
             logger.info('---------response----------%s' % response)
             logger.info('POST DATA VALUE RESPONSE: {}'.format(response.text))
 
+            if response.status_code != 200:
+                count = 1
+                while count <= 3 or response.status_code != 200:
+                    response = dhis2_remote_repository.post_data_elements_value(json_dumps)
+                    count = count + 1
+                    logger.info('---------response again----------%s' % response)
+                    logger.info('POST DATA VALUE AGAIN RESPONSE: {}'.format(response.text))
+
             imported += response.json()['importCount']['imported']
             updated += response.json()['importCount']['updated']
             ignored += response.json()['importCount']['ignored']
