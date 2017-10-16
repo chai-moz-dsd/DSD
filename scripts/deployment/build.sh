@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 
-tag=${BUILD_NUMBER}
-
 # Copy Dockerfile to folder where the project root directory is
 echo "Copy Dockerfile"
-cp ./${JOB_NAME}/Dockerfile ./
+cp ./${3}/Dockerfile ./
 
 echo "Build docker image"
-docker build -t chaimozdsd/dsd:${tag} .
+docker build -t chaimozdsd/dsd:${1} .
 
 echo "Remove old images"
 docker images | grep -P '^\S+dsd\s+([0-9]+)\b' | \
-awk 'BEGIN {BASELINE="'${tag}'"}{if($2 < BASELINE) print $1":"$2}' | xargs -I {} docker rmi -f {} || true
-
-echo "tag latest image"
-docker rmi -f chaimozdsd/dsd:latest || echo 'remove latest image failure'
-docker tag chaimozdsd/dsd:${tag} chaimozdsd/dsd:latest
+awk 'BEGIN {BASELINE="'${1}'"}{if($2 < BASELINE) print $1":"$2}' | xargs -I {} docker rmi -f {} || true
 
 docker images | grep "^<none>" | awk 'NR >= 1 {print $3}' | xargs -I {} docker rmi -f {} || true
+
+password=${2}
+
+echo "push docker image to the repo"
+docker login -u="chaimozdsd" -p=${password}
+docker push chaimozdsd/dsd:${1}
