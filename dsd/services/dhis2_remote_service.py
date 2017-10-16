@@ -134,7 +134,8 @@ def post_data_element_values(date_element_values):
 
             if response.status_code != 200:
                 count = 1
-                while count <= 3 or response.status_code != 200:
+                while count <= 3 and response.status_code != 200:
+                    time.sleep(60)
                     response = dhis2_remote_repository.post_data_elements_value(json_dumps)
                     count = count + 1
                     logger.info('---------response again----------%s' % response)
