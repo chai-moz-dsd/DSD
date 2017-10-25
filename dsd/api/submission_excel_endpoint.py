@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 import io
 
 import xlsxwriter
-from django.http import HttpResponse, FileResponse
+from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 
 from dsd.exceptions.illegal_arguments_exception import IllegalArgumentException
@@ -31,7 +31,7 @@ def data_submission_excel_endpoint(request):
     workbook.close()
 
     output.seek(0)
-    response = FileResponse(output, content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    response = HttpResponse(output.read(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     response['Content-Disposition'] = "attachment; filename={}".format(
         'TodasSubmicoes{}-{}.xlsx'.format(start_day, end_day))
 
