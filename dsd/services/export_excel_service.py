@@ -7,8 +7,6 @@ PATH = '/tmp/'
 
 
 def create_excel(workbook, worksheet, location_level, location_id, start_day, end_day):
-    # workbook = xlsxwriter.Workbook(PATH + 'TodasSubmicoes' + start_day + '-' + end_day + '.xlsx')
-    # worksheet = workbook.add_worksheet('Todas Submicoes')
 
     create_excel_header(workbook, worksheet)
 
@@ -21,8 +19,6 @@ def create_excel(workbook, worksheet, location_level, location_id, start_day, en
             data = cursor.fetchall()
 
     create_excel_data(worksheet, data)
-
-    workbook.close()
 
 
 def create_excel_header(workbook, worksheet):
