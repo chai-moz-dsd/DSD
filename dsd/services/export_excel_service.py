@@ -1,9 +1,6 @@
 # encoding: utf-8
-import xlsxwriter
 from django.db import connections
 from dsd.services.submission_service import sql_excel_data, sql_excel_data_no_location
-
-PATH = '/tmp/'
 
 
 def create_excel(workbook, worksheet, location_level, location_id, start_day, end_day):

@@ -11,8 +11,6 @@ from dsd.exceptions.illegal_arguments_exception import IllegalArgumentException
 from dsd.services.submission_service import START_DAY, END_DAY, LOCATION, INDEX_PAGE, fetch_ou_id_by_ou_uid
 from dsd.services.export_excel_service import create_excel
 
-PATH = '/tmp/'
-
 
 @csrf_exempt
 @require_http_methods(['GET'])
@@ -38,16 +36,6 @@ def data_submission_excel_endpoint(request):
         'TodasSubmicoes{}-{}.xlsx'.format(start_day, end_day))
 
     return response
-
-
-def file_iterator(file_name, chunk_size=512):
-    with open(file_name) as f:
-        while True:
-            c = f.read(chunk_size)
-            if c:
-                yield c
-            else:
-                break
 
 
 def check_params(params):
